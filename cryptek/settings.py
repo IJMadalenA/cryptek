@@ -9,39 +9,73 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import logging
+import environ
 from pathlib import Path
+
+from django.conf.global_settings import SECRET_KEY
+from django.contrib import messages
+from django_filters import rest_framework
+
+logger = logging.getLogger(__name__)
+
+env = environ.Env(
+    DEBUG=(bool, False),
+    LOCAL=(bool, False),
+    PERMISSIONS=(bool, False),
+    ALLOWED_HOSTS=(
+        list,
+        (
+            'localhost',
+            '127.0.0.1',
+        )
+    ),
+    SECRET_KEY=(str, SECRET_KEY),
+)
+
+# CORE SETTINGS. https://docs.djangoproject.com/es/5.1/ref/settings/#core-settings =====================================
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+ADMINS = [] # https://docs.djangoproject.com/es/5.1/ref/settings/#admins.
+MANAGERS = ADMINS # https://docs.djangoproject.com/es/5.1/ref/settings/#managers.
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
+# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/.
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-c(pqpj!8f#b9duj7=)o^c9ovn^$+(w0&9b7qn432$naww&*yp*'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG') # https://docs.djangoproject.com/es/5.1/ref/settings/#debug.
+LOCAL = env('LOCAL')
+PERMISSIONS = env('PERMISSIONS')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env('ALLOWED_HOSTS') # https://docs.djangoproject.com/es/5.1/ref/settings/#allowed-hosts.
+APPEND_SLASH = True # https://docs.djangoproject.com/es/5.1/ref/settings/#append-slash.
 
-
-# Application definition
-
-INSTALLED_APPS = [
+# APPLICATION DEFINITION. https://docs.djangoproject.com/es/5.1/ref/settings/#installed-apps ===========================
+DJANGO_DEFAULT_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+]
+THIRD_PARTY_APPS = [
+    # 'rest_framework',
+    'django_filters',
+    'whitenoise.runserver_nostatic'
+]
+CUSTOM_APPS = [
     'library_tomb.apps.LibraryTombConfig',
     'message_app.apps.MessageAppConfig',
     'log_recorder_app.apps.LogRecorderAppConfig',
     'conscious_element.apps.ConsciousElementConfig'
 ]
+INSTALLED_APPS = DJANGO_DEFAULT_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -51,15 +85,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+] # https://docs.djangoproject.com/es/5.1/ref/settings/#middleware.
 
 ROOT_URLCONF = 'cryptek.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -70,25 +103,24 @@ TEMPLATES = [
             ],
         },
     },
-]
+] # https://docs.djangoproject.com/es/5.1/ref/settings/#templates.
 
-WSGI_APPLICATION = 'cryptek.wsgi.application'
+WSGI_APPLICATION = 'cryptek.wsgi.application' # https://docs.djangoproject.com/es/5.1/ref/settings/#wsgi-application.
 
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
+# DATABASES. https://docs.djangoproject.com/en/5.1/ref/settings/#databases =============================================
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        'ATOMIC_REQUESTS': True, # https://docs.djangoproject.com/es/5.1/ref/settings/#atomic-requests.
+        'AUTOCOMMIT': True, # https://docs.djangoproject.com/es/5.1/ref/settings/#autocommit.
+        'TEST': {
+            "NAME": BASE_DIR / 'db.test.sqlite3',
+        }
     }
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
+# AUTHENTICATION. https://docs.djangoproject.com/es/5.1/ref/settings/#auth =============================================
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -102,27 +134,54 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
-]
+] # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
+AUTH_USER_MODEL = 'conscious_element.CryptekUser' # https://docs.djangoproject.com/es/5.1/ref/settings/#auth-user-model.
+LOGIN_REDIRECT_URL = '/home/' # https://docs.djangoproject.com/es/5.1/ref/settings/#login-redirect-url.
+LOGIN_URL = '/login/' # https://docs.djangoproject.com/es/5.1/ref/settings/#login-url.
+LOGOUT_REDIRECT_URL = '/home/' # https://docs.djangoproject.com/es/5.1/ref/settings/#logout-redirect-url.
+PASSWORD_RESET_TIMEOUT = 259200 # https://docs.djangoproject.com/es/5.1/ref/settings/#password-reset-timeout.
+PASSWORD_HASHERS = (
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
+    "django.contrib.auth.hashers.Argon2PasswordHasher",
+    "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
+    "django.contrib.auth.hashers.ScryptPasswordHasher",
+) # https://docs.djangoproject.com/es/5.1/ref/settings/#password-hashers.
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
+# INTERNATIONALIZATION =================================================================================================
+LANGUAGE_CODE = 'en-us' # https://docs.djangoproject.com/es/5.1/ref/settings/#language-code.
+LANGUAGES = (
+    ('en', 'English'),
+    ('es', 'Spanish'),
+)
 TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_TZ = True
+USE_I18N = True # https://docs.djangoproject.com/en/5.1/topics/i18n/.
+USE_TZ = True # https://docs.djangoproject.com/es/5.1/ref/settings/#use-tz.
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
-STATIC_URL = 'static/'
-
+# STATIC FILES (CSS, JavaScript, Images) https://docs.djangoproject.com/es/5.1/ref/settings/#static-files ==============
+# https://docs.djangoproject.com/en/5.1/howto/static-files/.
+STATIC_URL = 'static/' # https://docs.djangoproject.com/es/5.1/ref/settings/#static-url.
+STATICFILES_FINDERS = (
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+)
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
+# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field.
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_CHARSET = 'utf-8' # https://docs.djangoproject.com/es/5.1/ref/settings/#default-charset.
+
+# EMAIL CONFIGURATION. https://docs.djangoproject.com/es/5.1/ref/settings/#default-from-email. =========================
+
+# MESSAGES. https://docs.djangoproject.com/es/5.1/ref/settings/#messages. ==============================================
+MESSAGE_TAGS = {
+    messages.DEBUG: "debug",
+    messages.INFO: "info",
+    messages.SUCCESS: "success",
+    messages.WARNING: "warning",
+    messages.ERROR: "error",
+}
+
+# SESSIONS. https://docs.djangoproject.com/es/5.1/ref/settings/#sessions. ==============================================
