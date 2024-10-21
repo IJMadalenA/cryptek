@@ -11,26 +11,22 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import logging
 import environ
+import os
 from pathlib import Path
 
-from django.conf.global_settings import SECRET_KEY
 from django.contrib import messages
 from django_filters import rest_framework
 
 logger = logging.getLogger(__name__)
 
 env = environ.Env(
+    # set casting, default value
     DEBUG=(bool, False),
     LOCAL=(bool, False),
     PERMISSIONS=(bool, False),
-    ALLOWED_HOSTS=(
-        list,
-        (
-            'localhost',
-            '127.0.0.1',
-        )
-    ),
-    SECRET_KEY=(str, SECRET_KEY),
+    ALLOWED_HOSTS=(list, ''),
+    SECRET_KEY=(str, ''),
+    ADMINS=(list, ['admin_is',]),
 )
 
 # CORE SETTINGS. https://docs.djangoproject.com/es/5.1/ref/settings/#core-settings =====================================
@@ -38,21 +34,24 @@ env = environ.Env(
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ADMINS = [] # https://docs.djangoproject.com/es/5.1/ref/settings/#admins.
+# Take environment variables from .env file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+ADMINS = env.list('ADMINS') # https://docs.djangoproject.com/es/5.1/ref/settings/#admins.
 MANAGERS = ADMINS # https://docs.djangoproject.com/es/5.1/ref/settings/#managers.
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/.
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env.str('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG') # https://docs.djangoproject.com/es/5.1/ref/settings/#debug.
-LOCAL = env('LOCAL')
-PERMISSIONS = env('PERMISSIONS')
+DEBUG = env.bool('DEBUG') # https://docs.djangoproject.com/es/5.1/ref/settings/#debug.
+LOCAL = env.bool('LOCAL')
+PERMISSIONS = env.bool('PERMISSIONS')
 
-ALLOWED_HOSTS = env('ALLOWED_HOSTS') # https://docs.djangoproject.com/es/5.1/ref/settings/#allowed-hosts.
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS") # https://docs.djangoproject.com/es/5.1/ref/settings/#allowed-hosts.
 APPEND_SLASH = True # https://docs.djangoproject.com/es/5.1/ref/settings/#append-slash.
 
 # APPLICATION DEFINITION. https://docs.djangoproject.com/es/5.1/ref/settings/#installed-apps ===========================
@@ -92,7 +91,7 @@ ROOT_URLCONF = 'cryptek.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'cryptek/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -114,9 +113,9 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
         'ATOMIC_REQUESTS': True, # https://docs.djangoproject.com/es/5.1/ref/settings/#atomic-requests.
         'AUTOCOMMIT': True, # https://docs.djangoproject.com/es/5.1/ref/settings/#autocommit.
-        'TEST': {
-            "NAME": BASE_DIR / 'db.test.sqlite3',
-        }
+        # 'TEST': {
+        #     "NAME": BASE_DIR / 'db.test.sqlite3',
+        # }
     }
 }
 
@@ -164,10 +163,11 @@ USE_TZ = True # https://docs.djangoproject.com/es/5.1/ref/settings/#use-tz.
 # STATIC FILES (CSS, JavaScript, Images) https://docs.djangoproject.com/es/5.1/ref/settings/#static-files ==============
 # https://docs.djangoproject.com/en/5.1/howto/static-files/.
 STATIC_URL = 'static/' # https://docs.djangoproject.com/es/5.1/ref/settings/#static-url.
-STATICFILES_FINDERS = (
-    "django.contrib.staticfiles.finders.FileSystemFinder",
-    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-)
+STATIC_ROOT = 'cryptek/static'
+# STATICFILES_FINDERS = (
+#     "django.contrib.staticfiles.finders.FileSystemFinder",
+#     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+# )
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field.
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
