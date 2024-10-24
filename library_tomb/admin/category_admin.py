@@ -1,4 +1,4 @@
-from django.contrib.admin import register, ModelAdmin
+from django.contrib.admin import ModelAdmin, register
 
 from library_tomb.models.category import Category
 

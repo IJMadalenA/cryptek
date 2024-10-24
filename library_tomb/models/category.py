@@ -1,5 +1,5 @@
 # Category model
-from django.db.models import Model, CharField, TextField, SlugField, ImageField
+from django.db.models import CharField, ImageField, Model, SlugField, TextField
 
 
 class Category(Model):
@@ -8,7 +8,6 @@ class Category(Model):
     description = TextField(blank=True)
     slug = SlugField()
     thumbnail = ImageField()
-
 
     def str(self):
         return self.name

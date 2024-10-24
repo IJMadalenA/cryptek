@@ -1,16 +1,7 @@
-from django.db.models import (
-    Model,
-    CharField,
-    ForeignKey,
-    TextField,
-    CASCADE,
-    ManyToManyField,
-    DateTimeField,
-    BooleanField,
-    OneToOneField,
-    IntegerField,
-    ImageField, SlugField,
-)
+from django.db.models import (CASCADE, BooleanField, CharField, DateTimeField,
+                              ForeignKey, ImageField, IntegerField,
+                              ManyToManyField, Model, OneToOneField, SlugField,
+                              TextField)
 from django.urls import reverse
 from django.utils.text import slugify
 from markdownx.models import MarkdownxField
@@ -68,7 +59,7 @@ class Post(Model):
             self.author = CryptekUser.objects.first()
         super().save(*args, **kwargs)
 
-        
+
 # PostVersion model
 class PostVersion(Model):
     post = ForeignKey(Post, on_delete=CASCADE, related_name="versions")
