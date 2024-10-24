@@ -1,4 +1,4 @@
-from django.contrib.admin import register, ModelAdmin
+from django.contrib.admin import ModelAdmin, register
 
 from conscious_element.models.user_role import UserRole
 
