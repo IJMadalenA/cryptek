@@ -16,18 +16,29 @@ Including another URLconf
 """
 
 from django.conf import settings
-from django.contrib import admin
-from django.urls import path, include
 from django.conf.urls.static import static
+from django.contrib import admin
+from django.contrib.sitemaps.views import sitemap
+from django.urls import include, path
 
-import library_tomb.views
 from conscious_element.views import about_me
+from library_tomb.sitemaps import PostSitemap
+
+sitemaps = {
+    "posts": PostSitemap,
+}
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path(
+        "sitemap.xml",
+        sitemap,
+        {"sitemaps": sitemaps},
+        name="django.contrib.sitemaps.views.sitemap",
+    ),
     path("blog/", include("library_tomb.urls")),
     path("markdownx/", include("markdownx.urls")),
-    path('about/', about_me, name='about_me'),
+    path("about/", about_me, name="about_me"),
 ]
 
 if settings.DEBUG:
