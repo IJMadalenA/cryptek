@@ -9,8 +9,10 @@ from django.db.models import (
     BooleanField,
     OneToOneField,
     IntegerField,
-    ImageField,
+    ImageField, SlugField,
 )
+from django.urls import reverse
+from django.utils.text import slugify
 from markdownx.models import MarkdownxField
 
 from conscious_element.models.cryptek_user import CryptekUser
@@ -45,14 +47,28 @@ class Post(Model):
     featured = BooleanField()
     publish_date = DateTimeField(blank=True, null=True)
     header_image = ImageField(upload_to="header_images/", blank=True, null=True)
+    slug = SlugField(
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         ordering = ["-created_at"]
 
-    def str(self):
+    def __str__(self):
         return self.title
 
+    def get_absolute_url(self):
+        return reverse("post_detail", kwargs={"slug": self.slug})
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        if not self.author:
+            self.author = CryptekUser.objects.first()
+        super().save(*args, **kwargs)
+
+        
 # PostVersion model
 class PostVersion(Model):
     post = ForeignKey(Post, on_delete=CASCADE, related_name="versions")
