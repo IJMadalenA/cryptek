@@ -73,7 +73,7 @@
                         <img src="{{ object.header_image.url }}" alt="Header Image" class="header-image">
                     {% endif %}
                     <h1>{% block title %}{{ object.title }}{% endblock title %}</h1>
-                    <p class="text-muted">{{ object.author }} | {{ object.created_on }}</p>
+                    <p class="text-muted">{{ object.author }} | {{ object.created_at | date:"d M Y" }}</p>
                     <p class="card-text">{{ object.content | safe }}</p>
                 </div>
             </div>

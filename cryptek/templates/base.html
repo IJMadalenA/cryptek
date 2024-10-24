@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 
@@ -59,7 +60,10 @@
 {% endblock content %}
 <!-- Footer -->
 <footer class="py-3 bg-grey">
-    <p class="m-0 text-dark text-center ">Copyright &copy; Django Central</p>
+    <div class="col-md-3 text-center">
+                <img src="{% static 'images/python-powered.png' %}" alt="python-powered" class="img-fluid">
+            </div>
+    <p class="m-0 text-dark text-center ">Copyright &copy; IJMadalenA</p>
 </footer>
 </body>
 </html>
