@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1>About Me</h1>
+        <p>Hello! I am [Your Name], a passionate software developer with experience in a variety of technologies. Here are some of the technologies I specialize in:</p>
+
+        <div class="row mt-4 mb-4">
+            <div class="col-md-3 text-center">
+                <img src="{% static 'images/python.png' %}" alt="Python" class="img-fluid">
+                <p>Python</p>
+            </div>
+            <div class="col-md-3 text-center">
+                <img src="{% static 'images/django.png' %}" alt="Django" class="img-fluid">
+                <p>Django</p>
+            </div>
+            <div class="col-md-3 text-center">
+                <img src="{% static 'images/postgres.png' %}" alt="Postgres" class="img-fluid">
+                <p>Postgres</p>
+            </div>
+            <div class="col-md-3 text-center">
+                <img src="{% static 'images/docker.png' %}" alt="Docker" class="img-fluid">
+                <p>Docker</p>
+            </div>
+        </div>
+
+        <p>You can connect with me on LinkedIn or view my projects on GitHub using the links below:</p>
+
+        <ul>
+            <li><a href="https://www.linkedin.com/in/ijmadalena/" target="_blank">LinkedIn</a></li>
+            <li><a href="https://github.com/IJMadalenA" target="_blank">GitHub</a></li>
+        </ul>
+    </div>
+{% endblock %}
