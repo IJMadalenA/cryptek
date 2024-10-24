@@ -598,6 +598,22 @@ files = [
 Django = ">=4.2"
 
 [[package]]
+name = "django-markdownx"
+version = "4.0.7"
+description = "A comprehensive Markdown editor built for Django."
+optional = false
+python-versions = "*"
+files = [
+    {file = "django-markdownx-4.0.7.tar.gz", hash = "sha256:38aa331c2ca0bee218b77f462361b5393e4727962bc6021939c09048363cb6ea"},
+    {file = "django_markdownx-4.0.7-py2.py3-none-any.whl", hash = "sha256:c1975ae3053481d4c111abd38997a5b5bb89235a1e3215f995d835942925fe7b"},
+]
+
+[package.dependencies]
+Django = "*"
+Markdown = "*"
+Pillow = "*"
+
+[[package]]
 name = "dulwich"
 version = "0.21.7"
 description = "Python Git Library"
@@ -704,13 +720,13 @@ doc = ["Sphinx", "sphinx-rtd-theme", "sphinxcontrib-spelling"]
 
 [[package]]
 name = "faker"
-version = "30.6.0"
+version = "30.8.0"
 description = "Faker is a Python package that generates fake data for you."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "Faker-30.6.0-py3-none-any.whl", hash = "sha256:37b5ab951f7367ea93edb865120e9717a7a649d6a4b223f1e4a47a8a20d9e85f"},
-    {file = "faker-30.6.0.tar.gz", hash = "sha256:be0e548352c1be6f6d9c982003848a0d305868f160bb1fb7f945acffc347e676"},
+    {file = "Faker-30.8.0-py3-none-any.whl", hash = "sha256:4cd0c5ea4bc1e4c902967f6e662f5f5da69f1674d9a94f54e516d27f3c2a6a16"},
+    {file = "faker-30.8.0.tar.gz", hash = "sha256:3608c7fcac2acde0eaa6da28dae97628f18f14d54eaa2a92b96ae006f1621bd7"},
 ]
 
 [package.dependencies]
@@ -1784,13 +1800,13 @@ files = [
 
 [[package]]
 name = "trove-classifiers"
-version = "2024.10.16"
+version = "2024.10.21.16"
 description = "Canonical source for classifiers on PyPI (pypi.org)."
 optional = false
 python-versions = "*"
 files = [
-    {file = "trove_classifiers-2024.10.16-py3-none-any.whl", hash = "sha256:9b02a4cb49bd2e85c13e728ee461f4f332d6334736b18d61254c964643687144"},
-    {file = "trove_classifiers-2024.10.16.tar.gz", hash = "sha256:8a3570c880f7ca2ffebbc91806aee3e8f5cd221422dfc8cd2cad4b48789ac69b"},
+    {file = "trove_classifiers-2024.10.21.16-py3-none-any.whl", hash = "sha256:0fb11f1e995a757807a8ef1c03829fbd4998d817319abcef1f33165750f103be"},
+    {file = "trove_classifiers-2024.10.21.16.tar.gz", hash = "sha256:17cbd055d67d5e9d9de63293a8732943fabc21574e4c7b74edf112b4928cf5f3"},
 ]
 
 [[package]]
@@ -1942,4 +1958,4 @@ test = ["pytest"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "8f05ed116ed6bc25e3885c85ccbdcf84971f521a0dfd7211b8ba1c990ea27153"
+content-hash = "18e0a9b2dad7eb9dbb03bb76bfa5472153c81343cbda032a3bc0bf1b576a8a3f"
