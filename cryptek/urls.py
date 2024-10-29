@@ -20,8 +20,11 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
 from django.urls import include, path
+from django.views.generic import RedirectView
 
-from conscious_element.views import about_me
+from conscious_element.views.about_me import about_me
+from conscious_element.views.login_view import CustomLoginView
+from conscious_element.views.logout_view import CustomLogoutView
 from library_tomb.sitemaps import PostSitemap
 
 sitemaps = {
@@ -36,7 +39,11 @@ urlpatterns = [
         {"sitemaps": sitemaps},
         name="django.contrib.sitemaps.views.sitemap",
     ),
-    path("blog/", include("library_tomb.urls")),
+    path("login/", CustomLoginView.as_view(), name="login"),
+    path("logout/", CustomLogoutView.as_view(), name="logout"),
+    # path("", RedirectView.as_view(url='blog/', permanent=True)),
+    path("", RedirectView.as_view(url="blog", permanent=True), name="to_blog"),
+    path("blog/", include("library_tomb.urls"), name="blog"),
     path("markdownx/", include("markdownx.urls")),
     path("about/", about_me, name="about_me"),
 ]

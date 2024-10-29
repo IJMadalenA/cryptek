@@ -149,13 +149,11 @@ AUTH_PASSWORD_VALIDATORS = [
 ]  # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend"]
 AUTH_USER_MODEL = "conscious_element.CryptekUser"  # https://docs.djangoproject.com/es/5.1/ref/settings/#auth-user-model.
-LOGIN_REDIRECT_URL = (
-    "/home/"  # https://docs.djangoproject.com/es/5.1/ref/settings/#login-redirect-url.
-)
 LOGIN_URL = "/login/"  # https://docs.djangoproject.com/es/5.1/ref/settings/#login-url.
-LOGOUT_REDIRECT_URL = (
-    "/home/"  # https://docs.djangoproject.com/es/5.1/ref/settings/#logout-redirect-url.
+LOGIN_REDIRECT_URL = (
+    "/blog/"  # https://docs.djangoproject.com/es/5.1/ref/settings/#login-redirect-url.
 )
+LOGOUT_REDIRECT_URL = "/login/"  # https://docs.djangoproject.com/es/5.1/ref/settings/#logout-redirect-url.
 PASSWORD_RESET_TIMEOUT = 259200  # https://docs.djangoproject.com/es/5.1/ref/settings/#password-reset-timeout.
 PASSWORD_HASHERS = (
     "django.contrib.auth.hashers.PBKDF2PasswordHasher",
