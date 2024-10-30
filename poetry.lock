@@ -598,6 +598,20 @@ files = [
 Django = ">=4.2"
 
 [[package]]
+name = "django-formtools"
+version = "2.5.1"
+description = "A set of high-level abstractions for Django forms"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "django-formtools-2.5.1.tar.gz", hash = "sha256:47cb34552c6efca088863d693284d04fc36eaaf350eb21e1a1d935e0df523c93"},
+    {file = "django_formtools-2.5.1-py3-none-any.whl", hash = "sha256:bce9b64eda52cc1eef6961cc649cf75aacd1a707c2fff08d6c3efcbc8e7e761a"},
+]
+
+[package.dependencies]
+Django = ">=3.2"
+
+[[package]]
 name = "django-markdownx"
 version = "4.0.7"
 description = "A comprehensive Markdown editor built for Django."
@@ -612,6 +626,70 @@ files = [
 Django = "*"
 Markdown = "*"
 Pillow = "*"
+
+[[package]]
+name = "django-otp"
+version = "1.5.4"
+description = "A pluggable framework for adding two-factor authentication to Django using one-time passwords."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "django_otp-1.5.4-py3-none-any.whl", hash = "sha256:783dea669ac0eaf5cd336f73839443584ee665af427a84175cca5a9d620366db"},
+    {file = "django_otp-1.5.4.tar.gz", hash = "sha256:0d9497ea4fb13fc04d50b49aa53dd1c740fe4bc5dde0ca27fb394f84e5da7bac"},
+]
+
+[package.dependencies]
+django = ">=3.2"
+
+[package.extras]
+qrcode = ["qrcode"]
+segno = ["segno"]
+
+[[package]]
+name = "django-phonenumber-field"
+version = "8.0.0"
+description = "An international phone number field for django models."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "django_phonenumber_field-8.0.0-py3-none-any.whl", hash = "sha256:196c917b70c01a98e327f482eb8a4a4a55a29891db551f99078585397370b3ba"},
+    {file = "django_phonenumber_field-8.0.0.tar.gz", hash = "sha256:8a560fe1b01b94c9de8cde22bc373b695f023cc6df4baba00264cb079da9f631"},
+]
+
+[package.dependencies]
+Django = ">=3.2"
+
+[package.extras]
+phonenumbers = ["phonenumbers (>=7.0.2)"]
+phonenumberslite = ["phonenumberslite (>=7.0.2)"]
+
+[[package]]
+name = "django-two-factor-auth"
+version = "1.17.0"
+description = "Complete Two-Factor Authentication for Django"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "django_two_factor_auth-1.17.0-py3-none-any.whl", hash = "sha256:622e78b0d6cf12eeafa239665d99c1221c399228f2f902fe478aea7759995e0e"},
+    {file = "django_two_factor_auth-1.17.0.tar.gz", hash = "sha256:a2dcc3efedd0ce4b4c14d389766c9fd8e13cabdff5e4e1b645adeb650c550cf7"},
+]
+
+[package.dependencies]
+Django = ">=4.2"
+django-formtools = "*"
+django_otp = ">=0.8.0"
+django-phonenumber-field = "<9"
+qrcode = ">=4.0.0,<7.99"
+
+[package.extras]
+call = ["twilio (>=6.0)"]
+linting = ["isort (<=5.99)", "ruff"]
+phonenumbers = ["phonenumbers (>=7.0.9,<8.99)"]
+phonenumberslite = ["phonenumberslite (>=7.0.9,<8.99)"]
+sms = ["twilio (>=6.0)"]
+tests = ["coverage", "freezegun", "tox"]
+webauthn = ["webauthn (>=2.0,<2.99)"]
+yubikey = ["django-otp-yubikey"]
 
 [[package]]
 name = "djangorestframework"
@@ -1483,6 +1561,17 @@ files = [
 pylint = ">=1.7"
 
 [[package]]
+name = "pypng"
+version = "0.20220715.0"
+description = "Pure Python library for saving and loading PNG images"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pypng-0.20220715.0-py3-none-any.whl", hash = "sha256:4a43e969b8f5aaafb2a415536c1a8ec7e341cd6a3f957fd5b5f32a4cfeed902c"},
+    {file = "pypng-0.20220715.0.tar.gz", hash = "sha256:739c433ba96f078315de54c0db975aee537cbc3e1d0ae4ed9aab0ca1e427e2c1"},
+]
+
+[[package]]
 name = "pyproject-hooks"
 version = "1.2.0"
 description = "Wrappers to call pyproject.toml-based build backend hooks."
@@ -1579,6 +1668,29 @@ files = [
     {file = "PyYAML-6.0.2-cp39-cp39-win_amd64.whl", hash = "sha256:39693e1f8320ae4f43943590b49779ffb98acb81f788220ea932a6b6c51004d8"},
     {file = "pyyaml-6.0.2.tar.gz", hash = "sha256:d584d9ec91ad65861cc08d42e834324ef890a082e591037abe114850ff7bbc3e"},
 ]
+
+[[package]]
+name = "qrcode"
+version = "7.4.2"
+description = "QR Code image generator"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "qrcode-7.4.2-py3-none-any.whl", hash = "sha256:581dca7a029bcb2deef5d01068e39093e80ef00b4a61098a2182eac59d01643a"},
+    {file = "qrcode-7.4.2.tar.gz", hash = "sha256:9dd969454827e127dbd93696b20747239e6d540e082937c90f14ac95b30f5845"},
+]
+
+[package.dependencies]
+colorama = {version = "*", markers = "platform_system == \"Windows\""}
+pypng = "*"
+typing-extensions = "*"
+
+[package.extras]
+all = ["pillow (>=9.1.0)", "pytest", "pytest-cov", "tox", "zest.releaser[recommended]"]
+dev = ["pytest", "pytest-cov", "tox"]
+maintainer = ["zest.releaser[recommended]"]
+pil = ["pillow (>=9.1.0)"]
+test = ["coverage", "pytest"]
 
 [[package]]
 name = "rapidfuzz"
@@ -1972,4 +2084,4 @@ test = ["pytest"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "355a1567e75de15e57b5898c2f908696eaed5ad142142b104ea85ddbb1fa21c9"
+content-hash = "d87fbafd69c4200b33111a3a215bd9beedc4451f3632c0d05bc93c476919e1ef"

@@ -91,7 +91,8 @@ INSTALLED_APPS = DJANGO_DEFAULT_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
+    # "django.contrib.sessions.middleware.SessionMiddleware",
+    "conscious_element.session_middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -163,6 +164,23 @@ PASSWORD_HASHERS = (
     "django.contrib.auth.hashers.ScryptPasswordHasher",
 )  # https://docs.djangoproject.com/es/5.1/ref/settings/#password-hashers.
 
+# SECURITY =============================================================================================================
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = ()
+X_FRAME_OPTIONS = "DENY"
+
+# SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https") # https://docs.djangoproject.com/en/dev/ref/settings/#secure-proxy-ssl-header.
+# SECURE_SSL_REDIRECT = True # https://docs.djangoproject.com/en/5.1/ref/settings/#secure-ssl-redirect.
+
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # https://docs.djangoproject.com/en/5.1/ref/settings/#secure-hsts-include-subdomains.
+SECURE_HSTS_PRELOAD = (
+    True  # https://docs.djangoproject.com/en/5.1/ref/settings/#secure-hsts-preload.
+)
+SECURE_HSTS_SECONDS = "2,592,000"  # https://docs.djangoproject.com/en/5.1/ref/settings/#secure-hsts-seconds
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = False if DEBUG else True
+
 
 # INTERNATIONALIZATION =================================================================================================
 LANGUAGE_CODE = (
@@ -183,11 +201,11 @@ STATIC_URL = (
     "/static/"  # https://docs.djangoproject.com/es/5.1/ref/settings/#static-url.
 )
 MEDIA_URL = "/media/"
-STATIC_ROOT = "cryptek/static"
+STATIC_ROOT = os.path.join(BASE_DIR, "cryptek/static")
 MEDIA_ROOT = "cryptek/media"
-STATICFILES_DIRS = [
-    BASE_DIR / "/static/",
-]
+# STATICFILES_DIRS = [
+#     BASE_DIR / "/static/",
+# ]
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
@@ -211,6 +229,12 @@ DEFAULT_CHARSET = (
 )
 
 # EMAIL CONFIGURATION. https://docs.djangoproject.com/es/5.1/ref/settings/#default-from-email. =========================
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = env.str("EMAIL_HOST")
+EMAIL_PORT = env.int("EMAIL_PORT")
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = env.str("EMAIL_USERNAME")
+EMAIL_HOST_PASSWORD = env.str("EMAIL_PASSWORD")
 
 # MESSAGES. https://docs.djangoproject.com/es/5.1/ref/settings/#messages. ==============================================
 MESSAGE_TAGS = {
@@ -222,3 +246,4 @@ MESSAGE_TAGS = {
 }
 
 # SESSIONS. https://docs.djangoproject.com/es/5.1/ref/settings/#sessions. ==============================================
+SESSION_ENGINE = "conscious_element.backends"

@@ -33,6 +33,7 @@ sitemaps = {
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("account/", include("conscious_element.urls")),
     path(
         "sitemap.xml",
         sitemap,
