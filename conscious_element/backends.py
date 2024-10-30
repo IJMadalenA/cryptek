@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib import auth
 from django.contrib.sessions.backends.db import SessionStore as DBStore
 
@@ -7,11 +9,18 @@ class SessionStore(DBStore):
     Implements database session store.
     """
 
-    def __init__(self, session_key=None, user_agent=None, ip=None):
+    def __init__(
+            self, session_key=None, user_agent=None, ip=None, referer=None, accept_language=None, request_path=None,
+            timestamp=None
+            ):
         super().__init__(session_key)
         # Truncate user_agent string to max_length of the CharField
         self.user_agent = user_agent[:200] if user_agent else user_agent
         self.ip = ip
+        self.referer = referer[:200] if referer else referer
+        self.accept_language = accept_language[:200] if accept_language else accept_language
+        self.request_path = request_path
+        self.timestamp = timestamp if timestamp else datetime.datetime.now()
         self.user_id = None
 
     # Used by superclass to get self.model, which is used elsewhere
@@ -54,6 +63,10 @@ class SessionStore(DBStore):
             user_agent=self.user_agent,
             user_id=self.user_id,
             ip=self.ip,
+            referer=self.referer,
+            accept_language=self.accept_language,
+            request_path=self.request_path,
+            timestamp=self.timestamp
         )
 
     def clear(self):

@@ -41,10 +41,13 @@ class SessionAdmin(admin.ModelAdmin):
         "location",
         "device",
     )
+    fields = (
+        ("user", "ip"), "user_agent", ("referer", "request_path"), "accept_language", "session_data", ("expire_date", "timestamp")
+    )
     search_fields = ()
     list_filter = ExpiredFilter, OwnerFilter
     exclude = ("session_key",)
-    readonly_fields = ("user", "user_agent", "ip")
+    readonly_fields = ("user", "ip", "user_agent", "referer", "accept_language", "session_data", "timestamp", "request_path")
 
     def get_search_fields(self, request):
         User = get_user_model()
