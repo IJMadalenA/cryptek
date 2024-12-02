@@ -33,9 +33,15 @@ class Session(AbstractBaseSession):
     user_agent = models.CharField(null=True, blank=True, max_length=200)
     last_activity = models.DateTimeField(auto_now=True)
     ip = models.GenericIPAddressField(null=True, blank=True, verbose_name="IP")
-    referer = models.CharField(null=True, blank=True, max_length=200, verbose_name="HTTP Referer")
-    accept_language = models.CharField(null=True, blank=True, max_length=200, verbose_name="Accept-Language")
-    request_path = models.CharField(null=True, blank=True, max_length=200, verbose_name="Request Path")
+    referer = models.CharField(
+        null=True, blank=True, max_length=200, verbose_name="HTTP Referer"
+    )
+    accept_language = models.CharField(
+        null=True, blank=True, max_length=200, verbose_name="Accept-Language"
+    )
+    request_path = models.CharField(
+        null=True, blank=True, max_length=200, verbose_name="Request Path"
+    )
     timestamp = models.DateTimeField(null=True, blank=True, verbose_name="Timestamp")
 
     objects = SessionManager()
