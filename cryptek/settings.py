@@ -170,6 +170,7 @@ SECURE_BROWSER_XSS_FILTER = ()
 X_FRAME_OPTIONS = "DENY"
 
 # SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https") # https://docs.djangoproject.com/en/dev/ref/settings/#secure-proxy-ssl-header.
+# automatically redirects requests over HTTP to HTTPS.
 # SECURE_SSL_REDIRECT = True # https://docs.djangoproject.com/en/5.1/ref/settings/#secure-ssl-redirect.
 
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # https://docs.djangoproject.com/en/5.1/ref/settings/#secure-hsts-include-subdomains.
