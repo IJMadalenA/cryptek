@@ -1,4 +1,5 @@
 from django.db.models import CASCADE, DateTimeField, ForeignKey, Model
+from django.db.models.fields import BooleanField
 
 from conscious_element.models.cryptek_user import CryptekUser
 
@@ -8,6 +9,7 @@ class Follow(Model):
     follower = ForeignKey(CryptekUser, on_delete=CASCADE, related_name="following")
     following = ForeignKey(CryptekUser, on_delete=CASCADE, related_name="followers")
     created_at = DateTimeField(auto_now_add=True)
+    active = BooleanField(default=True)
 
     class Meta:
         unique_together = ("follower", "following")

@@ -25,6 +25,7 @@ from django.views.generic import RedirectView
 from conscious_element.views.about_me import about_me
 from conscious_element.views.login_view import CustomLoginView
 from conscious_element.views.logout_view import CustomLogoutView
+from cryptek.csp_report_view import csp_report_view
 from library_tomb.sitemaps import PostSitemap
 
 sitemaps = {
@@ -47,6 +48,7 @@ urlpatterns = [
     path("blog/", include("library_tomb.urls"), name="blog"),
     path("markdownx/", include("markdownx.urls")),
     path("about/", about_me, name="about_me"),
+    path("csp-violations/", csp_report_view, name="csp_report_view"),
 ]
 
 if settings.DEBUG:

@@ -76,6 +76,7 @@ DJANGO_DEFAULT_APPS = [
     "django.contrib.sitemaps",
 ]
 THIRD_PARTY_APPS = [
+    "csp",
     "rest_framework",
     "django_filters",
     "markdownx",
@@ -98,6 +99,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "csp.middleware.CSPMiddleware",
 ]  # https://docs.djangoproject.com/es/5.1/ref/settings/#middleware.
 
 ROOT_URLCONF = "cryptek.urls"
@@ -169,6 +171,65 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = ()
 X_FRAME_OPTIONS = "DENY"
 
+# CSP - CONTENT SECURITY POLICY.
+CSP_REPORT_ONLY = True
+CSP_REPORT_URI = "/csp-violations/"
+CCONTENT_SECURITY_POLICY = {
+    "EXCLUDE_URL_PREFIXES": ["/admin/"],
+    "directives": {
+        # General content
+        "default-src": (
+            "'self'",
+            "'unsafe-inline'",  # Temporarily allow inline styling
+            "http://localhost:8000/*",
+            "https://fonts.googleapis.com",
+            "https://maxcdn.bootstrapcdn.com",
+        ),
+        "base-uri": ("'self'",),
+        "form-action": ("'self'",),
+        "child-src": ("'self'",),
+        "connect-src": ("'self'",),
+        # Allow image and media sources
+        "img-src": ("'self'", "data:"),
+        "media-src": ("'self'",),
+        "disposition": ("'self'",),
+        # Fonts and Styles Configuration
+        "font-src": (
+            "'self'",
+            "http://localhost:8000/*",
+            "https://fonts.gstatic.com",  # Required for Google Fonts
+            "data:",  # To allow inline base64 fonts if used
+        ),
+        "style-src": (
+            "'self'",
+            "'unsafe-inline'",  # Needed if you can't avoid inline styles
+            "http://localhost:8000/*",
+            "https://fonts.googleapis.com",  # Google Fonts stylesheets
+            "https://maxcdn.bootstrapcdn.com",  # Bootstrap stylesheets
+        ),
+        "style-src-elem": (
+            "'self'",
+            "'unsafe-inline'",  # Temporarily allow inline styling
+            "http://localhost:8000/*",
+            "https://fonts.googleapis.com",
+            "https://maxcdn.bootstrapcdn.com",
+        ),
+        "effective-directive": (
+            "style-src-elem",
+            "http://localhost:8000/*",
+        ),
+        "original-policy": (
+            "'self'",
+            "'unsafe-inline'",  # Temporarily allow inline styling
+            "http://localhost:8000/*",
+            "https://fonts.googleapis.com",
+            "https://maxcdn.bootstrapcdn.com",
+        ),
+        # Scripts
+        "script-src": ("'self'",),
+    },
+}
+
 # SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https") # https://docs.djangoproject.com/en/dev/ref/settings/#secure-proxy-ssl-header.
 # automatically redirects requests over HTTP to HTTPS.
 # SECURE_SSL_REDIRECT = True # https://docs.djangoproject.com/en/5.1/ref/settings/#secure-ssl-redirect.
@@ -228,6 +289,31 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 DEFAULT_CHARSET = (
     "utf-8"  # https://docs.djangoproject.com/es/5.1/ref/settings/#default-charset.
 )
+
+# LOGGING CONFIGURATION. https://docs.djangoproject.com/es/5.1/ref/settings/#logging ===================================
+# https://docs.djangoproject.com/es/5.1/topics/logging/#configuring-logging
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "file": {
+            "level": "WARNING",
+            "class": "logging.FileHandler",
+            "filename": "csp_violations.log",
+        },
+        "console": {
+            "level": "WARNING",
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "django_csp": {
+            "handlers": ["file", "console"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+    },
+}
 
 # EMAIL CONFIGURATION. https://docs.djangoproject.com/es/5.1/ref/settings/#default-from-email. =========================
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

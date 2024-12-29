@@ -35,7 +35,7 @@ class Post(Model):
         choices=STATUS,
         default=0,
     )
-    featured = BooleanField()
+    featured = BooleanField(default=False)
     publish_date = DateTimeField(blank=True, null=True)
     header_image = ImageField(upload_to="header_images/", blank=True, null=True)
     slug = SlugField(
