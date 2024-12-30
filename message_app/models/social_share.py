@@ -9,5 +9,5 @@ class SocialShare(Model):
     platform = CharField(max_length=100)  # e.g., 'Facebook', 'Twitter', etc.
     share_count = IntegerField(default=0)
 
-    def str(self):
+    def __str__(self):
         return f"{self.post.title} shared on {self.platform}"

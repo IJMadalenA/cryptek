@@ -10,5 +10,5 @@ class Notification(Model):
     is_read = BooleanField(default=False)
     created_at = DateTimeField(auto_now_add=True)
 
-    def str(self):
+    def __str__(self):
         return f"Notification for {self.user}"
