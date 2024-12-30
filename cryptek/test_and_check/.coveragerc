@@ -1,0 +1,34 @@
+# .coveragerc to control coverage.py
+
+[run]
+branch = True
+
+data_file = ./.coverage
+
+cover_pylib = False
+
+command_line = manage.py test --verbosity=0
+
+omit = */migrations/*, */tests/*, .env, */manage.py
+
+source = ./
+
+parallel = True
+
+sigterm = True
+
+[report]
+fail_under = 85
+
+precision = 2
+
+show_missing = True
+
+skip_covered = True
+
+skip_empty = True
+
+sort = Cover
+
+[html]
+directory = ./cryptek/test_and_check/coverage_report
