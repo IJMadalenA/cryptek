@@ -10,5 +10,5 @@ class AuditLog(Model):
     action = TextField()
     action_date = DateTimeField(auto_now_add=True)
 
-    def str(self):
+    def __str__(self):
         return f"Audit log for {self.user.username}"
