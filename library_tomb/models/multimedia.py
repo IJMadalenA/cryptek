@@ -9,5 +9,5 @@ class Multimedia(Model):
     file = FileField(upload_to="media/")
     media_type = CharField(max_length=50)  # e.g., 'image', 'video', 'audio'
 
-    def str(self):
+    def __str__(self):
         return f"Media for {self.post.title}"

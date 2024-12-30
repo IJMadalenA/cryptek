@@ -9,5 +9,8 @@ class Like(Model):
     user = ForeignKey(CryptekUser, on_delete=CASCADE, related_name="likes")
     created_at = DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"{self.user} likes {self.post}"
+
     class Meta:
         unique_together = ("post", "user")

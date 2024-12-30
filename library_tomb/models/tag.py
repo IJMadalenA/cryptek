@@ -5,5 +5,5 @@ from django.db.models import CharField, Model
 class Tag(Model):
     name = CharField(max_length=100, unique=True)
 
-    def str(self):
+    def __str__(self):
         return self.name

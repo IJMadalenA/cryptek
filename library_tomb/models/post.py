@@ -55,8 +55,8 @@ class Post(Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
-        if not self.author:
-            self.author = CryptekUser.objects.first()
+        if not self.author or self.author.is_anonymous:
+            self.author = kwargs.get("user", self.author)
         super().save(*args, **kwargs)
 
 
@@ -66,7 +66,7 @@ class PostVersion(Model):
     content = TextField()
     version_date = DateTimeField(auto_now_add=True)
 
-    def str(self):
+    def __str__(self):
         return f"Version of {self.post.title} at {self.version_date}"
 
 
@@ -76,7 +76,7 @@ class PostReaction(Model):
     user = ForeignKey(CryptekUser, on_delete=CASCADE, related_name="reactions")
     reaction = CharField(max_length=50)  # e.g., 'like', 'love', 'haha', etc.
 
-    def str(self):
+    def __str__(self):
         return f"{self.user} reacted to {self.post} with {self.reaction}"
 
 
@@ -86,5 +86,5 @@ class PostAnalytics(Model):
     views = IntegerField(default=0)
     read_time = IntegerField(default=0)  # in seconds
 
-    def str(self):
+    def __str__(self):
         return f"Analytics for {self.post.title}"

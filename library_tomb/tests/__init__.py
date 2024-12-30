@@ -1,1 +1,1 @@
-from .factory_test import *
+from .factory_tests import *

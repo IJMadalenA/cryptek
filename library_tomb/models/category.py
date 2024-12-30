@@ -9,5 +9,5 @@ class Category(Model):
     slug = SlugField()
     thumbnail = ImageField()
 
-    def str(self):
+    def __str__(self):
         return self.name
