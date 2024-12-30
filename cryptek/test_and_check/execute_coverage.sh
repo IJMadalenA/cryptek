@@ -12,35 +12,29 @@ function error_and_exit {
     echo "ERROR: $1"
     exit 1
 }
-
-# Run coverage commands and handle errors
 function run_coverage {
-    coverage run --rcfile=$COVERAGERC_FILE_PATH manage.py test --parallel -v=0 --no-color ||
-    error_and_exit "Tests failed. Cannot proceed."
+    coverage erase || error_and_exit "Failed to clean up the old coverage files."
+#     TODO: add a test report into the log file. Register the number of test failed, time, ect.
+    coverage run --rcfile=$COVERAGERC_FILE_PATH manage.py test --timing|| error_and_exit "Tests failed. Cannot proceed."
+    coverage run --rcfile=$COVERAGERC_FILE_PATH manage.py test --timing --reverse || error_and_exit "Tests failed. Cannot proceed."
+    coverage run --rcfile=$COVERAGERC_FILE_PATH manage.py test --timing --shuffle || error_and_exit "Tests failed. Cannot proceed."
+    coverage run --rcfile=$COVERAGERC_FILE_PATH  manage.py check
+    coverage combine --quiet || error_and_exit "Failed to combine coverage data within the directory: $OUTPUT_FILE_PATH."
+    COVERAGE_REPORT=$(coverage report --rcfile=$COVERAGERC_FILE_PATH || echo "The coverage report has FAILED.")
+    coverage html  --directory=./cryptek/test_and_check/html_report --quiet || echo "Failed to generate HTML coverage report."
+    coverage erase || error_and_exit "Failed to clean up the new coverage files."
 
-    coverage combine --rcfile=$COVERAGERC_FILE_PATH ||
-    error_and_exit "Failed to combine coverage data within the directory: $OUTPUT_FILE_PATH."
-
-    COVERAGE_REPORT=$(coverage report --rcfile=$COVERAGERC_FILE_PATH ||
-    echo "The coverage report has FAILED.")
-
-    coverage html --rcfile=$COVERAGERC_FILE_PATH ||
-    coverage erase && echo "Failed to generate HTML coverage report."
-
-    coverage erase || error_and_exit "Failed to clean up coverage files."
+    echo "${COVERAGE_REPORT}"
 }
-
 function run_check {
     local TAGS=(
         "admin" "caches" "compatibility" "files"
         "staticfiles" "templates" "translation"
         "models" "security" "database" "urls"
     )
-
     CHECK_OUTPUT=""
     for tag in "${TAGS[@]}"; do
         TAG_OUTPUT=$(python manage.py check --verbosity=3 --fail-level=WARNING --tag "$tag" 2>&1)
-
         if [[ "$TAG_OUTPUT" == *"System check identified no issues"* ]]; then
             CHECK_OUTPUT+="Check $tag: SUCCESS\n"
         else
@@ -79,7 +73,6 @@ function generate_log_file {
     TOTAL_UNCOVERED_FILES=$(echo "$COVERAGE_REPORT" | awk '$6 > "0.00%" {count++} END {print count+1}')
     UNCOVERED_FILES=$(echo "$COVERAGE_REPORT" | awk '$6 == "0.00%" {count++} END {print count+0}')
     PARTIAL_UNCOVERED_FILES=$((TOTAL_UNCOVERED_FILES - UNCOVERED_FILES))
-
 {
         echo "================= EXECUTION SUMMARY ================="
         echo "Execution Date: $(date "+%Y-%m-%d %H:%M:%S")"
@@ -97,7 +90,6 @@ function generate_log_file {
     } >> "$COVERAGE_LOG_FILE"
     echo "Log has been written to $COVERAGE_LOG_FILE"
 }
-
 # Main script execution
 cd ../.. || error_and_exit "Failed to navigate to project root directory."
 

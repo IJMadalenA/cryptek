@@ -20,6 +20,8 @@ sigterm = True
 [report]
 fail_under = 85
 
+format = markdown
+
 precision = 2
 
 show_missing = True
@@ -31,4 +33,4 @@ skip_empty = True
 sort = Cover
 
 [html]
-directory = ./cryptek/test_and_check/coverage_report
+directory = cryptek/test_and_check/coverage_report/
