@@ -10,5 +10,5 @@ class Profile(Model):
     bio = TextField(blank=True)
     avatar = ImageField(upload_to="avatars/", blank=True, null=True)
 
-    def str(self):
+    def __str__(self):
         return f"{self.user.username} Profile"

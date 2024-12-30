@@ -50,3 +50,6 @@ class Session(AbstractBaseSession):
     @classmethod
     def get_session_store_class(cls):
         return SessionStore
+
+    def __str__(self):
+        return f"{self.user} - {self.ip}"
