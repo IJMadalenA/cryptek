@@ -25,8 +25,14 @@ class SessionsFactoryTestCase(BaseFactoryTest):
     def test_get_session_store_class_returns_correct_class(self):
         result = self.Meta.factory._meta.model.get_session_store_class()
         expected = SessionStore
-        self.assertEqual(result, expected, "The method did not return SessionStore class.")
-        self.assertIsInstance(result(), SessionStore, "The method did not return an instance of SessionStore class.")
+        self.assertEqual(
+            result, expected, "The method did not return SessionStore class."
+        )
+        self.assertIsInstance(
+            result(),
+            SessionStore,
+            "The method did not return an instance of SessionStore class.",
+        )
 
     def test_get_session_store_class_returns_correct_store(self):
         store_class = self.Meta.factory._meta.model.get_session_store_class()

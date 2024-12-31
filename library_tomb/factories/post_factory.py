@@ -3,7 +3,8 @@ from factory import SubFactory, post_generation
 from factory.django import DjangoModelFactory
 
 from conscious_element.factory.cryptek_user_factory import CryptekUserFactory
-from library_tomb.models.post import Post, PostVersion, PostReaction, PostAnalytics
+from library_tomb.models.post import (Post, PostAnalytics, PostReaction,
+                                      PostVersion)
 
 
 class PostFactory(DjangoModelFactory):
@@ -24,6 +25,7 @@ class PostFactory(DjangoModelFactory):
 
 class PostVersionFactory(DjangoModelFactory):
     post = SubFactory(PostFactory)
+
     class Meta:
         model = PostVersion
 
@@ -31,11 +33,13 @@ class PostVersionFactory(DjangoModelFactory):
 class PostReactionFactory(DjangoModelFactory):
     user = SubFactory(CryptekUserFactory)
     post = SubFactory(PostFactory)
+
     class Meta:
         model = PostReaction
 
 
 class PostAnalyticsFactory(DjangoModelFactory):
     post = SubFactory(PostFactory)
+
     class Meta:
         model = PostAnalytics

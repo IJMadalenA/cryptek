@@ -3,8 +3,10 @@ from library_tomb.factories.category_factory import CategoryFactory
 from library_tomb.factories.comment_factory import CommentFactory
 from library_tomb.factories.like_factory import LikeFactory
 from library_tomb.factories.multimedia_factory import MultimediaFactory
-from library_tomb.factories.post_factory import PostFactory, PostVersionFactory, PostReactionFactory, \
-    PostAnalyticsFactory
+from library_tomb.factories.post_factory import (PostAnalyticsFactory,
+                                                 PostFactory,
+                                                 PostReactionFactory,
+                                                 PostVersionFactory)
 from library_tomb.factories.tag_factory import TagFactory
 
 
@@ -38,6 +40,7 @@ class PostFactoryTestCase(BaseFactoryTest):
     class Meta:
         factory = PostFactory
 
+
 class PostVersionFactoryTestCase(BaseFactoryTest):
     class Meta:
         factory = PostVersionFactory
@@ -47,9 +50,11 @@ class PostReactionFactoryTestCase(BaseFactoryTest):
     class Meta:
         factory = PostReactionFactory
 
+
 class PostAnalyticsFactoryTestCase(BaseFactoryTest):
     class Meta:
         factory = PostAnalyticsFactory
+
 
 class TagFactoryTestCase(BaseFactoryTest):
     class Meta:
