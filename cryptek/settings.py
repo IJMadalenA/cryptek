@@ -150,7 +150,10 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]  # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend"]
+AUTHENTICATION_BACKENDS = (
+    # "django.contrib.auth.backends.ModelBackend",
+    "cryptek.backends.EmailOrUsernameAuthenticationBackend",
+)
 AUTH_USER_MODEL = "conscious_element.CryptekUser"  # https://docs.djangoproject.com/es/5.1/ref/settings/#auth-user-model.
 LOGIN_URL = "/login/"  # https://docs.djangoproject.com/es/5.1/ref/settings/#login-url.
 LOGIN_REDIRECT_URL = (

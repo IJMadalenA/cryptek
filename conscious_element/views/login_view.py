@@ -1,9 +1,31 @@
 from django.contrib import messages
+from django.contrib.auth.forms import AuthenticationForm, UsernameField
 from django.contrib.auth.views import LoginView
+from django.forms.fields import CharField
+from django.forms.forms import Form
+from django.forms.widgets import PasswordInput, TextInput
 from django.urls import reverse_lazy
 
 
+class CustomLoginForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["username"].widget.attrs.update(
+            {
+                "placeholder": "Enter your username or email",
+                "class": "form-control",
+            }
+        )
+        self.fields["password"].widget.attrs.update(
+            {
+                "placeholder": "Enter your password",
+                "class": "form-control",
+            }
+        )
+
+
 class CustomLoginView(LoginView):
+    authentication_form = CustomLoginForm
     template_name = "login.html"
     success_url = reverse_lazy("blog/")
     redirect_authenticated_user = True
@@ -17,3 +39,8 @@ class CustomLoginView(LoginView):
     def form_invalid(self, form):
         messages.error(self.request, "Invalid username or password.")
         return super().form_invalid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["request"] = self.request
+        return kwargs
