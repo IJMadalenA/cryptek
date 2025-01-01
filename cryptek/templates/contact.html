@@ -2,22 +2,52 @@
 
 {% block content %}
     <div class="container mt-5">
-        <h2>Contact Me</h2>
-        <form method="post" novalidate>
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="id_name">Your Name:</label>
-                {{ form.name }}
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="text-center mb-4">Contact Me</h2>
+                <form method="post" novalidate class="shadow p-4 bg-white rounded">
+                    {% csrf_token %}
+                    {% if form.errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ form.errors }}
+                        </div>
+                    {% endif %}
+
+                    {% if user.is_authenticated %}
+                        <div class="form-group">
+                            <label for="id_full_name" class="font-weight-bold">Your Name:</label>
+                            <p id="id_full_name" class="form-control-plaintext">{{ user.first_name }} {{ user.last_name }}</p>
+                        </div>
+                    {% else %}
+                        <div class="form-group">
+                            <label for="id_first_name" class="font-weight-bold">Your First Name:</label>
+                            {{ form.first_name }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_last_name" class="font-weight-bold">Your Last Name:</label>
+                            {{ form.last_name }}
+                        </div>
+                    {% endif %}
+
+                    <div class="form-group">
+                        <label for="id_email" class="font-weight-bold">Your Email:</label>
+                        {% if user.is_authenticated %}
+                            <p id="id_email" class="form-control-plaintext">{{ user.email }}</p>
+                        {% else %}
+                            {{ form.email }}
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_message" class="font-weight-bold">Your Message:</label>
+                        {{ form.message }}
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Send</button>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label for="id_email">Your Email:</label>
-                {{ form.email }}
-            </div>
-            <div class="form-group">
-                <label for="id_message">Your Message:</label>
-                {{ form.message }}
-            </div>
-            <button type="submit" class="btn btn-primary">Send</button>
-        </form>
+        </div>
     </div>
 {% endblock %}
