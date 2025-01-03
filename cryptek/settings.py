@@ -319,7 +319,9 @@ LOGGING = {
 }
 
 # EMAIL CONFIGURATION. https://docs.djangoproject.com/es/5.1/ref/settings/#default-from-email. =========================
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+DEV_EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+PROD_EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_BACKEND = DEV_EMAIL_BACKEND if DEBUG else PROD_EMAIL_BACKEND
 EMAIL_HOST = env.str("EMAIL_HOST")
 EMAIL_PORT = env.int("EMAIL_PORT")
 EMAIL_USE_TLS = True

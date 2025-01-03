@@ -2,11 +2,6 @@
 
 {% block content %}
     <style>
-        body {
-            {#font-family: "Roboto", sans-serif;#}
-            {#font-size: 18px;#}
-            background-color: #f3fbf4;
-        }
         .login-container {
             max-width: 450px;
             margin: 50px auto;
@@ -19,9 +14,10 @@
             text-align: center;
             color: #185034;
         }
-        .btn-primary {
-            background-color: #185034;
-            border-color: #185034;
+        .btn-secondary {
+            background-color: #ffd700;
+            border-color: #ffd700;
+            color: black;
         }
         .form-control {
             border-radius: 20px;
@@ -32,12 +28,9 @@
         .form-group {
             margin-bottom: 0;
         }
-        .btn {
-            border-radius: 20px;
+        .btn-container {
+            text-align: center;
             margin-top: 20px;
-            width: 50%;
-            margin-left: auto;
-            margin-right: auto;
         }
     </style>
 
@@ -46,15 +39,32 @@
             <h2 class="login-title">Login to IJMadalenA Blog</h2>
             <form method="post" action="{% url 'login' %}">
                 {% csrf_token %}
+
                 <div class="form-group">
-                    <label for="id_username"></label><input type="text" id="id_username" name="username" class="form-control" placeholder="Enter your username or email" required>
+                    <label for="id_username"></label>
+                    <input type="text" id="id_username" name="username" class="form-control" placeholder="Enter your username or email" required>
                 </div>
+
                 <div class="form-group">
-                    <label for="id_password"></label><input type="password" id="id_password" name="password" class="form-control" placeholder="Enter your password" required>
+                    <label for="id_password"></label>
+                    <input type="password" id="id_password" name="password" class="form-control" placeholder="Enter your password" required>
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">Login</button>
+
+                <!-- Login Button -->
+                <div class="btn-container">
+                    <button type="submit" class="btn btn-primary btn-block btn-login">
+                        Login
+                    </button>
+                </div>
             </form>
+
+            <div class="btn-container">
+                <!-- Create Account Button -->
+                <a href="{% url 'create_account' %}" class="btn btn-secondary">
+                    Create Account
+                </a>
+            </div>
+
         </div>
     </div>
-
 {% endblock %}

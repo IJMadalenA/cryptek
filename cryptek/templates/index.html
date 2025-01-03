@@ -1,94 +1,111 @@
-{% extends "base.html" %}
+{% extends "base.html"%}
 {% block content %}
     <style>
-        body {
-            font-family: "Roboto", sans-serif;
-            font-size: 18px;
-            background-color: #f3fbf4;
-        }
-        .head_text {
-            color: #f3fbf4;
-        }
-        .card {
-            box-shadow: 0 16px 48px #e4ebe3;
-        }
-        .header-image {
+        .masthead {
             width: 100%;
-            height: auto;
+            background: #185034;
+            color: #fff;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: -webkit-center;
+            box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.1);
         }
+        .masthead .site-heading {
+            font-size: 2.5rem;
+            font-weight: bold;
+            line-height: 1.5;
+        }
+        .masthead .subheading {
+            font-size: 1.25rem;
+            color: #ddd;
+        }
+    /* Responsive fixes */
+    @media (max-width: 768px) {
+        .masthead h1 {
+            font-size: 1.8rem;
+        }
+
+        .masthead .subheading {
+            font-size: 1rem;
+        }
+    }
     </style>
 
     <header class="masthead">
-        <div class="overlay"></div>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8 col-md-10 mx-auto">
-                    <div class="site-heading">
-                        <h3 class="site-heading my-4 mt-3 text-white">Welcome to my Blog</h3>
-                        <p class="text-light">A humble blog developed with .</p>
-                    </div>
-                </div>
-            </div>
+        <div class="container-fluid">
+            <h1 class="site-heading">Welcome to My Blog</h1>
+            <p class="subheading">A humble blog developed with Django</p>
         </div>
     </header>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 mt-3 left">
-                {% for post in post_list %}
-                    <div class="card mb-4">
-                        {% if post.header_image %}
-                            <img src="{{ post.header_image.url }}" alt="Header Image" class="header-image">
+    <div class="container mt-4">
+        <div class="row g-3"> <!-- Add spacing between rows and columns -->
+            {% for entry in entry_list %}
+                <div class="col-lg-6 col-md-6 col-sm-12"> <!-- Two cards per row, stack on smaller devices -->
+                    <div class="card h-100 shadow-sm d-flex flex-column">
+                        <!-- Display post header image (if available) -->
+                        {% if entry.header_image %}
+                            <img src="{{ entry.header_image.url }}" class="card-img-top" alt="{{ entry.title }}">
                         {% endif %}
-                        <div class="card-body">
-                            <h2 class="card-title">{{ post.title }}</h2>
-                            <p class="card-text text-muted h6">{{ post.author }} | {{ post.created_at }}</p>
-                            <p class="card-text">{{ post.overview }}</p>
-                            <a href="{% url 'post_detail' post.slug %}" class="btn btn-primary">Read More &rarr;</a>
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <div>
+                                <h5 class="card-title font-weight-bold">{{ entry.title }}</h5>
+                                <p class="card-text text-muted small">
+                                    By {{ entry.author }} | {{ entry.created_at }}
+                                </p>
+                                <p class="card-text">{{ entry.overview }}</p>
+                            </div>
+                            <a href="{% url 'entry_detail' entry.slug %}" class="btn btn-primary mt-auto">
+                                Read More →
+                            </a>
                         </div>
                     </div>
-                {% endfor %}
-            </div>
-            {% block sidebar %} {% include 'sidebar.html' %} {% endblock sidebar %}
+                </div>
+            {% endfor %}
         </div>
-    </div>
 
-    {% if is_paginated %}
-        <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center">
-                {% if page_obj.has_previous %}
-                    <li class="page-item">
-                        <a href="?page={{ page_obj.previous_page_number }}" class="page-link" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                    </li>
-                {% endif %}
+        <!-- If no entries are available -->
+        {% if not entry_list %}
+            <div class="text-center mt-4">
+                <h4 class="text-muted">No entries available</h4>
+                <p class="lead text-muted">Please check back later!</p>
+            </div>
+        {% endif %}
 
-                {% for page_num in page_obj.paginator.page_range %}
-                    {% if page_num == page_obj.number %}
-                        <li class="page-item active" aria-current="page">
-                            <span class="page-link">
-                                {{ page_num }}
-                                <span class="sr-only">(current)</span>
-                            </span>
-                        </li>
-                    {% elif page_num > page_obj.number|add:'-3' and page_num < page_obj.number|add:'3' %}
+        <!-- Pagination -->
+        {% if is_paginated %}
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
                         <li class="page-item">
-                            <a href="?page={{ page_num }}" class="page-link">{{ page_num }}</a>
+                            <a href="?page={{ page_obj.previous_page_number }}" class="page-link" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
                         </li>
                     {% endif %}
-                {% endfor %}
 
-                {% if page_obj.has_next %}
-                    <li class="page-item">
-                        <a href="?page={{ page_obj.next_page_number }}" class="page-link" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </li>
-                {% endif %}
-            </ul>
-        </nav>
-    {% endif %}
+                    {% for page_num in page_obj.paginator.page_range %}
+                        {% if page_num == page_obj.number %}
+                            <li class="page-item active" aria-current="page">
+                                <span class="page-link">{{ page_num }}</span>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a href="?page={{ page_num }}" class="page-link">{{ page_num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a href="?page={{ page_obj.next_page_number }}" class="page-link" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+
 {% endblock %}
