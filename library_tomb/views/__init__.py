@@ -1,2 +1,2 @@
-from .post_view import PostDetail, PostList
+from .entry_view import EntryDetail, EntryList
 from .search_view import PostListView

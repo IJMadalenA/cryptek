@@ -9,6 +9,7 @@ from markdownx.models import MarkdownxField
 from conscious_element.models.cryptek_user import CryptekUser
 from library_tomb.models.category import Category
 from library_tomb.models.tag import Tag
+from log_recorder_app import models
 
 STATUS = (
     (0, "Draft"),
@@ -17,8 +18,8 @@ STATUS = (
 )
 
 
-# Post model
-class Post(Model):
+# Entry model
+class Entry(Model):
     title = CharField(max_length=200)
     content = MarkdownxField()
     overview = TextField(
@@ -26,9 +27,9 @@ class Post(Model):
         null=True,
         max_length=200,
     )
-    author = ForeignKey(CryptekUser, on_delete=CASCADE, related_name="posts")
-    categories = ManyToManyField(Category, related_name="posts", blank=True)
-    tags = ManyToManyField(Tag, related_name="posts", blank=True)
+    author = ForeignKey(CryptekUser, on_delete=CASCADE, related_name="entries")
+    categories = ManyToManyField(Category, related_name="entries", blank=True)
+    tags = ManyToManyField(Tag, related_name="entries", blank=True)
     created_at = DateTimeField(auto_now_add=True)
     updated_at = DateTimeField(auto_now=True)
     status = IntegerField(
@@ -45,12 +46,14 @@ class Post(Model):
 
     class Meta:
         ordering = ["-created_at"]
+        verbose_name_plural = "Entries"
+        get_latest_by = "created_at"
 
     def __str__(self):
         return self.title
 
     def get_absolute_url(self):
-        return reverse("post_detail", kwargs={"slug": self.slug})
+        return reverse("entry_detail", kwargs={"slug": self.slug})
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -60,31 +63,31 @@ class Post(Model):
         super().save(*args, **kwargs)
 
 
-# PostVersion model
-class PostVersion(Model):
-    post = ForeignKey(Post, on_delete=CASCADE, related_name="versions")
+# EntryVersion model
+class EntryVersion(Model):
+    entry = ForeignKey(Entry, on_delete=CASCADE, related_name="versions")
     content = TextField()
     version_date = DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Version of {self.post.title} at {self.version_date}"
+        return f"Version of {self.entry.title} at {self.version_date}"
 
 
-# PostReactions model
-class PostReaction(Model):
-    post = ForeignKey(Post, on_delete=CASCADE, related_name="reactions")
+# EntryReactions model
+class EntryReaction(Model):
+    entry = ForeignKey(Entry, on_delete=CASCADE, related_name="reactions")
     user = ForeignKey(CryptekUser, on_delete=CASCADE, related_name="reactions")
     reaction = CharField(max_length=50)  # e.g., 'like', 'love', 'haha', etc.
 
     def __str__(self):
-        return f"{self.user} reacted to {self.post} with {self.reaction}"
+        return f"{self.user} reacted to {self.entry} with {self.reaction}"
 
 
-# PostAnalytics model
-class PostAnalytics(Model):
-    post = OneToOneField(Post, on_delete=CASCADE, related_name="analytics")
+# EntryAnalytics model
+class EntryAnalytics(Model):
+    entry = OneToOneField(Entry, on_delete=CASCADE, related_name="analytics")
     views = IntegerField(default=0)
     read_time = IntegerField(default=0)  # in seconds
 
     def __str__(self):
-        return f"Analytics for {self.post.title}"
+        return f"Analytics for {self.entry.title}"

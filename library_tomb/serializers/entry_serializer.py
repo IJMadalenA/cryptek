@@ -1,10 +1,10 @@
 from rest_framework.fields import CharField, DateTimeField, ImageField
 from rest_framework.serializers import ModelSerializer
 
-from library_tomb.models.post import Post
+from library_tomb.models.entry import Entry
 
 
-class PostSerializerOut(ModelSerializer):
+class EntrySerializerOut(ModelSerializer):
     title = CharField(read_only=True)
     content = CharField(read_only=True)
     author = CharField(
@@ -18,7 +18,7 @@ class PostSerializerOut(ModelSerializer):
     header_image = ImageField(read_only=True)
 
     class Meta:
-        model = Post
+        model = Entry
         fields = (
             "title",
             "content",

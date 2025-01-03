@@ -3,10 +3,10 @@ from library_tomb.factories.category_factory import CategoryFactory
 from library_tomb.factories.comment_factory import CommentFactory
 from library_tomb.factories.like_factory import LikeFactory
 from library_tomb.factories.multimedia_factory import MultimediaFactory
-from library_tomb.factories.post_factory import (PostAnalyticsFactory,
-                                                 PostFactory,
-                                                 PostReactionFactory,
-                                                 PostVersionFactory)
+from library_tomb.factories.entry_factory import (EntryAnalyticsFactory,
+                                                  EntryFactory,
+                                                  EntryReactionFactory,
+                                                  EntryVersionFactory)
 from library_tomb.factories.tag_factory import TagFactory
 
 
@@ -33,27 +33,27 @@ class MultimediaFactoryTestCase(BaseFactoryTest):
 class PostFactoryTestCase(BaseFactoryTest):
 
     def test_get_absolute_url_method(self):
-        post = PostFactory(title="Test Post Title")  # Pass a title for slug generation
-        expected_url = f"/blog/{post.slug}/"
-        self.assertEqual(post.get_absolute_url(), expected_url)
+        entry = EntryFactory(title="Test Entry Title")  # Pass a title for slug generation
+        expected_url = f"/blog/{entry.slug}/"
+        self.assertEqual(entry.get_absolute_url(), expected_url)
 
     class Meta:
-        factory = PostFactory
+        factory = EntryFactory
 
 
 class PostVersionFactoryTestCase(BaseFactoryTest):
     class Meta:
-        factory = PostVersionFactory
+        factory = EntryVersionFactory
 
 
 class PostReactionFactoryTestCase(BaseFactoryTest):
     class Meta:
-        factory = PostReactionFactory
+        factory = EntryReactionFactory
 
 
 class PostAnalyticsFactoryTestCase(BaseFactoryTest):
     class Meta:
-        factory = PostAnalyticsFactory
+        factory = EntryAnalyticsFactory
 
 
 class TagFactoryTestCase(BaseFactoryTest):

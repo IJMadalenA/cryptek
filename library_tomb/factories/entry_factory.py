@@ -3,16 +3,16 @@ from factory import SubFactory, post_generation
 from factory.django import DjangoModelFactory
 
 from conscious_element.factory.cryptek_user_factory import CryptekUserFactory
-from library_tomb.models.post import (Post, PostAnalytics, PostReaction,
-                                      PostVersion)
+from library_tomb.models.entry import (Entry, EntryAnalytics, EntryReaction,
+                                       EntryVersion)
 
 
-class PostFactory(DjangoModelFactory):
+class EntryFactory(DjangoModelFactory):
     author = SubFactory(CryptekUserFactory)
     slug = None
 
     class Meta:
-        model = Post
+        model = Entry
 
     @post_generation
     def set_slug(self, create, extracted, **kwargs):
@@ -23,23 +23,23 @@ class PostFactory(DjangoModelFactory):
             self.save()
 
 
-class PostVersionFactory(DjangoModelFactory):
-    post = SubFactory(PostFactory)
+class EntryVersionFactory(DjangoModelFactory):
+    entry = SubFactory(EntryFactory)
 
     class Meta:
-        model = PostVersion
+        model = EntryVersion
 
 
-class PostReactionFactory(DjangoModelFactory):
+class EntryReactionFactory(DjangoModelFactory):
     user = SubFactory(CryptekUserFactory)
-    post = SubFactory(PostFactory)
+    entry = SubFactory(EntryFactory)
 
     class Meta:
-        model = PostReaction
+        model = EntryReaction
 
 
-class PostAnalyticsFactory(DjangoModelFactory):
-    post = SubFactory(PostFactory)
+class EntryAnalyticsFactory(DjangoModelFactory):
+    entry = SubFactory(EntryFactory)
 
     class Meta:
-        model = PostAnalytics
+        model = EntryAnalytics

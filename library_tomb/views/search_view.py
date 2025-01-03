@@ -3,14 +3,14 @@ from django.shortcuts import render
 from django.views.generic import ListView
 from django_filters import rest_framework as filters
 
-from library_tomb.models.post import Post
+from library_tomb.models.entry import Entry
 
 
 class PostFilter(filters.FilterSet):
     q = filters.CharFilter(method="filter_by_all", label="Search")
 
     class Meta:
-        model = Post
+        model = Entry
         fields = []
 
     def filter_by_all(self, queryset, name, value):
@@ -20,7 +20,7 @@ class PostFilter(filters.FilterSet):
 
 
 class PostListView(ListView):
-    model = Post
+    model = Entry
     template_name = "search_bar.html"
     context_object_name = "object_list"
     filterset_class = PostFilter

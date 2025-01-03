@@ -2,19 +2,19 @@ import logging
 
 from django.views.generic import DetailView, ListView
 
-from library_tomb.models.post import Post
-from library_tomb.serializers.post_serializer import PostSerializerOut
+from library_tomb.models.entry import Entry
+from library_tomb.serializers.entry_serializer import EntrySerializerOut
 
 logger = logging.getLogger(__name__)
 
 
-class PostList(ListView):
+class EntryList(ListView):
     """
-    Return all posts that are with status 1 (published) and order from the latest one.
+    Return all entries that are with status 1 (published) and order from the latest one.
     """
 
     queryset = (
-        Post.objects.defer(
+        Entry.objects.defer(
             "overview",
             "id",
             "slug",
@@ -27,27 +27,27 @@ class PostList(ListView):
         .order_by("-created_at")
     )
     template_name = "index.html"
-    paginate_by = 3
+    paginate_by = 4
 
 
-class PostDetail(DetailView):
+class EntryDetail(DetailView):
     """
-    Retrieve a post by its slug.
+    Retrieve a Entry by its slug.
     """
 
-    queryset = Post.objects.defer(
+    queryset = Entry.objects.defer(
         "overview",
         "id",
         "slug",
     ).filter(status=1)
-    template_name = "post_detail.html"
+    template_name = "entry_detail.html"
 
     def get_context_data(self, **kwargs):
         try:
             context = super().get_context_data(**kwargs)
-            del context["post"]
+            del context["entry"]
             del context["view"]
-            serializer = PostSerializerOut(data=context["object"].__dict__)
+            serializer = EntrySerializerOut(data=context["object"].__dict__)
             if serializer.is_valid():
                 return context
             else:
