@@ -1,0 +1,62 @@
+services:
+
+  database:
+    container_name: postgres-blog-db
+    build:
+      context: .
+      dockerfile: Dockerfile.db
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "psql pg_isready -U orikan_db_admin -d postgres-blog-db"]
+      interval: 7s
+      timeout: 14s
+      retries: 21
+    env_file:
+      - ../.env
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - blog_network
+
+  django:
+    build:
+      context: ../../cryptek
+      dockerfile: tesseract_vault/Dockerfile
+    container_name: django-blog
+    env_file:
+      - ../.env
+    expose:
+      - "5432"
+    ports:
+      - "8000:8000"
+    networks:
+      - blog_network
+    depends_on:
+      database:
+        condition: service_started
+      redis:
+        condition: service_started
+        
+  redis:
+    build:
+      context: .
+      dockerfile: Dockerfile.redis
+    container_name: redis-cache
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - blog_network
+    command: [ "redis-server", "--appendonly", "yes"]
+
+volumes:
+  postgres-data:
+  redis-data:
+
+networks:
+  blog_network:

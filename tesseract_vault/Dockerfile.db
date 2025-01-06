@@ -1,0 +1,13 @@
+FROM postgres:9-alpine3.15
+
+# Use official PostgreSQL image with Alpine
+FROM postgres:17.2-alpine
+
+# Metadata
+LABEL authors="ijmadalena"
+
+# Update the system.
+RUN apk update && apk upgrade
+
+## Copy initialization SQL script to Docker image
+#COPY init-database.sql /docker-entrypoint-initdb.d/
