@@ -1,0 +1,23 @@
+{% block contact_box %}
+    <div class="card shadow-sm contact-me">
+        <div class="card-body text-center">
+
+            <!-- Card Tittle. -->
+            <h5 class="card-title font-weight-bold">
+                Get in Touch.
+            </h5>
+
+            <!-- Card Text. -->
+            <p class="text-muted">
+                This blog is made on the top of our Favourite full stack Framework 'Django',
+                follow up the tutorial to learn how we made it..!
+            </p>
+
+            <!-- Card Button. -->
+            <a href="{% url 'contact' %}"
+               class="btn btn-success">Contact Me.
+            </a>
+
+        </div>
+    </div>
+{% endblock contact_box %}

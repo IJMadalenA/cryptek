@@ -4,10 +4,10 @@
 {% block title %}{{ category.title }}{% endblock %}
 
 {% block content %}
-   {% if posts %}
+   {% if entries %}
        <ul>
-       {% for post in posts %}
-           <li><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></li>
+       {% for entry in entries %}
+           <li><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></li>
        {% endfor %}
        </ul>
    {% else %}

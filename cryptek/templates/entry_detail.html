@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block content %}
+    <style>
+    .header-image {
+        width: 100%; /* Ensure the image takes the full width of its container */
+        height: auto;
+        margin-bottom: 20px;
+        border-radius: 24px;
+        display: block; /* Ensures the image is treated as a block element */
+        object-fit: cover; /* Ensures the image covers its container without distortion */
+    }
+    h1 {
+        font-size: 2em;
+        margin-bottom: 15px;
+        color: #333; /* Darker text color for contrast */
+    }
+    @media (max-width: 768px) {
+        .header-image {
+            width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+        }
+        .card-body {
+            padding: 10px;
+        }
+        h1 {
+            font-size: 1.5em; /* Smaller font size for titles on small screens */
+        }
+        .text-muted {
+            font-size: 0.8em; /* Smaller font size for metadata on small screens */
+        }
+        .card-text {
+            font-size: 1em; /* Smaller font size for content on small screens */
+        }
+    }
+</style>
+
+    <div class="container">
+        <div class="card mt-3 left top">
+            <div class="header-image">
+                {% if object.header_image %}
+                    <img src="{{ object.header_image.url }}" alt="Header Image" class="header-image">
+                {% endif %}
+            </div>
+
+            <div class="card-title">
+                <h1>
+                    {% block title %}
+                        {{ object.title }}
+                    {% endblock title %}
+                </h1>
+            </div>
+
+            <div class="card-subtitle">
+                <p class="text-muted">
+                    {{ object.author }} | {{ object.created_at | date:"d M Y" }}
+                </p>
+            </div>
+
+            <div class="card-body">
+                <p class="card-text">
+                    {{ object.content | safe }}
+                </p>
+            </div>
+
+        </div>
+    </div>
+{% endblock content %}
