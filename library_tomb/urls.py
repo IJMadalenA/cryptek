@@ -11,7 +11,7 @@ urlpatterns = [
     path("home/", views.EntryList.as_view(), name="home"),
     path("entry/<slug:slug>/", views.EntryDetail.as_view(), name="entry_detail"),
     path("<slug:slug>/", views.EntryDetail.as_view(), name="entry_detail"),
-    path('entry/<slug:slug>/comment/', CommentCreateView.as_view(), name='add_comment'),
+    path("entry/<slug:slug>/comment/", CommentCreateView.as_view(), name="add_comment"),
     path(
         "contact/success/",
         ContactSuccessView.as_view(),
