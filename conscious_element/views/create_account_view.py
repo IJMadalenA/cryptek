@@ -1,7 +1,7 @@
-from django.views.generic.edit import FormView
+from django.contrib import messages
 from django.contrib.auth import login
 from django.urls import reverse_lazy
-from django.contrib import messages
+from django.views.generic.edit import FormView
 
 from conscious_element.forms.create_account_form import CreateAccountForm
 

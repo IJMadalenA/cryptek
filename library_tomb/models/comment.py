@@ -14,6 +14,13 @@ class Comment(Model):
         null=False,
         blank=False,
     )
+    parent = ForeignKey(
+        "self",
+        on_delete=CASCADE,
+        related_name="replies",
+        null=True,
+        blank=True,
+    )
     user = ForeignKey(CryptekUser, on_delete=CASCADE, related_name="comments")
     content = TextField()
     created_at = DateTimeField(auto_now_add=True)

@@ -1,7 +1,9 @@
 import logging
 
 from django.views.generic import DetailView, ListView
+from django.views.generic.edit import FormMixin
 
+from library_tomb.forms.comment_form import CommentForm
 from library_tomb.models.entry import Entry
 from library_tomb.serializers.entry_serializer import EntrySerializerOut
 
@@ -30,17 +32,19 @@ class EntryList(ListView):
     paginate_by = 4
 
 
-class EntryDetail(DetailView):
+class EntryDetail(FormMixin, DetailView):
     """
-    Retrieve a Entry by its slug.
+    Retrieve an Entry by its slug.
     """
 
+    model = Entry
+    template_name = "entry_detail.html"
+    form_class = CommentForm
     queryset = Entry.objects.defer(
         "overview",
         "id",
         "slug",
     ).filter(status=1)
-    template_name = "entry_detail.html"
 
     def get_context_data(self, **kwargs):
         try:

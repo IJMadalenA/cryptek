@@ -1,21 +1,20 @@
 from django.urls import path
 
-from message_app.views.contact_me_view import ContactMeView
 from message_app.views.contact_success_view import ContactSuccessView
-
 from . import views
 from .sitemaps import EntrySitemap
+from .views import CommentCreateView
 
 sitemaps = {"entry-detail": EntrySitemap}
 urlpatterns = [
     path("", views.EntryList.as_view(), name="main_page"),
     path("home/", views.EntryList.as_view(), name="home"),
-    path("comments/<int:entry_id>/add/", views.CommentCreateView.as_view(), name="add_comments"),
-    path("contact/", ContactMeView.as_view(), name="contact"),
+    path("entry/<slug:slug>/", views.EntryDetail.as_view(), name="entry_detail"),
+    path("<slug:slug>/", views.EntryDetail.as_view(), name="entry_detail"),
+    path('entry/<slug:slug>/comment/', CommentCreateView.as_view(), name='add_comment'),
     path(
         "contact/success/",
         ContactSuccessView.as_view(),
         name="contact_success",
     ),
-    path("<slug:slug>/", views.EntryDetail.as_view(), name="entry_detail"),
 ]

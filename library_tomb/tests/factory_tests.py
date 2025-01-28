@@ -1,12 +1,12 @@
 from cryptek.qa_templates import BaseFactoryTest
 from library_tomb.factories.category_factory import CategoryFactory
 from library_tomb.factories.comment_factory import CommentFactory
-from library_tomb.factories.like_factory import LikeFactory
-from library_tomb.factories.multimedia_factory import MultimediaFactory
 from library_tomb.factories.entry_factory import (EntryAnalyticsFactory,
                                                   EntryFactory,
                                                   EntryReactionFactory,
                                                   EntryVersionFactory)
+from library_tomb.factories.like_factory import LikeFactory
+from library_tomb.factories.multimedia_factory import MultimediaFactory
 from library_tomb.factories.tag_factory import TagFactory
 
 
@@ -33,7 +33,9 @@ class MultimediaFactoryTestCase(BaseFactoryTest):
 class PostFactoryTestCase(BaseFactoryTest):
 
     def test_get_absolute_url_method(self):
-        entry = EntryFactory(title="Test Entry Title")  # Pass a title for slug generation
+        entry = EntryFactory(
+            title="Test Entry Title"
+        )  # Pass a title for slug generation
         expected_url = f"/blog/{entry.slug}/"
         self.assertEqual(entry.get_absolute_url(), expected_url)
 

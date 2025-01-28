@@ -27,6 +27,7 @@ from conscious_element.views.about_me import about_me
 from conscious_element.views.login_view import CustomLoginView
 from cryptek.csp_report_view import csp_report_view
 from library_tomb.sitemaps import EntrySitemap
+from message_app.views.contact_me_view import ContactMeView
 
 sitemaps = {
     "entries": EntrySitemap,
@@ -48,6 +49,7 @@ urlpatterns = [
     path("blog/", include("library_tomb.urls"), name="blog"),
     path("markdownx/", include("markdownx.urls")),
     path("about/", about_me, name="about_me"),
+    path("contact/", ContactMeView.as_view(), name="contact"),
     path("csp-violations/", csp_report_view, name="csp_report_view"),
 ]
 

@@ -20,6 +20,7 @@ class CategoryAdmin(ModelAdmin):
 class CommentAdmin(ModelAdmin):
     list_display = (
         "entry",
+        "parent",
         "user",
         "content",
         "created_at",
@@ -45,6 +46,7 @@ class LikeAdmin(ModelAdmin):
 @register(Multimedia)
 class MultimediaAdmin(ModelAdmin):
     pass
+
 
 @register(Entry)
 class EntryAdmin(MarkdownxModelAdmin):

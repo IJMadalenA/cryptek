@@ -24,6 +24,9 @@ Markdown = "^3.7"
 pillow = "^11.0.0"
 coverage = "^7.6.10"
 tblib = "^3.0.0"
+transformers = "^4.48.1"
+tensorflow = "^2.18.0"
+tf-keras = "^2.18.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.10.0"
