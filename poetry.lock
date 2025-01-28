@@ -599,6 +599,21 @@ jinja2 = ["jinja2 (>=2.9.6)"]
 tests = ["jinja2 (>=2.9.6)", "pytest", "pytest-cov", "pytest-django", "pytest-ruff"]
 
 [[package]]
+name = "django-debug-toolbar"
+version = "5.0.1"
+description = "A configurable set of panels that display various debug information about the current request/response."
+optional = false
+python-versions = ">=3.9"
+files = [
+    { file = "django_debug_toolbar-5.0.1-py3-none-any.whl", hash = "sha256:7456cc2e951db37dab335686db7803c4a0ecb6736d120705f6668db9548bf49f" },
+    { file = "django_debug_toolbar-5.0.1.tar.gz", hash = "sha256:296f6f18a80710e84fbb8361538ae5ec522a75ebe9ab67db34bcf1026cbeb420" },
+]
+
+[package.dependencies]
+django = ">=4.2.9"
+sqlparse = ">=0.2"
+
+[[package]]
 name = "django-environ"
 version = "0.11.2"
 description = "A package that allows you to utilize 12factor inspired environment variables to configure your Django application."
@@ -3361,4 +3376,4 @@ postgresql = ["psycopg2-binary"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "ca2101b7ef0fa614f4f1c800557eafa41bfe089f70ef08d4198291b21b3782c0"
+content-hash = "cdfa5af2168ffe52327e7a6cef78fd69a0ae60907e76e3fe0db109707e455c2d"

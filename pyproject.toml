@@ -27,6 +27,7 @@ tblib = "^3.0.0"
 transformers = "^4.48.1"
 tensorflow = "^2.18.0"
 tf-keras = "^2.18.0"
+django-debug-toolbar = "^5.0.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.10.0"

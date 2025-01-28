@@ -80,6 +80,7 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "django_filters",
     "markdownx",
+    "debug_toolbar",
 ]
 CUSTOM_APPS = [
     "library_tomb.apps.LibraryTombConfig",
@@ -92,6 +93,7 @@ INSTALLED_APPS = DJANGO_DEFAULT_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     # "django.contrib.sessions.middleware.SessionMiddleware",
     "conscious_element.session_middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -357,3 +359,24 @@ MESSAGE_TAGS = {
 
 # SESSIONS. https://docs.djangoproject.com/es/5.1/ref/settings/#sessions. ==============================================
 SESSION_ENGINE = "conscious_element.backends"
+
+# DJANGO DEBUG TOOLBAR. https://django-debug-toolbar.readthedocs.io/en/latest/installation.html ========================
+INTERNAL_IPS = [
+    "127.0.0.1",
+]  # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#configure-internal-ips.
+DEBUG_TOOLBAR_PANELS = [
+    'debug_toolbar.panels.history.HistoryPanel',
+    'debug_toolbar.panels.versions.VersionsPanel',
+    'debug_toolbar.panels.timer.TimerPanel',
+    'debug_toolbar.panels.settings.SettingsPanel',
+    'debug_toolbar.panels.headers.HeadersPanel',
+    'debug_toolbar.panels.request.RequestPanel',
+    'debug_toolbar.panels.sql.SQLPanel',
+    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+    'debug_toolbar.panels.templates.TemplatesPanel',
+    'debug_toolbar.panels.alerts.AlertsPanel',
+    'debug_toolbar.panels.cache.CachePanel',
+    'debug_toolbar.panels.signals.SignalsPanel',
+    'debug_toolbar.panels.redirects.RedirectsPanel',
+    'debug_toolbar.panels.profiling.ProfilingPanel',
+]
