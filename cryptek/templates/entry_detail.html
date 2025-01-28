@@ -70,7 +70,8 @@
             </div>
 
             <div class="comments-section">
-                <h2>Comments</h2>
+                <h3>Comments</h3>
+
                 {% if user.is_authenticated %}
                     <form id="comment-form" method="post" action="{% url 'add_comment' object.slug %}">
                         {% csrf_token %}
@@ -80,13 +81,24 @@
                 {% else %}
                     <p>You must be logged in to comment.</p>
                 {% endif %}
+
                 <hr>
+
                 <div class="comments-list" id="comments-list">
                     {% for comment in object.comments.all %}
-                        <div class="comment">
-                            <p><strong>{{ comment.user.username }}</strong> - {{ comment.created_at }}</p>
-                            <p>{{ comment.content }}</p>
-                        </div>
+                        <ul class="comment">
+                            <li>
+                                <p><strong>{{ comment.user.username }}</strong> - {{ comment.created_at }}</p>
+                                <p>{{ comment.content }}</p>
+                                {% if user.is_authenticated %}
+                                    {% if user.is_admin or user == comment.user %}
+                                        <button class="btn btn-danger" onclick="deleteComment({{ comment.id }})">
+                                            Delete
+                                        </button>
+                                    {% endif %}
+                                {% endif %}
+                            </li>
+                        </ul>
                     {% endfor %}
                 </div>
             </div>
@@ -117,6 +129,9 @@
                     newComment.innerHTML = `
                         <p><strong>${data.data.user}</strong> - ${data.data.created_at}</p>
                         <p>${data.data.content}</p>
+        {% if user == comment.user %}
+            <button class="btn btn-danger" onclick="deleteComment(${data.data.id})">Delete</button>
+        {% endif %}
                     `;
                     commentList.appendChild(newComment);
                     form.reset();
@@ -129,5 +144,26 @@
                 alert('An error occurred while adding the comment.');
             });
         });
+
+        function deleteComment(commentId) {
+            fetch(`/comments/${commentId}/delete/`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while deleting the comment.');
+            });
+        }
     </script>
 {% endblock content %}
