@@ -12,9 +12,6 @@ from library_tomb.models.entry import Entry
 
 logger = logging.getLogger(__name__)
 
-PERSPECTIVE_API_KEY = "your_api_key_here"
-PERSPECTIVE_API_URL = "https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze"
-
 # Load the sentiment-analysis pipeline
 moderation_pipeline = pipeline("sentiment-analysis")
 
