@@ -64,6 +64,14 @@ class Entry(Model):
     def get_all_comments(self):
         return self.comments.filter(active=True)
 
+    @property
+    def like_count(self):
+        return self.likes.filter(type="like").count()
+
+    @property
+    def dislike_count(self):
+        return self.likes.filter(type="dislike").count()
+
 
 # EntryVersion model
 class EntryVersion(Model):

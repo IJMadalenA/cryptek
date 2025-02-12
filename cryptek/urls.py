@@ -47,26 +47,26 @@ third_party_apps_urls = [
 ]
 
 urlpatterns = (
-        [
-            path("admin/", admin.site.urls),
-            path("account/", include("conscious_element.urls")),
-            path("login/", CustomLoginView.as_view(), name="login"),
-            path("logout/", LogoutView.as_view(), name="logout"),
-            path("", RedirectView.as_view(url="blog", permanent=True), name="to_blog"),
-            path("blog/", include("library_tomb.urls"), name="blog"),
-            path("about/", about_me, name="about_me"),
-            path("contact/", ContactMeView.as_view(), name="contact"),
-            path(
-                "entry/<slug:slug>/comment/", CommentView.as_view(), name="get_post_comment"
-            ),
-            path(
-                "entry/<slug:slug>/comment/<int:pk>/",
-                CommentView.as_view(),
-                name="put_delete_comment",
-            ),
-        ]
-        + third_party_apps_urls
-        + debug_toolbar_urls()
+    [
+        path("admin/", admin.site.urls),
+        path("account/", include("conscious_element.urls")),
+        path("login/", CustomLoginView.as_view(), name="login"),
+        path("logout/", LogoutView.as_view(), name="logout"),
+        path("", RedirectView.as_view(url="blog", permanent=True), name="to_blog"),
+        path("blog/", include("library_tomb.urls"), name="blog"),
+        path("about/", about_me, name="about_me"),
+        path("contact/", ContactMeView.as_view(), name="contact"),
+        path(
+            "entry/<slug:slug>/comment/", CommentView.as_view(), name="get_post_comment"
+        ),
+        path(
+            "entry/<slug:slug>/comment/<int:pk>/",
+            CommentView.as_view(),
+            name="put_delete_comment",
+        ),
+    ]
+    + third_party_apps_urls
+    + debug_toolbar_urls()
 )
 
 if settings.DEBUG:

@@ -63,55 +63,70 @@
                 </p>
             </div>
 
+            {% if user.is_authenticated %}
+                <div class="like-dislike-buttons">
+                    <form id="like-form" method="post" action="{% url 'like_entry' object.slug %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="type" value="like">
+                        <button type="submit" class="btn btn-primary">Like</button>
+                    </form>
+                    <p>Likes: {{ object.like_count }}</p>
+                    <form id="dislike-form" method="post" action="{% url 'like_entry' object.slug %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="type" value="dislike">
+                        <button type="submit" class="btn btn-secondary">Dislike</button>
+                    </form>
+                    <p>Dislikes: {{ object.dislike_count }}</p>
+                </div>
+            {% endif %}
             <div class="card-body">
                 <p class="card-text">
                     {{ object.content | safe }}
                 </p>
             </div>
-
-            <div class="comments-section">
-                <h3>Comments</h3>
-
-                {% if user.is_authenticated %}
-                    <form method="post" action="{% url 'get_post_comment' object.slug %}">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <button type="submit" class="btn btn-primary">Add Comment</button>
-                    </form>
-                {% else %}
-                    <p>You must be logged in to comment.</p>
-                {% endif %}
-
-                <hr>
-
-                <div class="comments-list">
-                    {% for comment in object.comments.all %}
-                        <ul class="comment">
-                            <li>
-                                <p><strong>{{ comment.user.username }}</strong> - {{ comment.created_at }}</p>
-                                <p>{{ comment.content }}</p>
-                                {% if user.is_authenticated %}
-                                    {% if user.is_staff or user == comment.user %}
-                                        <form method="post"
-                                              action="{% url 'put_delete_comment' object.slug comment.id %}">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="_method" value="delete">
-                                            <button type="submit" class="btn btn-danger">Delete</button>
-                                        </form>
-                                        <form method="post"
-                                              action="{% url 'put_delete_comment' object.slug comment.id %}">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="_method" value="put">
-                                            <textarea name="content">{{ comment.content }}</textarea>
-                                            <button type="submit" class="btn btn-secondary">Edit</button>
-                                        </form>
-                                    {% endif %}
-                                {% endif %}
-                            </li>
-                        </ul>
-                    {% endfor %}
-                </div>
-            </div>
         </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const likeForm = document.querySelector("#like-form");
+                const dislikeForm = document.querySelector("#dislike-form");
+
+                likeForm.addEventListener("submit", function(event) {
+                    event.preventDefault();
+                    const formData = new FormData(likeForm);
+                    fetch(likeForm.action, {
+                        method: "POST",
+                        body: formData,
+                        headers: {
+                            "X-Requested-With": "XMLHttpRequest",
+                            "X-CSRFToken": "{{ csrf_token }}",
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                })
+                .catch(error => console.error("Error:", error));
+            });
+
+            dislikeForm.addEventListener("submit", function(event) {
+                event.preventDefault();
+                const formData = new FormData(dislikeForm);
+                fetch(dislikeForm.action, {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest",
+                        "X-CSRFToken": "{{ csrf_token }}",
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                })
+                .catch(error => console.error("Error:", error));
+            });
+        });
+        </script>
     </div>
 {% endblock content %}
