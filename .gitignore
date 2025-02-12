@@ -9,3 +9,4 @@
 *.log
 /csp_violations.log
 /cryptek/test_and_check/coverage_report/
+/get-docker.sh

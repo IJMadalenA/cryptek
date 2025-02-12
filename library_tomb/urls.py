@@ -12,7 +12,11 @@ urlpatterns = [
     path("entry/<slug:slug>/", views.EntryDetail.as_view(), name="entry_detail"),
     path("<slug:slug>/", views.EntryDetail.as_view(), name="entry_detail"),
     path("entry/<slug:slug>/comment/", CommentView.as_view(), name="get_post_comment"),
-    path("entry(<slug:slug>)/comment/<int:pk>", CommentView.as_view(), name="put_delete_comment"),
+    path(
+        "entry(<slug:slug>)/comment/<int:pk>",
+        CommentView.as_view(),
+        name="put_delete_comment",
+    ),
     path(
         "contact/success/",
         ContactSuccessView.as_view(),
