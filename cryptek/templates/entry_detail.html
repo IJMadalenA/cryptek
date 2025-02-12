@@ -73,7 +73,7 @@
                 <h3>Comments</h3>
 
                 {% if user.is_authenticated %}
-                    <form id="comment-form" method="post" action="{% url 'add_comment' object.slug %}">
+                    <form method="post" action="{% url 'get_post_comment' object.slug %}">
                         {% csrf_token %}
                         {{ form.as_p }}
                         <button type="submit" class="btn btn-primary">Add Comment</button>
@@ -84,17 +84,27 @@
 
                 <hr>
 
-                <div class="comments-list" id="comments-list">
+                <div class="comments-list">
                     {% for comment in object.comments.all %}
                         <ul class="comment">
                             <li>
                                 <p><strong>{{ comment.user.username }}</strong> - {{ comment.created_at }}</p>
                                 <p>{{ comment.content }}</p>
                                 {% if user.is_authenticated %}
-                                    {% if user.is_admin or user == comment.user %}
-                                        <button class="btn btn-danger" onclick="deleteComment({{ comment.id }})">
-                                            Delete
-                                        </button>
+                                    {% if user.is_staff or user == comment.user %}
+                                        <form method="post"
+                                              action="{% url 'put_delete_comment' object.slug comment.id %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="_method" value="delete">
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                        <form method="post"
+                                              action="{% url 'put_delete_comment' object.slug comment.id %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="_method" value="put">
+                                            <textarea name="content">{{ comment.content }}</textarea>
+                                            <button type="submit" class="btn btn-secondary">Edit</button>
+                                        </form>
                                     {% endif %}
                                 {% endif %}
                             </li>
@@ -104,66 +114,4 @@
             </div>
         </div>
     </div>
-
-    <script>
-        document.getElementById('comment-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const form = event.target;
-            const formData = new FormData(form);
-            const csrfToken = formData.get('csrfmiddlewaretoken');
-            const url = form.action;
-
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': csrfToken,
-                },
-                body: formData,
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const commentList = document.getElementById('comments-list');
-                    const newComment = document.createElement('div');
-                    newComment.classList.add('comment');
-                    newComment.innerHTML = `
-                        <p><strong>${data.data.user}</strong> - ${data.data.created_at}</p>
-                        <p>${data.data.content}</p>
-        {% if user == comment.user %}
-            <button class="btn btn-danger" onclick="deleteComment(${data.data.id})">Delete</button>
-        {% endif %}
-                    `;
-                    commentList.appendChild(newComment);
-                    form.reset();
-                } else {
-                    alert(data.message || 'An error occurred while adding the comment.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while adding the comment.');
-            });
-        });
-
-        function deleteComment(commentId) {
-            fetch(`/comments/${commentId}/delete/`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    location.reload();
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while deleting the comment.');
-            });
-        }
-    </script>
 {% endblock content %}
