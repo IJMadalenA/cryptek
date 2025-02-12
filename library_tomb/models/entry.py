@@ -9,7 +9,6 @@ from markdownx.models import MarkdownxField
 from conscious_element.models.cryptek_user import CryptekUser
 from library_tomb.models.category import Category
 from library_tomb.models.tag import Tag
-from log_recorder_app import models
 
 STATUS = (
     (0, "Draft"),
@@ -61,6 +60,9 @@ class Entry(Model):
         if not self.author or self.author.is_anonymous:
             self.author = kwargs.get("user", self.author)
         super().save(*args, **kwargs)
+
+    def get_all_comments(self):
+        return self.comments.filter(active=True)
 
 
 # EntryVersion model

@@ -1,153 +1,70 @@
-import logging
-
-from django.http.response import HttpResponseForbidden, JsonResponse
+from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.generic.edit import FormView
+from django.views.generic.detail import SingleObjectMixin
+from django.views.generic.edit import FormMixin
 from django_ratelimit.decorators import ratelimit
-from transformers import pipeline
 
 from library_tomb.forms.comment_form import CommentForm
 from library_tomb.models.comment import Comment
 from library_tomb.models.entry import Entry
 
-logger = logging.getLogger(__name__)
-
-# Load the sentiment-analysis pipeline
-moderation_pipeline = pipeline("sentiment-analysis")
-
-
-def moderate_comment(content):
-    """
-    Moderate the comment content using a sentiment-analysis pipeline.
-
-    Args:
-        content (str): The content of the comment to be moderated.
-
-    Returns:
-        bool: True if the comment is not negative, False otherwise.
-    """
-    result = moderation_pipeline(content)
-    return result[0]["label"] != "NEGATIVE"
-
 
 @method_decorator(ratelimit(key="ip", rate="10/m"), name="dispatch")
-class CommentView(FormView, View):
-    """
-    View to handle the creation of comments.
-
-    Attributes:
-        form_class (CommentForm): The form class used to create a comment.
-        template_name (str): The template used to render the form.
-    """
-
+class CommentView(View, FormMixin, SingleObjectMixin):
+    model = Comment
     form_class = CommentForm
     template_name = "entry_detail.html"
 
+    def get(self, request, *args, **kwargs):
+        entry = get_object_or_404(Entry, slug=self.kwargs["slug"], status=1)
+        comments = entry.comments.all()
+        return JsonResponse({"success": True, "comments": list(comments.values())}, status=200)
+
     def form_valid(self, form):
-        """
-        Handle a valid form submission.
-
-        Args:
-            form (CommentForm): The submitted form.
-
-        Returns:
-            JsonResponse: A JSON response indicating success or failure.
-        """
         if not self.request.user.is_authenticated:
-            return JsonResponse(
-                {"success": False, "message": "User not authenticated"}, status=403
-            )
+            return JsonResponse({"success": False, "message": "User not authenticated"}, status=403)
         entry = get_object_or_404(Entry, slug=self.kwargs["slug"], status=1)
         comment = form.save(commit=False)
         comment.entry = entry
         comment.user = self.request.user
-        if moderate_comment(comment.content):
-            comment.save()
-            return JsonResponse(
-                {
-                    "success": True,
-                    "message": "Comment successfully added!",
-                    "data": {
-                        "id": comment.id,
-                        "entry": comment.entry.title,
-                        "user": self.request.user.username,
-                        "content": comment.content,
-                        "created_at": comment.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-                    },
-                },
-                status=201,
-            )
-        else:
-            return JsonResponse(
-                {"success": False, "message": "Comment not appropriate"}, status=400
-            )
+        comment.save()
+        return JsonResponse({"success": True, "message": "Comment successfully added!"}, status=201)
 
     def form_invalid(self, form):
-        """
-        Handle an invalid form submission.
+        return JsonResponse({"success": False, "errors": form.errors}, status=400)
 
-        Args:
-            form (CommentForm): The submitted form.
-
-        Returns:
-            JsonResponse: A JSON response indicating the form errors.
-        """
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse({"success": False, "message": "User not authenticated"}, status=403)
+        entry = get_object_or_404(Entry, slug=self.kwargs["slug"], status=1)
+        form = self.get_form()
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.entry = entry
+            comment.user = request.user
+            comment.save()
+            return JsonResponse({"success": True, "message": "Comment successfully added!"}, status=201)
         return JsonResponse({"success": False, "errors": form.errors}, status=400)
 
     def put(self, request, *args, **kwargs):
-        """
-        Handle a PUT request to update a comment.
-
-        Args:
-            request (HttpRequest): The HTTP request.
-
-        Returns:
-            JsonResponse: A JSON response indicating success or failure.
-        """
-        comment_id = kwargs.get("comment_id")
-        comment = get_object_or_404(Comment, id=comment_id)
-
-        if request.user.is_authenticated and request.user == comment.user:
-            form = CommentForm(request.PUT, instance=comment)
-            if form.is_valid():
-                form.save()
-                return JsonResponse(
-                    {"success": True, "message": "Comment successfully updated!"},
-                    status=200,
-                )
-            else:
-                return JsonResponse(
-                    {"success": False, "errors": form.errors}, status=400
-                )
-        else:
-            return HttpResponseForbidden(
-                "You do not have permission to update this comment."
-            )
+        if not request.user.is_authenticated:
+            return JsonResponse({"success": False, "message": "User not authenticated"}, status=403)
+        comment = get_object_or_404(Comment, id=self.kwargs["pk"])
+        if request.user != comment.user and not request.user.is_staff:
+            return HttpResponseForbidden("You do not have permission to edit this comment.")
+        form = self.get_form()
+        if form.is_valid():
+            form.save()
+            return JsonResponse({"success": True, "message": "Comment successfully updated!"}, status=200)
+        return JsonResponse({"success": False, "errors": form.errors}, status=400)
 
     def delete(self, request, *args, **kwargs):
-        """
-        Handle a DELETE request to delete a comment.
-
-        Args:
-            request (HttpRequest): The HTTP request.
-
-        Returns:
-            JsonResponse: A JSON response indicating success or failure.
-        """
-        comment_id = kwargs.get("comment_id")
-        comment = get_object_or_404(Comment, id=comment_id)
-
-        if request.user.is_authenticated and (
-                request.user.is_admin or request.user == comment.user
-        ):
-            comment.delete()
-            return JsonResponse(
-                {"success": True, "message": "Comment successfully deleted!"},
-                status=200,
-            )
-        else:
-            return HttpResponseForbidden(
-                "You do not have permission to delete this comment."
-            )
+        if not request.user.is_authenticated:
+            return JsonResponse({"success": False, "message": "User not authenticated"}, status=403)
+        comment = get_object_or_404(Comment, id=self.kwargs["pk"])
+        if request.user != comment.user and not request.user.is_staff:
+            return HttpResponseForbidden("You do not have permission to delete this comment.")
+        comment.delete()
+        return JsonResponse({"success": True, "message": "Comment successfully deleted!"}, status=200)
