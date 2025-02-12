@@ -92,6 +92,7 @@ INSTALLED_APPS = DJANGO_DEFAULT_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "csp.middleware.CSPMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     # "django.contrib.sessions.middleware.SessionMiddleware",
@@ -101,7 +102,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "csp.middleware.CSPMiddleware",
 ]  # https://docs.djangoproject.com/es/5.1/ref/settings/#middleware.
 
 ROOT_URLCONF = "cryptek.urls"
@@ -148,12 +148,15 @@ DATABASES = {
 #     }
 # }
 
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-#     },
-#     'cache-for-ratelimiting': {},
-# }
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
 
 # AUTHENTICATION. https://docs.djangoproject.com/es/5.1/ref/settings/#auth =============================================
 AUTH_PASSWORD_VALIDATORS = [
@@ -197,7 +200,7 @@ X_FRAME_OPTIONS = "DENY"
 # CSP - CONTENT SECURITY POLICY.
 CSP_REPORT_ONLY = True
 CSP_REPORT_URI = "/csp-violations/"
-CCONTENT_SECURITY_POLICY = {
+CONTENT_SECURITY_POLICY = {
     "EXCLUDE_URL_PREFIXES": ["/admin/"],
     "directives": {
         # General content
@@ -358,25 +361,28 @@ MESSAGE_TAGS = {
 }
 
 # SESSIONS. https://docs.djangoproject.com/es/5.1/ref/settings/#sessions. ==============================================
-SESSION_ENGINE = "conscious_element.backends"
+# SESSION_ENGINE = "conscious_element.backends"
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'default'
+
 
 # DJANGO DEBUG TOOLBAR. https://django-debug-toolbar.readthedocs.io/en/latest/installation.html ========================
 INTERNAL_IPS = [
     "127.0.0.1",
 ]  # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#configure-internal-ips.
 DEBUG_TOOLBAR_PANELS = [
-    'debug_toolbar.panels.history.HistoryPanel',
-    'debug_toolbar.panels.versions.VersionsPanel',
-    'debug_toolbar.panels.timer.TimerPanel',
-    'debug_toolbar.panels.settings.SettingsPanel',
-    'debug_toolbar.panels.headers.HeadersPanel',
-    'debug_toolbar.panels.request.RequestPanel',
-    'debug_toolbar.panels.sql.SQLPanel',
-    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
-    'debug_toolbar.panels.templates.TemplatesPanel',
-    'debug_toolbar.panels.alerts.AlertsPanel',
-    'debug_toolbar.panels.cache.CachePanel',
-    'debug_toolbar.panels.signals.SignalsPanel',
-    'debug_toolbar.panels.redirects.RedirectsPanel',
-    'debug_toolbar.panels.profiling.ProfilingPanel',
+    "debug_toolbar.panels.history.HistoryPanel",
+    "debug_toolbar.panels.versions.VersionsPanel",
+    "debug_toolbar.panels.timer.TimerPanel",
+    "debug_toolbar.panels.settings.SettingsPanel",
+    "debug_toolbar.panels.headers.HeadersPanel",
+    "debug_toolbar.panels.request.RequestPanel",
+    "debug_toolbar.panels.sql.SQLPanel",
+    "debug_toolbar.panels.staticfiles.StaticFilesPanel",
+    "debug_toolbar.panels.templates.TemplatesPanel",
+    "debug_toolbar.panels.alerts.AlertsPanel",
+    "debug_toolbar.panels.cache.CachePanel",
+    "debug_toolbar.panels.signals.SignalsPanel",
+    # 'debug_toolbar.panels.redirects.RedirectsPanel',
+    # "debug_toolbar.panels.profiling.ProfilingPanel",
 ]
