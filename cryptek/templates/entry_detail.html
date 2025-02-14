@@ -63,22 +63,24 @@
                 </p>
             </div>
 
-            {% if user.is_authenticated %}
-                <div class="like-dislike-buttons">
+            <div class="like-dislike-buttons">
+                {% if user.is_authenticated %}
                     <form id="like-form" method="post" action="{% url 'like_entry' object.slug %}">
                         {% csrf_token %}
                         <input type="hidden" name="type" value="like">
-                        <button type="submit" class="btn btn-primary">Like</button>
+                        <button type="submit" class="btn btn-primary">Like: {{ object.like_count }}</button>
                     </form>
-                    <p>Likes: {{ object.like_count }}</p>
                     <form id="dislike-form" method="post" action="{% url 'like_entry' object.slug %}">
                         {% csrf_token %}
                         <input type="hidden" name="type" value="dislike">
-                        <button type="submit" class="btn btn-secondary">Dislike</button>
+                        <button type="submit" class="btn btn-secondary">Dislike: {{ object.dislike_count }}</button>
                     </form>
+                {% else %}
                     <p>Dislikes: {{ object.dislike_count }}</p>
-                </div>
-            {% endif %}
+                    <p>Like: {{ object.like_count }}</p>
+                {% endif %}
+            </div>
+
             <div class="card-body">
                 <p class="card-text">
                     {{ object.content | safe }}
