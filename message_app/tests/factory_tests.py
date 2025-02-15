@@ -1,4 +1,4 @@
-from cryptek.qa_templates import BaseFactoryTest
+from cryptek.test_and_check.base_factory_test import BaseFactoryTest
 from message_app.factories.message_sent_factory import MessageSentFactory
 from message_app.factories.notification_factory import NotificationFactory
 from message_app.factories.social_share_factory import SocialShareFactory

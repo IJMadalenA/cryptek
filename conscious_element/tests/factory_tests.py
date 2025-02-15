@@ -3,7 +3,7 @@ from conscious_element.factory.cryptek_user_factory import CryptekUserFactory
 from conscious_element.factory.follow_factory import FollowFactory
 from conscious_element.factory.profile_factory import ProfileFactory
 from conscious_element.factory.session_factory import SessionFactory
-from cryptek.qa_templates import BaseFactoryTest
+from cryptek.test_and_check.base_factory_test import BaseFactoryTest
 
 
 class CryptekUserFactoryTestCase(BaseFactoryTest):
