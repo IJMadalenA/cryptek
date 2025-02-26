@@ -1,340 +1,37 @@
-from django.test import TestCase
-from factory.django import DjangoModelFactory
+import secrets
 
-
-class BaseFactoryTest(TestCase):
-    """
-    Base test case for testing factory implementations.
-
-    Provides functionality to test if a Django model factory is properly set up,
-    correctly creates single instances, and supports batch creation of multiple
-    instances. Designed to work with `factory_boy`'s `DjangoModelFactory`.
-    This test case also allows marking test cases as abstract or skipping the
-    tests if no factory is provided.
-
-    Attributes:
-        model: Class of the model associated with the factory defined in Meta.
-    """
-
-    def setUp(self):
-        """
-        setUp(self)
-
-        Prepares the test case for execution by performing checks and initialization based
-        on the Meta attribute provided in the test class. It ensures that a compatible
-        factory and model are defined before executing the tests.
-
-        Raises
-        ------
-        TypeError
-            If the 'factory' defined in the Meta attribute is not a subclass of
-            DjangoModelFactory.
-
-        Skips
-        -----
-        If the Meta attribute does not define a 'factory' property or if the 'abstract'
-        attribute of Meta is set to True, the test will be skipped to prevent execution.
-
-        Notes
-        -----
-        This method verifies that:
-        - 'Meta' and its 'factory' attribute are defined in the test class.
-        - The 'abstract' field in the Meta attribute determines whether the tests
-          should be executed.
-        - The factory must be a subclass of DjangoModelFactory for compatibility.
-
-        After validation, the corresponding model for the factory is set to
-        self.model for further use.
-        """
-        if not hasattr(self, "Meta") or not hasattr(self.Meta, "factory"):
-            self.skipTest("Skipping tests as no factory is defined in Meta.")
-        if getattr(self.Meta, "abstract", False):
-            self.skipTest("Skipping tests as this TestCase is marked abstract.")
-
-        if not self.Meta.factory or not issubclass(
-            self.Meta.factory, DjangoModelFactory
-        ):
-            raise TypeError(
-                "The factory defined in Meta is not a subclass of DjangoModelFactory"
-            )
-
-        self.model = self.Meta.factory._meta.model
-
-    def test_create(self):
-        instance = self.Meta.factory.create()
-        self.assertIsInstance(instance, self.Meta.factory._meta.model)
-
-    def test_create_multiple(self):
-        instances = self.Meta.factory.create_batch(3)
-        self.assertEqual(len(instances), 3)
-        for instance in instances:
-            self.assertIsInstance(instance, self.Meta.factory._meta.model)
-
-    def test_str_representation(self):
-        instance = self.Meta.factory.create()
-        self.assertIsInstance(instance.__str__(), str)
-
-    class Meta:
-        abstract = True
-        factory = None
-
-
-from functools import partial
-
-import django
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ImproperlyConfigured
 from django.db import DEFAULT_DB_ALIAS, connections
 from django.db.models import Q
 from django.shortcuts import resolve_url
-from django.test import RequestFactory
-from django.test import TestCase as DjangoTestCase
-from django.test import signals
-from django.test.client import store_rendered_templates
+from django.test import Client, TestCase
 from django.test.utils import CaptureQueriesContext
+from django.urls import NoReverseMatch, reverse
+from factory.fuzzy import FuzzyText
 
-try:
-    from django.urls import NoReverseMatch, reverse
-except ImportError:
-    from django.core.urlresolvers import NoReverseMatch, reverse  # noqa
+from cryptek.status_code_assertion import StatusCodeAssertionMixin
 
-try:
-    import rest_framework  # noqa
-
-    DRF = True
-except ImportError:
-    DRF = False
-
-
-def get_api_client():
-    try:
-        from rest_framework.test import APIClient
-    except ImportError:
-        from django.core.exceptions import ImproperlyConfigured
-
-        def APIClient(*args, **kwargs):
-            raise ImproperlyConfigured(
-                "django-rest-framework must be installed in order to use APITestCase."
-            )
-
-    return APIClient
-
-
-if hasattr(DjangoTestCase, "assertURLEqual"):
-    assertURLEqual = DjangoTestCase.assertURLEqual
+if hasattr(TestCase, "assertURLEqual"):
+    assertURLEqual = TestCase.assertURLEqual
 else:
 
-    def assertURLEqual(t, url1, url2, msg_prefix=""):
-        raise NotImplementedError(
-            "Your version of Django does not support `assertURLEqual`"
-        )
-
-
-class StatusCodeAssertionMixin(object):
-    """
-    The following `assert_http_###_status_name` methods were intentionally added statically instead of dynamically so
-    that code completion in IDEs like PyCharm would work. It is preferred to use these methods over the response_XXX
-    methods, which could be deprecated at some point. The assert methods contain both the number and the status name
-    slug so that people that remember them best by their numeric code and people that remember best by their name will
-    be able to easily find the assertion they need. This was also directly patterned off of what the `Django Rest
-    Framework uses <https://github.com/encode/django-rest-framework/blob/main/rest_framework/status.py>`_.
-    """
-
-    def _assert_http_status(self, status_code, response=None, msg=None, url=None):
-        response = self._which_response(response)
-        self.assertEqual(response.status_code, status_code, msg)
-        if url is not None:
-            self.assertEqual(response.url, url)
-
-    def assert_http_100_continue(self, response=None, msg=None):
-        self._assert_http_status(100, response=response, msg=msg)
-
-    def assert_http_101_switching_protocols(self, response=None, msg=None):
-        self._assert_http_status(101, response=response, msg=msg)
-
-    def assert_http_200_ok(self, response=None, msg=None):
-        self._assert_http_status(200, response=response, msg=msg)
-
-    def assert_http_201_created(self, response=None, msg=None):
-        self._assert_http_status(201, response=response, msg=msg)
-
-    def assert_http_202_accepted(self, response=None, msg=None):
-        self._assert_http_status(202, response=response, msg=msg)
-
-    def assert_http_203_non_authoritative_information(self, response=None, msg=None):
-        self._assert_http_status(203, response=response, msg=msg)
-
-    def assert_http_204_no_content(self, response=None, msg=None):
-        self._assert_http_status(204, response=response, msg=msg)
-
-    def assert_http_205_reset_content(self, response=None, msg=None):
-        self._assert_http_status(205, response=response, msg=msg)
-
-    def assert_http_206_partial_content(self, response=None, msg=None):
-        self._assert_http_status(206, response=response, msg=msg)
-
-    def assert_http_207_multi_status(self, response=None, msg=None):
-        self._assert_http_status(207, response=response, msg=msg)
-
-    def assert_http_208_already_reported(self, response=None, msg=None):
-        self._assert_http_status(208, response=response, msg=msg)
-
-    def assert_http_226_im_used(self, response=None, msg=None):
-        self._assert_http_status(226, response=response, msg=msg)
-
-    def assert_http_300_multiple_choices(self, response=None, msg=None):
-        self._assert_http_status(300, response=response, msg=msg)
-
-    def assert_http_301_moved_permanently(self, response=None, msg=None, url=None):
-        self._assert_http_status(301, response=response, msg=msg, url=url)
-
-    def assert_http_302_found(self, response=None, msg=None, url=None):
-        self._assert_http_status(302, response=response, msg=msg, url=url)
-
-    def assert_http_303_see_other(self, response=None, msg=None):
-        self._assert_http_status(303, response=response, msg=msg)
-
-    def assert_http_304_not_modified(self, response=None, msg=None):
-        self._assert_http_status(304, response=response, msg=msg)
-
-    def assert_http_305_use_proxy(self, response=None, msg=None):
-        self._assert_http_status(305, response=response, msg=msg)
-
-    def assert_http_306_reserved(self, response=None, msg=None):
-        self._assert_http_status(306, response=response, msg=msg)
-
-    def assert_http_307_temporary_redirect(self, response=None, msg=None):
-        self._assert_http_status(307, response=response, msg=msg)
-
-    def assert_http_308_permanent_redirect(self, response=None, msg=None):
-        self._assert_http_status(308, response=response, msg=msg)
-
-    def assert_http_400_bad_request(self, response=None, msg=None):
-        self._assert_http_status(400, response=response, msg=msg)
-
-    def assert_http_401_unauthorized(self, response=None, msg=None):
-        self._assert_http_status(401, response=response, msg=msg)
-
-    def assert_http_402_payment_required(self, response=None, msg=None):
-        self._assert_http_status(402, response=response, msg=msg)
-
-    def assert_http_403_forbidden(self, response=None, msg=None):
-        self._assert_http_status(403, response=response, msg=msg)
-
-    def assert_http_404_not_found(self, response=None, msg=None):
-        self._assert_http_status(404, response=response, msg=msg)
-
-    def assert_http_405_method_not_allowed(self, response=None, msg=None):
-        self._assert_http_status(405, response=response, msg=msg)
-
-    def assert_http_406_not_acceptable(self, response=None, msg=None):
-        self._assert_http_status(406, response=response, msg=msg)
-
-    def assert_http_407_proxy_authentication_required(self, response=None, msg=None):
-        self._assert_http_status(407, response=response, msg=msg)
-
-    def assert_http_408_request_timeout(self, response=None, msg=None):
-        self._assert_http_status(408, response=response, msg=msg)
-
-    def assert_http_409_conflict(self, response=None, msg=None):
-        self._assert_http_status(409, response=response, msg=msg)
-
-    def assert_http_410_gone(self, response=None, msg=None):
-        self._assert_http_status(410, response=response, msg=msg)
-
-    def assert_http_411_length_required(self, response=None, msg=None):
-        self._assert_http_status(411, response=response, msg=msg)
-
-    def assert_http_412_precondition_failed(self, response=None, msg=None):
-        self._assert_http_status(412, response=response, msg=msg)
-
-    def assert_http_413_request_entity_too_large(self, response=None, msg=None):
-        self._assert_http_status(413, response=response, msg=msg)
-
-    def assert_http_414_request_uri_too_long(self, response=None, msg=None):
-        self._assert_http_status(414, response=response, msg=msg)
-
-    def assert_http_415_unsupported_media_type(self, response=None, msg=None):
-        self._assert_http_status(415, response=response, msg=msg)
-
-    def assert_http_416_requested_range_not_satisfiable(self, response=None, msg=None):
-        self._assert_http_status(416, response=response, msg=msg)
-
-    def assert_http_417_expectation_failed(self, response=None, msg=None):
-        self._assert_http_status(417, response=response, msg=msg)
-
-    def assert_http_422_unprocessable_entity(self, response=None, msg=None):
-        self._assert_http_status(422, response=response, msg=msg)
-
-    def assert_http_423_locked(self, response=None, msg=None):
-        self._assert_http_status(423, response=response, msg=msg)
-
-    def assert_http_424_failed_dependency(self, response=None, msg=None):
-        self._assert_http_status(424, response=response, msg=msg)
-
-    def assert_http_426_upgrade_required(self, response=None, msg=None):
-        self._assert_http_status(426, response=response, msg=msg)
-
-    def assert_http_428_precondition_required(self, response=None, msg=None):
-        self._assert_http_status(428, response=response, msg=msg)
-
-    def assert_http_429_too_many_requests(self, response=None, msg=None):
-        self._assert_http_status(429, response=response, msg=msg)
-
-    def assert_http_431_request_header_fields_too_large(self, response=None, msg=None):
-        self._assert_http_status(431, response=response, msg=msg)
-
-    def assert_http_451_unavailable_for_legal_reasons(self, response=None, msg=None):
-        self._assert_http_status(451, response=response, msg=msg)
-
-    def assert_http_500_internal_server_error(self, response=None, msg=None):
-        self._assert_http_status(500, response=response, msg=msg)
-
-    def assert_http_501_not_implemented(self, response=None, msg=None):
-        self._assert_http_status(501, response=response, msg=msg)
-
-    def assert_http_502_bad_gateway(self, response=None, msg=None):
-        self._assert_http_status(502, response=response, msg=msg)
-
-    def assert_http_503_service_unavailable(self, response=None, msg=None):
-        self._assert_http_status(503, response=response, msg=msg)
-
-    def assert_http_504_gateway_timeout(self, response=None, msg=None):
-        self._assert_http_status(504, response=response, msg=msg)
-
-    def assert_http_505_http_version_not_supported(self, response=None, msg=None):
-        self._assert_http_status(505, response=response, msg=msg)
-
-    def assert_http_506_variant_also_negotiates(self, response=None, msg=None):
-        self._assert_http_status(506, response=response, msg=msg)
-
-    def assert_http_507_insufficient_storage(self, response=None, msg=None):
-        self._assert_http_status(507, response=response, msg=msg)
-
-    def assert_http_508_loop_detected(self, response=None, msg=None):
-        self._assert_http_status(508, response=response, msg=msg)
-
-    def assert_http_509_bandwidth_limit_exceeded(self, response=None, msg=None):
-        self._assert_http_status(509, response=response, msg=msg)
-
-    def assert_http_510_not_extended(self, response=None, msg=None):
-        self._assert_http_status(510, response=response, msg=msg)
-
-    def assert_http_511_network_authentication_required(self, response=None, msg=None):
-        self._assert_http_status(511, response=response, msg=msg)
-
-
-class NoPreviousResponse(Exception):
-    pass
-
-
-# Build a real context
-
-CAPTURE = True
+    def assert_url_equal(t, url1, url2, msg_prefix=""):
+        raise NotImplementedError("Your version of Django does not support `assertURLEqual`")
 
 
 class _AssertNumQueriesLessThanContext(CaptureQueriesContext):
+    """
+    Context manager to assert that the number of executed queries is less than a specified number.
+
+    Attributes:
+        test_case (DjangoTestCase): The test case instance.
+        num (int): The maximum number of queries allowed.
+        verbose (bool): If True, prints the executed queries if the assertion fails.
+    """
+
     def __init__(self, test_case, num, connection, verbose=False):
         self.test_case = test_case
         self.num = num
@@ -342,9 +39,7 @@ class _AssertNumQueriesLessThanContext(CaptureQueriesContext):
         super(_AssertNumQueriesLessThanContext, self).__init__(connection)
 
     def __exit__(self, exc_type, exc_value, traceback):
-        super(_AssertNumQueriesLessThanContext, self).__exit__(
-            exc_type, exc_value, traceback
-        )
+        super(_AssertNumQueriesLessThanContext, self).__exit__(exc_type, exc_value, traceback)
         if exc_type is not None:
             return
         executed = len(self)
@@ -355,38 +50,64 @@ class _AssertNumQueriesLessThanContext(CaptureQueriesContext):
         self.test_case.assertLess(executed, self.num, msg)
 
 
-class login(object):
-    """
-    A useful login context for Django tests.  If the first argument is
-    a User, we will login with that user's username.  If no password is
-    given we will use 'password'.
-    """
-
+class _GenericContext:
     def __init__(self, testcase, *args, **credentials):
         self.testcase = testcase
-        user = get_user_model()
+        self.credentials = credentials
+        self.user = get_user_model()
+        self.password = secrets.token_urlsafe(16)
 
-        if args and isinstance(args[0], user):
-            username_field = getattr(user, "USERNAME_FIELD", "username")
-            credentials.update(
+        if args and isinstance(args[0], self.user):
+            """
+            If the first argument is an instance of the user model, we will use it to create the user.
+            This is useful for testing views that require a user to be logged in.
+            """
+            self.user_instance = args[0]
+            self.user_instance.set_password(self.credentials.get("password", self.password))
+            self.user_instance.save()
+            self.credentials.update(
                 {
-                    username_field: getattr(args[0], username_field),
+                    "username": getattr(self.user_instance, "username"),
+                    "password": self.credentials.get("password", self.password),
+                }
+            )
+        else:
+            """
+            If the first argument is not an instance of the user model, we will create a new user.
+            """
+            self.user_instance = self.user.objects.create_user(
+                username=self.credentials.get("username", "username"),
+                password=self.credentials.get("password", self.password),
+            )
+            self.credentials.update(
+                {
+                    "username": self.user_instance.username,
+                    "password": self.credentials.get("password", self.password),
                 }
             )
 
-        if not credentials.get("password", False):
-            credentials["password"] = "password"
+    def login(self):
+        success = self.testcase.client.login(**self.credentials)
+        self.testcase.assertTrue(success, "login failed with credentials=%r" % self.credentials)
 
-        success = testcase.client.login(**credentials)
-        self.testcase.assertTrue(
-            success, "login failed with credentials=%r" % credentials
-        )
+    def logout(self):
+        self.testcase.client.logout()
 
+
+class _AuthenticatedContext(_GenericContext):
     def __enter__(self):
-        pass
+        self.login()
 
     def __exit__(self, *args):
-        self.testcase.client.logout()
+        self.logout()
+
+
+class _UnauthenticatedContext(_GenericContext):
+    def __enter__(self):
+        self.logout()
+
+    def __exit__(self, *args):
+        self.login()
 
 
 class BaseTestCase(StatusCodeAssertionMixin):
@@ -397,29 +118,10 @@ class BaseTestCase(StatusCodeAssertionMixin):
     user_factory = None
 
     def __init__(self, *args, **kwargs):
+        super().__init__()
         self.last_response = None
 
-    def tear_down(self):
-        self.client.logout()
-
-    def print_form_errors(self, response_or_form=None):
-        """A utility method for quickly debugging responses with form errors."""
-
-        if response_or_form is None:
-            response_or_form = self.last_response
-
-        if hasattr(response_or_form, "errors"):
-            form = response_or_form
-        elif hasattr(response_or_form, "context"):
-            form = response_or_form.context["form"]
-        else:
-            raise Exception(
-                "print_form_errors requires the response_or_form argument to either be a Django http response or a form instance."
-            )
-
-        print(form.errors.as_text())
-
-    def request(self, method_name, url_name, *args, **kwargs):
+    def _request(self, method_name, url_name, *args, **kwargs):
         """
         Request url by name using reverse() through method
 
@@ -450,7 +152,7 @@ class BaseTestCase(StatusCodeAssertionMixin):
                 reverse(url_name, args=args, kwargs=kwargs),
                 data=data,
                 follow=follow,
-                **extra
+                **extra,
             )
         except NoReverseMatch:
             self.last_response = method(url_name, data=data, follow=follow, **extra)
@@ -459,25 +161,25 @@ class BaseTestCase(StatusCodeAssertionMixin):
         return self.last_response
 
     def get(self, url_name, *args, **kwargs):
-        return self.request("get", url_name, *args, **kwargs)
+        return self._request("get", url_name, *args, **kwargs)
 
     def post(self, url_name, *args, **kwargs):
-        return self.request("post", url_name, *args, **kwargs)
+        return self._request("post", url_name, *args, **kwargs)
 
     def put(self, url_name, *args, **kwargs):
-        return self.request("put", url_name, *args, **kwargs)
+        return self._request("put", url_name, *args, **kwargs)
 
     def patch(self, url_name, *args, **kwargs):
-        return self.request("patch", url_name, *args, **kwargs)
+        return self._request("patch", url_name, *args, **kwargs)
 
     def head(self, url_name, *args, **kwargs):
-        return self.request("head", url_name, *args, **kwargs)
+        return self._request("head", url_name, *args, **kwargs)
 
     def options(self, url_name, *args, **kwargs):
-        return self.request("options", url_name, *args, **kwargs)
+        return self._request("options", url_name, *args, **kwargs)
 
     def delete(self, url_name, *args, **kwargs):
-        return self.request("delete", url_name, *args, **kwargs)
+        return self._request("delete", url_name, *args, **kwargs)
 
     def _which_response(self, response=None):
         if response is None and self.last_response is not None:
@@ -487,7 +189,8 @@ class BaseTestCase(StatusCodeAssertionMixin):
 
     def _assert_response_code(self, status_code, response=None, msg=None):
         response = self._which_response(response)
-        self.assertEqual(response.status_code, status_code, msg)
+        self.assertTrue(response)
+        self.assertEqual(status_code, response.status_code, msg)
 
     def response_200(self, response=None, msg=None):
         """Given response has status_code 200"""
@@ -501,21 +204,9 @@ class BaseTestCase(StatusCodeAssertionMixin):
         """Given response has status_code 204"""
         self._assert_response_code(204, response, msg)
 
-    def response_301(self, response=None, msg=None):
-        """Given response has status_code 301"""
-        self._assert_response_code(301, response, msg)
-
-    def response_302(self, response=None, msg=None):
-        """Given response has status_code 302"""
-        self._assert_response_code(302, response, msg)
-
     def response_400(self, response=None, msg=None):
         """Given response has status_code 400"""
         self._assert_response_code(400, response, msg)
-
-    def response_401(self, response=None, msg=None):
-        """Given response has status_code 401"""
-        self._assert_response_code(401, response, msg)
 
     def response_403(self, response=None, msg=None):
         """Given response has status_code 403"""
@@ -525,64 +216,58 @@ class BaseTestCase(StatusCodeAssertionMixin):
         """Given response has status_code 404"""
         self._assert_response_code(404, response, msg)
 
-    def response_405(self, response=None, msg=None):
-        """Given response has status_code 405"""
-        self._assert_response_code(405, response, msg)
+    def response_code(self, response=None, status_code: int = None, msg=None):
+        response = self._which_response(response)
+        self.assertTrue(response)
+        self.assertEqual(status_code, response.status_code, msg)
 
-    def response_409(self, response=None, msg=None):
-        """Given response has status_code 409"""
-        self._assert_response_code(409, response, msg)
+    def response_code_in_range(self, response=None, msg=None, start=200, end=299):
+        response = self._which_response(response)
+        self.assertTrue(start <= response.status_code <= end, msg)
 
-    def response_410(self, response=None, msg=None):
-        """Given response has status_code 410"""
-        self._assert_response_code(410, response, msg)
-
-    def get_check_200(self, url, *args, **kwargs):
-        """Test that we can GET a page and it returns a 200"""
-        response = self.get(url, *args, **kwargs)
-        self.response_200(response)
-        return response
-
-    def assertLoginRequired(self, url, *args, **kwargs):
-        """Ensure login is required to GET this URL"""
+    def assert_login_required(self, url, *args, **kwargs):
         response = self.get(url, *args, **kwargs)
         reversed_url = reverse(url, args=args, kwargs=kwargs)
         login_url = str(resolve_url(settings.LOGIN_URL))
         expected_url = "{0}?next={1}".format(login_url, reversed_url)
         self.assertRedirects(response, expected_url)
 
-    assertRedirects = DjangoTestCase.assertRedirects
+    assertRedirects = TestCase.assertRedirects
     assertURLEqual = assertURLEqual
 
     def login(self, *args, **credentials):
         """Login a user"""
-        return login(self, *args, **credentials)
+        return _AuthenticatedContext(self, *args, **credentials)
 
-    def reverse(self, name, *args, **kwargs):
+    def logout(self):
+        """Logout a user"""
+        return _UnauthenticatedContext(self)
+
+    @staticmethod
+    def reverse(name, *args, **kwargs):
         """Reverse a url, convenience to avoid having to import reverse in tests"""
         return reverse(name, args=args, kwargs=kwargs)
 
     @classmethod
-    def make_user(cls, username="testuser", password="password", perms=None):
-        """
-        Build a user with <username> and password of 'password' for testing
-        purposes.
-        """
-        if cls.user_factory:
-            User = cls.user_factory._meta.model
-            user_factory = cls.user_factory
-        else:
-            User = get_user_model()
-            user_factory = User.objects.create_user
+    def make_user(
+        cls,
+        username=None,
+        password=None,
+        email=None,
+        perms=None,
+    ):
+        if username is None:
+            username = f"username_{FuzzyText(length=8).fuzz()}"
+        if password is None:
+            password = FuzzyText(length=12).fuzz()
+        if email is None:
+            email = f"{FuzzyText(length=8).fuzz()}@test.com"
 
-        USERNAME_FIELD = getattr(User, "USERNAME_FIELD", "username")
-        user_data = {USERNAME_FIELD: username}
-        EMAIL_FIELD = getattr(User, "EMAIL_FIELD", None)
-        if EMAIL_FIELD is not None and cls.user_factory is None:
-            user_data[EMAIL_FIELD] = "{}@example.com".format(username)
-        test_user = user_factory(**user_data)
-        test_user.set_password(password)
-        test_user.save()
+        user = get_user_model().objects.create_user(
+            username=str(username),
+            password=password,
+            email=str(email),
+        )
 
         if perms:
             from django.contrib.auth.models import Permission
@@ -594,20 +279,21 @@ class BaseTestCase(StatusCodeAssertionMixin):
                         "The permission in the perms argument needs to be either "
                         "app_label.codename or app_label.* (e.g. accounts.change_user or accounts.*)"
                     )
-
                 app_label, codename = perm.split(".")
                 if codename == "*":
                     _filter = _filter | Q(content_type__app_label=app_label)
                 else:
-                    _filter = _filter | Q(
-                        content_type__app_label=app_label, codename=codename
-                    )
+                    _filter = _filter | Q(content_type__app_label=app_label, codename=codename)
+            user.user_permissions.add(*list(Permission.objects.filter(_filter)))
 
-            test_user.user_permissions.add(*list(Permission.objects.filter(_filter)))
+        return {
+            "user": user,
+            "username": username,
+            "password": password,
+            "email": email,
+        }
 
-        return test_user
-
-    def assertNumQueriesLessThan(self, num, *args, **kwargs):
+    def assert_num_queries_less_than(self, num, *args, **kwargs):
         func = kwargs.pop("func", None)
         using = kwargs.pop("using", DEFAULT_DB_ALIAS)
         verbose = kwargs.pop("verbose", False)
@@ -620,43 +306,25 @@ class BaseTestCase(StatusCodeAssertionMixin):
         with context:
             func(*args, **kwargs)
 
-    def assertGoodView(self, url_name, *args, verbose=False, **kwargs):
-        """
-        Quick-n-dirty testing of a given url name.
-        Ensures URL returns a 200 status and that generates less than 50
-        database queries.
-        """
+    def assert_good_view(self, url_name, *args, verbose=False, **kwargs):
         query_count = kwargs.pop("test_query_count", 50)
 
-        with self.assertNumQueriesLessThan(query_count, verbose=verbose):
+        with self.assert_num_queries_less_than(query_count, verbose=verbose):
             response = self.get(url_name, *args, **kwargs)
 
         self.response_200(response)
 
         return response
 
-    def assertResponseContains(self, text, response=None, html=True, **kwargs):
-        """Convenience wrapper for assertContains"""
+    def assert_response_contains(self, text, response=None, html=True, **kwargs):
         response = self._which_response(response)
         self.assertContains(response, text, html=html, **kwargs)
 
-    def assertResponseNotContains(self, text, response=None, html=True, **kwargs):
-        """Convenience wrapper for assertNotContains"""
+    def assert_response_not_contains(self, text, response=None, html=True, **kwargs):
         response = self._which_response(response)
         self.assertNotContains(response, text, html=html, **kwargs)
 
-    def assertResponseHeaders(self, headers, response=None):
-        """
-        Check that the headers in the response are as expected.
-
-        Only headers defined in `headers` are compared, other keys present on
-        the `response` will be ignored.
-
-        :param headers: Mapping of header names to expected values
-        :type headers: :class:`collections.Mapping`
-        :param response: Response to check headers against
-        :type response: :class:`django.http.response.HttpResponse`
-        """
+    def assert_response_headers(self, headers, response=None):
         response = self._which_response(response)
         compare = {h: response.get(h) for h in headers}
         self.assertEqual(compare, headers)
@@ -666,158 +334,91 @@ class BaseTestCase(StatusCodeAssertionMixin):
             self.assertIn(key, self.last_response.context)
             return self.last_response.context[key]
         else:
-            raise NoPreviousResponse("There isn't a previous response to query")
+            raise Exception("There isn't a previous response to query")
 
-    def assertInContext(self, key):
+    def assert_in_context(self, key):
         return self.get_context(key)
 
-    def assertContext(self, key, value):
+    def assert_context(self, key, value):
         self.assertEqual(self.get_context(key), value)
 
 
-class TestCase(DjangoTestCase, BaseTestCase):
+class ClassBaseViewTestCase(TestCase, BaseTestCase):
     """
-    Django TestCase with helpful additional features
-    """
-
-    user_factory = None
-
-    def __init__(self, *args, **kwargs):
-        self.last_response = None
-        super(TestCase, self).__init__(*args, **kwargs)
-
-
-class APITestCase(TestCase):
-    def __init__(self, *args, **kwargs):
-        self.client_class = get_api_client()
-        super(APITestCase, self).__init__(*args, **kwargs)
-
-
-# Note this class inherits from TestCase defined above.
-class CBVTestCase(TestCase):
-    """
-    Directly calls class-based generic view methods,
-    bypassing the Django test Client.
-
-    This process bypasses middleware invocation and URL resolvers.
-
-    Example usage:
-
-        from myapp.views import MyClass
-
-        class MyClassTest(CBVTestCase):
-
-            def test_special_method(self):
-                request = RequestFactory().get('/')
-                instance = self.get_instance(MyClass, request=request)
-
-                # invoke a MyClass method
-                result = instance.special_method()
-
-                # make assertions
-                self.assertTrue(result)
+    Base class for testing class-based views with authentication.
     """
 
-    @staticmethod
-    def get_instance(view_cls, *args, **kwargs):
-        """
-        Returns a decorated instance of a class-based generic view class.
+    endpoint_name = None
+    is_authenticated = None
+    kwargs = None
+    args = None
 
-        Use `initkwargs` to set expected class attributes.
-        For example, set the `object` attribute on MyDetailView class:
+    def setUp(self):
+        _password = secrets.token_urlsafe(16)
+        self.client = Client()
+        self.user_instance = self.create_user()
+        self.user_instance.set_password(_password)
+        self.user_instance.save()
 
-            instance = self.get_instance(MyDetailView, initkwargs={'object': obj}, request)
+        if isinstance(self.login, AbstractUser):
+            username = self.login.username
+        else:
+            username = self.user_instance.username
 
-        because SingleObjectMixin (part of generic.DetailView)
-        expects self.object to be set before invoking get_context_data().
-
-        Pass a "request" kwarg in order for your tests to have particular
-        request attributes.
-        """
-        initkwargs = kwargs.pop("initkwargs", None)
-        request = kwargs.pop("request", None)
-        if initkwargs is None:
-            initkwargs = {}
-        instance = view_cls(**initkwargs)
-        instance.request = request
-        instance.args = args
-        instance.kwargs = kwargs
-        return instance
-
-    def get(self, view_cls, *args, **kwargs):
-        """
-        Calls view_cls.get() method after instantiating view class.
-        Renders view templates and sets context if appropriate.
-        """
-        data = kwargs.pop("data", None)
-        instance = self.get_instance(view_cls, *args, **kwargs)
-        if not instance.request:
-            # Use a basic request
-            instance.request = RequestFactory().get("/", data)
-        self.last_response = self.get_response(instance.request, instance.get)
-        self.context = self.last_response.context
-        return self.last_response
-
-    def post(self, view_cls, *args, **kwargs):
-        """
-        Calls view_cls.post() method after instantiating view class.
-        Renders view templates and sets context if appropriate.
-        """
-        data = kwargs.pop("data", None)
-        if data is None:
-            data = {}
-        instance = self.get_instance(view_cls, *args, **kwargs)
-        if not instance.request:
-            # Use a basic request
-            instance.request = RequestFactory().post("/", data)
-        self.last_response = self.get_response(instance.request, instance.entry)
-        self.context = self.last_response.context
-        return self.last_response
-
-    def get_response(self, request, view_func):
-        """
-        Obtain response from view class method (typically get or post).
-
-        No middleware is invoked, but templates are rendered
-        and context saved if appropriate.
-        """
-        # Curry (using functools.partial) a data dictionary into
-        # an instance of the template renderer callback function.
-        data = {}
-        on_template_render = partial(store_rendered_templates, data)
-        signal_uid = "template-render-%s" % id(request)
-        signals.template_rendered.connect(on_template_render, dispatch_uid=signal_uid)
-        try:
-            response = view_func(request)
-
-            if hasattr(response, "render") and callable(response.render):
-                response = response.render()
-                # Add any rendered template detail to the response.
-                response.templates = data.get("templates", [])
-                response.context = data.get("context")
+        if isinstance(self.is_authenticated, bool):
+            if self.is_authenticated:
+                self.client.login(
+                    username=username,
+                    password=_password,
+                )
+                if not self.user_instance.is_authenticated:
+                    raise Exception("The user was not able to authenticate.")
             else:
-                response.templates = None
-                response.context = None
+                self.client.logout()
+        else:
+            raise Exception("is_authenticated must set and be a boolean.")
 
-            return response
-        finally:
-            signals.template_rendered.disconnect(dispatch_uid=signal_uid)
+        self.assertTrue(
+            self.client.login(username=self.user_instance.username, password=_password),
+            msg=f"Login failed - {self.user_instance.username} - {_password}",
+        )
+        self.url = reverse(self.endpoint_name, args=self.args, kwargs=self.kwargs)
+
+    def create_user(self):
+        return get_user_model().objects.create_user(username="testuser", password="testpassword")
+
+    def authenticate(self):
+        self.client.login(username=self.login.username, password="password")
+
+    def unauthenticate(self):
+        self.client.logout()
+
+    def get(self, *args, **kwargs):
+        return self.client.get(self.url, *args, **kwargs)
+
+    def post(self, data: dict, *args, **kwargs):
+        return self.client.post(path=self.url, data=data, *args, **kwargs)
+
+    def put(self, data: dict, *args, **kwargs):
+        return self.client.put(self.url, data, *args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        return self.client.delete(self.url, *args, **kwargs)
 
     def get_check_200(self, url, *args, **kwargs):
-        """Test that we can GET a page and it returns a 200"""
-        response = super(CBVTestCase, self).get(url, *args, **kwargs)
+        response = super(ClassBaseViewTestCase, self).get(url, *args, **kwargs)
         self.response_200(response)
         return response
 
-    def assertLoginRequired(self, url, *args, **kwargs):
+    def assert_login_required(self, url, *args, **kwargs):
         """Ensure login is required to GET this URL"""
-        response = super(CBVTestCase, self).get(url, *args, **kwargs)
+        response = super(ClassBaseViewTestCase, self).get(url, *args, **kwargs)
         reversed_url = reverse(url, args=args, kwargs=kwargs)
         login_url = str(resolve_url(settings.LOGIN_URL))
         expected_url = "{0}?next={1}".format(login_url, reversed_url)
         self.assertRedirects(response, expected_url)
 
-    def assertGoodView(self, url_name, *args, **kwargs):
+    def assert_good_view(self, url_name, *args, **kwargs):
         """
         Quick-n-dirty testing of a given view.
         Ensures view returns a 200 status and that generates less than 50
@@ -825,7 +426,7 @@ class CBVTestCase(TestCase):
         """
         query_count = kwargs.pop("test_query_count", 50)
 
-        with self.assertNumQueriesLessThan(query_count):
-            response = super(CBVTestCase, self).get(url_name, *args, **kwargs)
+        with self.assert_num_queries_less_than(query_count):
+            response = super(ClassBaseViewTestCase, self).get(url_name, *args, **kwargs)
         self.response_200(response)
         return response
