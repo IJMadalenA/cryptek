@@ -1,6 +1,5 @@
 from django.conf import settings
-from django.contrib.sessions.base_session import (AbstractBaseSession,
-                                                  BaseSessionManager)
+from django.contrib.sessions.base_session import AbstractBaseSession, BaseSessionManager
 from django.db import models
 
 from conscious_element.backends import SessionStore
