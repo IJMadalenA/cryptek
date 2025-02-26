@@ -1,3 +1,8 @@
+[tool.black]
+line-length = 119
+color = true
+target-version = ['py38']
+
 [tool.poetry]
 name = "cryptek"
 version = "0.1.0"
@@ -29,6 +34,8 @@ tensorflow = "^2.18.0"
 tf-keras = "^2.18.0"
 django-debug-toolbar = "^5.0.1"
 django-redis = "^5.4.0"
+django-allauth = { extras = ["socialaccount"], version = "^65.4.1" }
+cython = "^3.0.12"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.10.0"
