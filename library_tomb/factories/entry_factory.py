@@ -1,6 +1,7 @@
 from django.utils.text import slugify
-from factory import SubFactory, post_generation
+from factory import Faker, LazyAttribute, SubFactory
 from factory.django import DjangoModelFactory
+from factory.fuzzy import FuzzyChoice, FuzzyText
 
 from conscious_element.factory.cryptek_user_factory import CryptekUserFactory
 from library_tomb.models.entry import (Entry, EntryAnalytics, EntryReaction,
@@ -8,19 +9,14 @@ from library_tomb.models.entry import (Entry, EntryAnalytics, EntryReaction,
 
 
 class EntryFactory(DjangoModelFactory):
-    author = SubFactory(CryptekUserFactory)
-    slug = None
+    author = SubFactory(CryptekUserFactory, username=FuzzyText(length=12))
+    title = Faker(provider="sentence", nb_words=4)
+    slug = LazyAttribute(lambda o: slugify(o.title))
+    content = FuzzyText(length=120)
+    status = FuzzyChoice([0, 1, 2])
 
     class Meta:
         model = Entry
-
-    @post_generation
-    def set_slug(self, create, extracted, **kwargs):
-        """Force slug creation after the object is created if missing."""
-        if not self.slug:
-            self.slug = slugify(self.title)
-        if create:
-            self.save()
 
 
 class EntryVersionFactory(DjangoModelFactory):

@@ -9,9 +9,7 @@ from library_tomb.models.like import Like
 class LikeView(View):
     def post(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            return JsonResponse(
-                {"success": False, "message": "User not authenticated"}, status=403
-            )
+            return JsonResponse({"success": False, "message": "User not authenticated"}, status=403)
 
         entry = get_object_or_404(Entry, slug=self.kwargs["slug"])
         like_type = request.POST.get("type", Like.LIKE)
