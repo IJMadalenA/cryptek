@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import logging
 import os
+import sys
 from pathlib import Path
 
 import environ
@@ -43,11 +44,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Take environment variables from .env file
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
-ADMINS = env.list(
-    "ADMINS"
-)  # https://docs.djangoproject.com/es/5.1/ref/settings/#admins.
-MANAGERS = ADMINS  # https://docs.djangoproject.com/es/5.1/ref/settings/#managers.
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/.
 
@@ -59,9 +55,16 @@ DEBUG = env.bool("DEBUG")  # https://docs.djangoproject.com/es/5.1/ref/settings/
 LOCAL = env.bool("LOCAL")
 PERMISSIONS = env.bool("PERMISSIONS")
 
-ALLOWED_HOSTS = env.list(
-    "ALLOWED_HOSTS"
-)  # https://docs.djangoproject.com/es/5.1/ref/settings/#allowed-hosts.
+ADMINS = (
+    None
+    if DEBUG
+    else env.tuple(
+        "ADMINS",
+    )
+)  # https://docs.djangoproject.com/es/5.1/ref/settings/#admins.
+MANAGERS = ADMINS  # https://docs.djangoproject.com/es/5.1/ref/settings/#managers.
+
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")  # https://docs.djangoproject.com/es/5.1/ref/settings/#allowed-hosts.
 APPEND_SLASH = True  # https://docs.djangoproject.com/es/5.1/ref/settings/#append-slash.
 
 # APPLICATION DEFINITION. https://docs.djangoproject.com/es/5.1/ref/settings/#installed-apps ===========================
@@ -81,6 +84,13 @@ THIRD_PARTY_APPS = [
     "django_filters",
     "markdownx",
     "debug_toolbar",
+    # "allauth",
+    # "allauth.account",
+    # "allauth.socialaccount",
+    # "allauth.socialaccount.providers.coinbase",
+    # "allauth.socialaccount.providers.github",
+    # "allauth.socialaccount.providers.google",
+    # "allauth.socialaccount.providers.linkedin_oauth2",
 ]
 CUSTOM_APPS = [
     "library_tomb.apps.LibraryTombConfig",
@@ -102,6 +112,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # # Allauth middleware.
+    # "allauth.account.middleware.AccountMiddleware",
 ]  # https://docs.djangoproject.com/es/5.1/ref/settings/#middleware.
 
 ROOT_URLCONF = "cryptek.urls"
@@ -125,14 +137,23 @@ TEMPLATES = [
 WSGI_APPLICATION = "cryptek.wsgi.application"  # https://docs.djangoproject.com/es/5.1/ref/settings/#wsgi-application.
 
 # DATABASES. https://docs.djangoproject.com/en/5.1/ref/settings/#databases =============================================
-DATABASES = {
+DATABASE = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
         "ATOMIC_REQUESTS": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#atomic-requests.
         "AUTOCOMMIT": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#autocommit.
-    }
+    },
 }
+TEST_DATABASE = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "test_db.sqlite3",
+        "ATOMIC_REQUESTS": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#atomic-requests.
+        "AUTOCOMMIT": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#autocommit.
+    },
+}
+DATABASES = TEST_DATABASE if "test" in sys.argv else DATABASE
 
 # DATABASES = {
 #     "default": {
@@ -176,13 +197,16 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTHENTICATION_BACKENDS = (
     # "django.contrib.auth.backends.ModelBackend",
     "cryptek.backends.EmailOrUsernameAuthenticationBackend",
+    # "allauth.account.auth_backends.AuthenticationBackend",
 )
-AUTH_USER_MODEL = "conscious_element.CryptekUser"  # https://docs.djangoproject.com/es/5.1/ref/settings/#auth-user-model.
-LOGIN_URL = "/login/"  # https://docs.djangoproject.com/es/5.1/ref/settings/#login-url.
-LOGIN_REDIRECT_URL = (
-    "/blog/"  # https://docs.djangoproject.com/es/5.1/ref/settings/#login-redirect-url.
+AUTH_USER_MODEL = (
+    "conscious_element.CryptekUser"  # https://docs.djangoproject.com/es/5.1/ref/settings/#auth-user-model.
 )
-LOGOUT_REDIRECT_URL = "/login/"  # https://docs.djangoproject.com/es/5.1/ref/settings/#logout-redirect-url.
+
+LOGIN_URL = "login"  # https://docs.djangoproject.com/es/5.1/ref/settings/#login-url.
+LOGIN_REDIRECT_URL = "home"  # https://docs.djangoproject.com/es/5.1/ref/settings/#login-redirect-url.
+LOGOUT_REDIRECT_URL = "login"  # https://docs.djangoproject.com/es/5.1/ref/settings/#logout-redirect-url.
+
 PASSWORD_RESET_TIMEOUT = 259200  # https://docs.djangoproject.com/es/5.1/ref/settings/#password-reset-timeout.
 PASSWORD_HASHERS = (
     "django.contrib.auth.hashers.PBKDF2PasswordHasher",
@@ -260,20 +284,27 @@ CONTENT_SECURITY_POLICY = {
 # automatically redirects requests over HTTP to HTTPS.
 # SECURE_SSL_REDIRECT = True # https://docs.djangoproject.com/en/5.1/ref/settings/#secure-ssl-redirect.
 
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # https://docs.djangoproject.com/en/5.1/ref/settings/#secure-hsts-include-subdomains.
-SECURE_HSTS_PRELOAD = (
-    True  # https://docs.djangoproject.com/en/5.1/ref/settings/#secure-hsts-preload.
+SECURE_HSTS_INCLUDE_SUBDOMAINS = (
+    True  # https://docs.djangoproject.com/en/5.1/ref/settings/#secure-hsts-include-subdomains.
 )
+SECURE_HSTS_PRELOAD = True  # https://docs.djangoproject.com/en/5.1/ref/settings/#secure-hsts-preload.
 SECURE_HSTS_SECONDS = "2,592,000"  # https://docs.djangoproject.com/en/5.1/ref/settings/#secure-hsts-seconds
 
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = False if DEBUG else True
 
+# Email verification settings.
+EMAIL_TOKEN_TIMEOUT = 86400  # 24 hours
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_EMAIL_REQUIRED = True
 
+SOCIALACCOUNT_PROVIDERS = {"google": {"EMAIL_AUTHENTICATION": True}}
+SOCIALACCOUNT_FORMS = {
+    "disconnect": "allauth.socialaccount.forms.DisconnectForm",
+    "signup": "allauth.socialaccount.forms.SignupForm",
+}
 # INTERNATIONALIZATION =================================================================================================
-LANGUAGE_CODE = (
-    "en-us"  # https://docs.djangoproject.com/es/5.1/ref/settings/#language-code.
-)
+LANGUAGE_CODE = "en-us"  # https://docs.djangoproject.com/es/5.1/ref/settings/#language-code.
 LANGUAGES = (
     ("en", "English"),
     ("es", "Spanish"),
@@ -285,9 +316,7 @@ USE_TZ = True  # https://docs.djangoproject.com/es/5.1/ref/settings/#use-tz.
 
 # STATIC & MEDIA FILES (CSS, JavaScript, Images) https://docs.djangoproject.com/es/5.1/ref/settings/#static-files ======
 # https://docs.djangoproject.com/en/5.1/howto/static-files/.
-STATIC_URL = (
-    "/static/"  # https://docs.djangoproject.com/es/5.1/ref/settings/#static-url.
-)
+STATIC_URL = "/static/"  # https://docs.djangoproject.com/es/5.1/ref/settings/#static-url.
 MEDIA_URL = "/media/"
 STATIC_ROOT = os.path.join(BASE_DIR, "cryptek/static")
 MEDIA_ROOT = "cryptek/media"
@@ -297,8 +326,7 @@ MEDIA_ROOT = "cryptek/media"
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
-        "LOCATION": BASE_DIR
-        / "media",  # This is the directory where all uploaded files will be stored
+        "LOCATION": BASE_DIR / "media",  # This is the directory where all uploaded files will be stored
     },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
@@ -312,9 +340,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field.
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-DEFAULT_CHARSET = (
-    "utf-8"  # https://docs.djangoproject.com/es/5.1/ref/settings/#default-charset.
-)
+DEFAULT_CHARSET = "utf-8"  # https://docs.djangoproject.com/es/5.1/ref/settings/#default-charset.
 
 # LOGGING CONFIGURATION. https://docs.djangoproject.com/es/5.1/ref/settings/#logging ===================================
 # https://docs.djangoproject.com/es/5.1/topics/logging/#configuring-logging
@@ -331,9 +357,18 @@ LOGGING = {
             "level": "WARNING",
             "class": "logging.StreamHandler",
         },
+        "null": {
+            "class": "logging.NullHandler",
+        },
     },
     "loggers": {
         "django_csp": {
+            "handlers": ["file", "console"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+        "django.security.DisallowedHost": {
+            # https://docs.djangoproject.com/es/5.1/ref/logging/#django-security
             "handlers": ["file", "console"],
             "level": "WARNING",
             "propagate": False,

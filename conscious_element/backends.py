@@ -44,9 +44,7 @@ class SessionStore(DBStore):
         self.user_agent = user_agent[:200] if user_agent else user_agent
         self.ip = ip
         self.referer = referer[:200] if referer else referer
-        self.accept_language = (
-            accept_language[:200] if accept_language else accept_language
-        )
+        self.accept_language = accept_language[:200] if accept_language else accept_language
         self.request_path = request_path
         self.timestamp = timestamp if timestamp else datetime.datetime.now()
         self.user_id = None
