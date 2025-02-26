@@ -12,9 +12,7 @@ from django.views.generic.edit import DeletionMixin
 
 class SessionMixin:
     def get_queryset(self):
-        return self.request.user.session_set.filter(expire_date__gt=now()).order_by(
-            "-last_activity"
-        )
+        return self.request.user.session_set.filter(expire_date__gt=now()).order_by("-last_activity")
 
 
 class LoginRequiredMixin:
@@ -37,9 +35,7 @@ class SessionListView(LoginRequiredMixin, SessionMixin, ListView):
         return super().get_context_data(**kwargs)
 
 
-class SessionDeleteView(
-    LoginRequiredMixin, SessionMixin, DeletionMixin, BaseDetailView
-):
+class SessionDeleteView(LoginRequiredMixin, SessionMixin, DeletionMixin, BaseDetailView):
     """
     View for deleting a user's own session.
 
@@ -68,9 +64,7 @@ class SessionDeleteOtherView(LoginRequiredMixin, SessionMixin, DeletionMixin, Vi
     """
 
     def get_object(self):
-        return (
-            super().get_queryset().exclude(session_key=self.request.session.session_key)
-        )
+        return super().get_queryset().exclude(session_key=self.request.session.session_key)
 
     def get_success_url(self):
         return str(reverse_lazy("conscious_element:session_list"))

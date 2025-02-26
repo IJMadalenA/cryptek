@@ -1,9 +1,6 @@
 from django.contrib import messages
-from django.contrib.auth.forms import AuthenticationForm, UsernameField
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
-from django.forms.fields import CharField
-from django.forms.forms import Form
-from django.forms.widgets import PasswordInput, TextInput
 from django.urls import reverse_lazy
 
 
@@ -31,9 +28,7 @@ class CustomLoginView(LoginView):
     redirect_authenticated_user = True
 
     def form_valid(self, form):
-        messages.success(
-            self.request, f'You are now logged in as {form.cleaned_data["username"]}.'
-        )
+        messages.success(self.request, f'You are now logged in as {form.cleaned_data["username"]}.')
         return super().form_valid(form)
 
     def form_invalid(self, form):
