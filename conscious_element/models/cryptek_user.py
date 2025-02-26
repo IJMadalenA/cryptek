@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractUser
+from django.db.models import BooleanField
 
 
 # User model
@@ -10,4 +11,4 @@ class CryptekUser(AbstractUser):
     # email
     # is_staff
     # is_active
-    pass
+    email_verified = BooleanField(default=False)
