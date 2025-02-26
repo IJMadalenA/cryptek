@@ -13,11 +13,7 @@ class EmailOrUsernameAuthenticationBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
         try:
             # Try to find the user by email or username
-            user = (
-                User.objects.get(email=username)
-                if "@" in username
-                else User.objects.get(username=username)
-            )
+            user = User.objects.get(email=username) if "@" in username else User.objects.get(username=username)
         except User.DoesNotExist:
             return None
 

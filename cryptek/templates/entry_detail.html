@@ -16,6 +16,12 @@
             color: #333;
         }
 
+        .like-dislike-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
         @media (max-width: 768px) {
             .header-image {
                 width: 100%;
@@ -38,6 +44,17 @@
             .card-text {
                 font-size: 1em;
             }
+
+            .like-dislike-buttons {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .card-body {
+                padding: 10px;
+                max-width: MIN(50%, 800px);
+            }
+
         }
     </style>
 
@@ -102,33 +119,33 @@
                         headers: {
                             "X-Requested-With": "XMLHttpRequest",
                             "X-CSRFToken": "{{ csrf_token }}",
-                    },
-                })
-                .then(response => response.json())
-                .then(data => {
-                    alert(data.message);
-                })
-                .catch(error => console.error("Error:", error));
-            });
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                    })
+                    .catch(error => console.error("Error:", error));
+                });
 
-            dislikeForm.addEventListener("submit", function(event) {
-                event.preventDefault();
-                const formData = new FormData(dislikeForm);
-                fetch(dislikeForm.action, {
-                    method: "POST",
-                    body: formData,
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest",
-                        "X-CSRFToken": "{{ csrf_token }}",
-                    },
-                })
-                .then(response => response.json())
-                .then(data => {
-                    alert(data.message);
-                })
-                .catch(error => console.error("Error:", error));
+                dislikeForm.addEventListener("submit", function(event) {
+                    event.preventDefault();
+                    const formData = new FormData(dislikeForm);
+                    fetch(dislikeForm.action, {
+                        method: "POST",
+                        body: formData,
+                        headers: {
+                            "X-Requested-With": "XMLHttpRequest",
+                            "X-CSRFToken": "{{ csrf_token }}",
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                    })
+                    .catch(error => console.error("Error:", error));
+                });
             });
-        });
         </script>
     </div>
 {% endblock content %}
