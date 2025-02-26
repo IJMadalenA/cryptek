@@ -44,18 +44,12 @@ class ContactMeForm(forms.Form):
         if user and user.is_authenticated:
             self.fields["is_authenticated"].initial = True
             self.fields["username"].widget = forms.HiddenInput()
-            self.fields["first_name"].widget.attrs.update(
-                {"readonly": True, "class": "form-control-plaintext"}
-            )
+            self.fields["first_name"].widget.attrs.update({"readonly": True, "class": "form-control-plaintext"})
             self.fields["first_name"].initial = user.first_name
             self.fields["first_name"].required = False
-            self.fields["last_name"].widget.attrs.update(
-                {"readonly": True, "class": "form-control-plaintext"}
-            )
+            self.fields["last_name"].widget.attrs.update({"readonly": True, "class": "form-control-plaintext"})
             self.fields["last_name"].initial = user.last_name
             self.fields["last_name"].required = False
-            self.fields["email"].widget.attrs.update(
-                {"readonly": True, "class": "form-control-plaintext"}
-            )
+            self.fields["email"].widget.attrs.update({"readonly": True, "class": "form-control-plaintext"})
             self.fields["email"].initial = user.email
             self.fields["email"].required = False

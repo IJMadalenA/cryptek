@@ -4,8 +4,7 @@ from factory.django import DjangoModelFactory
 from factory.fuzzy import FuzzyChoice, FuzzyText
 
 from conscious_element.factory.cryptek_user_factory import CryptekUserFactory
-from library_tomb.models.entry import (Entry, EntryAnalytics, EntryReaction,
-                                       EntryVersion)
+from library_tomb.models.entry import Entry, EntryAnalytics, EntryReaction, EntryVersion
 
 
 class EntryFactory(DjangoModelFactory):
