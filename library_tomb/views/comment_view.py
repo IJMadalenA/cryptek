@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
@@ -19,55 +20,42 @@ class CommentView(View, FormMixin, SingleObjectMixin):
 
     def form_valid(self, form):
         if not self.request.user.is_authenticated:
-            return JsonResponse(
-                {"success": False, "message": "User not authenticated"}, status=403
-            )
+            return JsonResponse({"success": False, "message": "User not authenticated"}, status=403)
         entry = get_object_or_404(Entry, slug=self.kwargs["slug"], status=1)
         comment = form.save(commit=False)
         comment.entry = entry
         comment.user = self.request.user
         comment.save()
-        return JsonResponse(
-            {"success": True, "message": "Comment successfully added!"}, status=201
-        )
+        return JsonResponse({"success": True, "message": "Comment successfully added!"}, status=201)
 
     def form_invalid(self, form):
         return JsonResponse({"success": False, "errors": form.errors}, status=400)
 
-    def get(self, request, *args, **kwargs):
+    def get(self, *args, **kwargs):
         entry = get_object_or_404(Entry, slug=self.kwargs["slug"], status=1)
         comments = entry.comments.all()
-        return JsonResponse(
-            {"success": True, "comments": list(comments.values())}, status=200
-        )
+        return JsonResponse(data={"success": True, "comments": list(comments.values())}, status=200)
 
-    def post(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return JsonResponse(
-                {"success": False, "message": "User not authenticated"}, status=403
-            )
+    @method_decorator(login_required(login_url="/login/"))
+    def post(self, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return JsonResponse({"success": False, "message": "User not authenticated"}, status=403)
         entry = get_object_or_404(Entry, slug=self.kwargs["slug"], status=1)
         form = self.get_form()
         if form.is_valid():
             comment = form.save(commit=False)
             comment.entry = entry
-            comment.user = request.user
+            comment.user = self.request.user
             comment.save()
-            return JsonResponse(
-                {"success": True, "message": "Comment successfully added!"}, status=201
-            )
+            return JsonResponse({"success": True, "message": "Comment successfully added!"}, status=201)
         return JsonResponse({"success": False, "errors": form.errors}, status=400)
 
-    def put(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return JsonResponse(
-                {"success": False, "message": "User not authenticated"}, status=403
-            )
+    def put(self, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return JsonResponse({"success": False, "message": "User not authenticated"}, status=403)
         comment = get_object_or_404(Comment, id=self.kwargs["pk"])
-        if request.user != comment.user and not request.user.is_staff:
-            return HttpResponseForbidden(
-                "You do not have permission to edit this comment."
-            )
+        if self.request.user != comment.user and not self.request.user.is_staff:
+            return HttpResponseForbidden("You do not have permission to edit this comment.")
         form = self.get_form()
         if form.is_valid():
             form.save()
@@ -77,17 +65,11 @@ class CommentView(View, FormMixin, SingleObjectMixin):
             )
         return JsonResponse({"success": False, "errors": form.errors}, status=400)
 
-    def delete(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return JsonResponse(
-                {"success": False, "message": "User not authenticated"}, status=403
-            )
+    def delete(self, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return JsonResponse({"success": False, "message": "User not authenticated"}, status=403)
         comment = get_object_or_404(Comment, id=self.kwargs["pk"])
-        if request.user != comment.user and not request.user.is_staff:
-            return HttpResponseForbidden(
-                "You do not have permission to delete this comment."
-            )
+        if self.request.user != comment.user and not self.request.user.is_staff:
+            return HttpResponseForbidden("You do not have permission to delete this comment.")
         comment.delete()
-        return JsonResponse(
-            {"success": True, "message": "Comment successfully deleted!"}, status=200
-        )
+        return JsonResponse({"success": True, "message": "Comment successfully deleted!"}, status=200)
