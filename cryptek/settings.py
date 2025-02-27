@@ -303,6 +303,7 @@ SOCIALACCOUNT_FORMS = {
     "disconnect": "allauth.socialaccount.forms.DisconnectForm",
     "signup": "allauth.socialaccount.forms.SignupForm",
 }
+
 # INTERNATIONALIZATION =================================================================================================
 LANGUAGE_CODE = "en-us"  # https://docs.djangoproject.com/es/5.1/ref/settings/#language-code.
 LANGUAGES = (
@@ -312,7 +313,6 @@ LANGUAGES = (
 TIME_ZONE = "UTC"
 USE_I18N = True  # https://docs.djangoproject.com/en/5.1/topics/i18n/.
 USE_TZ = True  # https://docs.djangoproject.com/es/5.1/ref/settings/#use-tz.
-
 
 # STATIC & MEDIA FILES (CSS, JavaScript, Images) https://docs.djangoproject.com/es/5.1/ref/settings/#static-files ======
 # https://docs.djangoproject.com/en/5.1/howto/static-files/.
@@ -421,3 +421,7 @@ DEBUG_TOOLBAR_PANELS = [
     # 'debug_toolbar.panels.redirects.RedirectsPanel',
     # "debug_toolbar.panels.profiling.ProfilingPanel",
 ]
+
+# Django RateLimit. https://django-ratelimit.readthedocs.io/en/stable/ =================================================
+RATELIMIT_HASH_ALGORITHM = "hashlib.sha256"
+RATELIMIT_ENABLE = False if DEBUG else True

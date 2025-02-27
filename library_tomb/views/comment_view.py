@@ -1,3 +1,4 @@
+# views/comment_view.py
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404
@@ -7,6 +8,7 @@ from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import FormMixin
 from django_ratelimit.decorators import ratelimit
 
+from cryptek.ai_system.comment_moderation import CommentModeration
 from library_tomb.forms.comment_form import CommentForm
 from library_tomb.models.comment import Comment
 from library_tomb.models.entry import Entry
@@ -18,9 +20,20 @@ class CommentView(View, FormMixin, SingleObjectMixin):
     form_class = CommentForm
     template_name = "entry_detail.html"
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.moderation = CommentModeration()
+
     def form_valid(self, form):
         if not self.request.user.is_authenticated:
             return JsonResponse({"success": False, "message": "User not authenticated"}, status=403)
+
+        content = form.cleaned_data.get("content")
+        acceptable, label = self.moderation.moderate_comment(content)
+
+        if not acceptable:
+            return JsonResponse({"success": False, "message": f"Comment not acceptable: {label}"}, status=400)
+
         entry = get_object_or_404(Entry, slug=self.kwargs["slug"], status=1)
         comment = form.save(commit=False)
         comment.entry = entry
@@ -40,31 +53,37 @@ class CommentView(View, FormMixin, SingleObjectMixin):
     def post(self, *args, **kwargs):
         if not self.request.user.is_authenticated:
             return JsonResponse({"success": False, "message": "User not authenticated"}, status=403)
-        entry = get_object_or_404(Entry, slug=self.kwargs["slug"], status=1)
+
         form = self.get_form()
         if form.is_valid():
-            comment = form.save(commit=False)
-            comment.entry = entry
-            comment.user = self.request.user
-            comment.save()
-            return JsonResponse({"success": True, "message": "Comment successfully added!"}, status=201)
-        return JsonResponse({"success": False, "errors": form.errors}, status=400)
+            return self.form_valid(form)
+        return self.form_invalid(form)
 
+    @method_decorator(login_required(login_url="/login/"))
     def put(self, *args, **kwargs):
         if not self.request.user.is_authenticated:
             return JsonResponse({"success": False, "message": "User not authenticated"}, status=403)
-        comment = get_object_or_404(Comment, id=self.kwargs["pk"])
-        if self.request.user != comment.user and not self.request.user.is_staff:
-            return HttpResponseForbidden("You do not have permission to edit this comment.")
-        form = self.get_form()
-        if form.is_valid():
-            form.save()
-            return JsonResponse(
-                {"success": True, "message": "Comment successfully updated!"},
-                status=200,
-            )
-        return JsonResponse({"success": False, "errors": form.errors}, status=400)
 
+        comment = kwargs.get("pk", None)
+        if not comment or not isinstance(comment, int):
+            return JsonResponse({"success": False, "message": "Comment ID not provided"}, status=400)
+
+        comment = get_object_or_404(Comment, id=comment)
+        if (self.request.user != comment.user) and not (self.request.user.is_staff or self.request.user.is_superuser):
+            return HttpResponseForbidden("You do not have permission to edit this comment.")
+
+        content = self.request.body
+        acceptable, label = self.moderation.moderate_comment(content)
+        if not acceptable:
+            return JsonResponse({"success": False, "message": f"Comment not acceptable: {label}"}, status=400)
+
+        # Django forms only work with GET and POST methods. That's the reason why we can't implement forms here.
+        comment.content = content
+        comment.save()
+
+        return JsonResponse({"success": True, "message": "Comment successfully updated!"}, status=200)
+
+    @method_decorator(login_required(login_url="/login/"))
     def delete(self, *args, **kwargs):
         if not self.request.user.is_authenticated:
             return JsonResponse({"success": False, "message": "User not authenticated"}, status=403)

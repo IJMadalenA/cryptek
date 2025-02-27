@@ -10,11 +10,14 @@ class CommentModeration:
     def __init__(self, model_name="distilbert-base-uncased-finetuned-sst-2-english"):
         self.moderation_pipeline = pipeline("sentiment-analysis", model=model_name)
 
-    def moderate_comment(self, content: str, score_threshold: int = None) -> (bool, float):
+    def moderate_comment(self, content: (str, bytes), score_threshold: int = None) -> (bool, float):
         """
         Check if the comment content is acceptable.
         This method only admits a single comment as input.
         """
+        if isinstance(content, bytes):
+            content = content.decode("utf-8")
+
         if not isinstance(content, str):
             raise ValueError("The content must be a single string.")
 

@@ -382,7 +382,6 @@ class ClassBaseViewTestCase(TestCase, BaseTestCase):
             self.client.login(username=self.user_instance.username, password=_password),
             msg=f"Login failed - {self.user_instance.username} - {_password}",
         )
-        self.url = reverse(self.endpoint_name, args=self.args, kwargs=self.kwargs)
 
     def create_user(self):
         return get_user_model().objects.create_user(username="testuser", password="testpassword")
@@ -394,16 +393,22 @@ class ClassBaseViewTestCase(TestCase, BaseTestCase):
         self.client.logout()
 
     def get(self, *args, **kwargs):
-        return self.client.get(self.url, *args, **kwargs)
+        return self.client.get(path=reverse(self.endpoint_name, args=self.args, kwargs=self.kwargs), *args, **kwargs)
 
-    def post(self, data: dict, *args, **kwargs):
-        return self.client.post(path=self.url, data=data, *args, **kwargs)
+    def post(self, data, *args, **kwargs):
+        return self.client.post(
+            path=reverse(self.endpoint_name, args=self.args, kwargs=self.kwargs), data=data, *args, **kwargs
+        )
 
-    def put(self, data: dict, *args, **kwargs):
-        return self.client.put(self.url, data, *args, **kwargs)
+    def put(self, data, *args, **kwargs):
+        return self.client.put(
+            path=reverse(self.endpoint_name, args=self.args, kwargs=self.kwargs), data=data, *args, **kwargs
+        )
 
     def delete(self, *args, **kwargs):
-        return self.client.delete(self.url, *args, **kwargs)
+        return self.client.delete(
+            path=reverse(self.endpoint_name, args=self.args, kwargs=self.kwargs), *args, **kwargs
+        )
 
     def get_check_200(self, url, *args, **kwargs):
         response = super(ClassBaseViewTestCase, self).get(url, *args, **kwargs)
