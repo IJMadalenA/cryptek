@@ -1,4 +1,6 @@
 # views/comment_view.py
+import ast
+
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404
@@ -72,7 +74,13 @@ class CommentView(View, FormMixin, SingleObjectMixin):
         if (self.request.user != comment.user) and not (self.request.user.is_staff or self.request.user.is_superuser):
             return HttpResponseForbidden("You do not have permission to edit this comment.")
 
-        content = self.request.body
+        content = ast.literal_eval(self.request.body.decode("utf-8"))
+        content = content.get("content", None)
+
+        if not content or not isinstance(content, str):
+            return JsonResponse(
+                {"success": False, "message": "Error - Content not provided or is not a string"}, status=400
+            )
         acceptable, label = self.moderation.moderate_comment(content)
         if not acceptable:
             return JsonResponse({"success": False, "message": f"Comment not acceptable: {label}"}, status=400)

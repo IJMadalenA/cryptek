@@ -18,7 +18,7 @@ class CommentModeration:
         if isinstance(content, bytes):
             content = content.decode("utf-8")
 
-        if not isinstance(content, str):
+        if not content or not isinstance(content, str):
             raise ValueError("The content must be a single string.")
 
         result = self.moderation_pipeline(content)[0]
