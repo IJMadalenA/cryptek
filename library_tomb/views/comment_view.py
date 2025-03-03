@@ -18,6 +18,20 @@ from library_tomb.models.entry import Entry
 
 @method_decorator(ratelimit(key="ip", rate="10/m"), name="dispatch")
 class CommentView(View, FormMixin, SingleObjectMixin):
+    """
+    A view for handling comments on entries. This view supports various HTTP methods
+    such as GET, POST, PUT, and DELETE to manage comments.
+
+    Inherits from:
+        - View: Base class for all views in Django.
+        - FormMixin: Provides a way to handle forms in class-based views.
+        - SingleObjectMixin: Provides a way to handle a single object for the view.
+
+    Attributes:
+        model (Comment): The model associated with this view.
+        form_class (CommentForm): The form class used for creating and updating comments.
+        template_name (str): The template used to render the view.
+    """
     model = Comment
     form_class = CommentForm
     template_name = "entry_detail.html"
@@ -47,9 +61,9 @@ class CommentView(View, FormMixin, SingleObjectMixin):
         return JsonResponse({"success": False, "errors": form.errors}, status=400)
 
     def get(self, *args, **kwargs):
-        entry = get_object_or_404(Entry, slug=self.kwargs["slug"], status=1)
-        comments = entry.comments.all()
-        return JsonResponse(data={"success": True, "comments": list(comments.values())}, status=200)
+            entry = get_object_or_404(Entry, slug=self.kwargs["slug"], status=1)
+            comments = entry.comments.all()
+            return JsonResponse(data={"success": True, "comments": list(comments.values())}, status=200)
 
     @method_decorator(login_required(login_url="/login/"))
     def post(self, *args, **kwargs):
@@ -74,6 +88,7 @@ class CommentView(View, FormMixin, SingleObjectMixin):
         if (self.request.user != comment.user) and not (self.request.user.is_staff or self.request.user.is_superuser):
             return HttpResponseForbidden("You do not have permission to edit this comment.")
 
+        # https://docs.python.org/3/library/ast.html
         content = ast.literal_eval(self.request.body.decode("utf-8"))
         content = content.get("content", None)
 

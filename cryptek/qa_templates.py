@@ -233,7 +233,6 @@ class BaseTestCase(StatusCodeAssertionMixin):
         self.assertRedirects(response, expected_url)
 
     assertRedirects = TestCase.assertRedirects
-    assertURLEqual = assertURLEqual
 
     def login(self, *args, **credentials):
         """Login a user"""
@@ -422,16 +421,3 @@ class ClassBaseViewTestCase(TestCase, BaseTestCase):
         login_url = str(resolve_url(settings.LOGIN_URL))
         expected_url = "{0}?next={1}".format(login_url, reversed_url)
         self.assertRedirects(response, expected_url)
-
-    def assert_good_view(self, url_name, *args, **kwargs):
-        """
-        Quick-n-dirty testing of a given view.
-        Ensures view returns a 200 status and that generates less than 50
-        database queries.
-        """
-        query_count = kwargs.pop("test_query_count", 50)
-
-        with self.assert_num_queries_less_than(query_count):
-            response = super(ClassBaseViewTestCase, self).get(url_name, *args, **kwargs)
-        self.response_200(response)
-        return response

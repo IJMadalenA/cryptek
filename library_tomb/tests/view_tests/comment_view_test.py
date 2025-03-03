@@ -7,9 +7,10 @@ from conscious_element.factory.cryptek_user_factory import CryptekUserFactory
 from cryptek.qa_templates import ClassBaseViewTestCase
 from library_tomb.factories.comment_factory import CommentFactory
 from library_tomb.factories.entry_factory import EntryFactory
+from library_tomb.models.comment import Comment
 
 
-class CommentViewTestCase(ClassBaseViewTestCase):
+class CommentViewGetPostTestCase(ClassBaseViewTestCase):
     endpoint_name = "get_post_comment"
     is_authenticated = True
 
@@ -42,6 +43,15 @@ class CommentViewTestCase(ClassBaseViewTestCase):
             self.assertIn("comments", response_data)
             self.assertTrue(len(response_data["comments"]) > 0)
 
+    def test_get_logout(self):
+        with self.logout():
+            response = self.get()
+            self.response_code(response=response, status_code=200)
+            # Validate that the user is authenticated.
+            response_data = json.loads(response.content)
+            self.assertIn("comments", response_data)
+            self.assertTrue(len(response_data["comments"]) > 0)
+
     def test_get_login_with_instance(self):
         user_instance = CryptekUserFactory.create()
         with self.login(user_instance):
@@ -53,11 +63,24 @@ class CommentViewTestCase(ClassBaseViewTestCase):
             self.assertTrue(len(response_data["comments"]) > 0)
 
     def test_post_comment(self):
-        data = {"content": "This is a test comment."}
+        data = {"content": "This is a good comment."}
         response = self.post(data=data)
         self.response_code(response=response, status_code=201)
         response_data = json.loads(response.content)
         self.assertIn("message", response_data)
+
+    def test_post_verified_comment(self):
+        random_comment = randint(100000, 999999)
+        data = {"content": f"This is a good comment - {random_comment}."}
+        response = self.post(data=data)
+        self.response_code(response=response, status_code=201)
+        Comment.objects.filter(content=f"This is a good comment - {random_comment}.").exists()
+
+    def test_post_moderation_system(self):
+        data = {"content": f"This is a shitty comment"}
+        response = self.post(data=data)
+        self.response_code(response=response, status_code=400)
+        Comment.objects.filter(content=f"This is a shitty comment").exists()
 
     def test_post_comment_invalid_data(self):
         data = {"content": ""}
@@ -96,3 +119,54 @@ class CommentViewTestCase(ClassBaseViewTestCase):
             data = {"content": "This is a test comment."}
             response = self.post(data=data)
             self.response_code(response=response, status_code=201)
+
+
+class CommentViewPutDeleteTestCase(ClassBaseViewTestCase):
+    endpoint_name = "put_delete_comment"
+    is_authenticated = True
+
+    def setUp(self):
+        super().setUp()
+        self.comment = CommentFactory.create(user=self.user_instance)
+        self.kwargs = {"slug": self.comment.entry.slug, "pk": self.comment.id}
+        self.user_instance.is_staff = True
+        self.user_instance.save()
+
+    def test_put_comment(self):
+        data = {"content": "This is a very good comment."}
+        response = self.put(data=data)
+        self.response_code(response=response, status_code=200)
+        response_data = json.loads(response.content)
+        self.assertIn("message", response_data)
+
+    def test_put_comment_invalid_data(self):
+        data = {"content": ""}
+        response = self.put(data=data)
+        self.response_400(response)
+        response_data = json.loads(response.content)
+        self.assertFalse(response_data.get("success", None))
+
+    def test_put_comment_unauthenticated(self):
+        with self.logout():
+            data = {"content": "This is an updated comment."}
+            response = self.put(data=data)
+            self.response_code(response=response, status_code=302)
+
+    def test_delete_comment(self):
+        response = self.delete()
+        self.response_code(response=response, status_code=200)
+        response_data = json.loads(response.content)
+        self.assertIn("message", response_data)
+
+    def test_delete_comment_unauthenticated(self):
+        with self.logout():
+            response = self.delete()
+            self.response_code(response=response, status_code=302)
+
+    def test_delete_comment_staff(self):
+        self.comment.user.is_staff = True
+        self.comment.user.save()
+        response = self.delete()
+        self.response_code(response=response, status_code=200)
+        response_data = json.loads(response.content)
+        self.assertIn("message", response_data)
