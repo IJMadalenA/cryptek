@@ -71,6 +71,7 @@ urlpatterns = (
     ]
     + third_party_apps_urls
     + debug_toolbar_urls()
+    + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 )
 
 if settings.DEBUG:

@@ -102,8 +102,8 @@ INSTALLED_APPS = DJANGO_DEFAULT_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "csp.middleware.CSPMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    "csp.middleware.CSPMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     # "django.contrib.sessions.middleware.SessionMiddleware",
     "conscious_element.session_middleware.SessionMiddleware",
@@ -318,10 +318,10 @@ USE_TZ = True  # https://docs.djangoproject.com/es/5.1/ref/settings/#use-tz.
 # https://docs.djangoproject.com/en/5.1/howto/static-files/.
 STATIC_URL = "/static/"  # https://docs.djangoproject.com/es/5.1/ref/settings/#static-url.
 MEDIA_URL = "/media/"
-STATIC_ROOT = os.path.join(BASE_DIR, "cryptek/static")
+STATIC_ROOT = os.path.join(BASE_DIR, "cryptek/staticfiles")
 MEDIA_ROOT = "cryptek/media"
 # STATICFILES_DIRS = [
-#     BASE_DIR / "/static/",
+#     os.path.join(BASE_DIR, "cryptek/staticfiles"),
 # ]
 STORAGES = {
     "default": {
