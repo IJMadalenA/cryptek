@@ -1,4 +1,8 @@
 {% extends "base.html" %}
+{% load socialaccount %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'accounts/auth.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 {% block content %}
     <style>
@@ -10,27 +14,53 @@
             background-color: white;
             border-radius: 40px;
         }
+
         .login-title {
             text-align: center;
             color: #185034;
         }
+
         .btn-secondary {
             background-color: #ffd700;
             border-color: #ffd700;
             color: black;
         }
+
         .form-control {
             border-radius: 20px;
             background-color: #f3fbf4;
             padding: 10px 20px;
             border: 0;
         }
+
         .form-group {
             margin-bottom: 0;
         }
+
         .btn-container {
             text-align: center;
             margin-top: 20px;
+        }
+
+        .github-btn {
+            align-items: center;
+            justify-content: center;
+            background-color: #333;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .github-btn img {
+            width: 25px;
+            height: 25px;
+            margin-right: 4px;
+        }
+
+        .github-btn span {
+            margin-left: 8px;
         }
     </style>
 
@@ -42,12 +72,14 @@
 
                 <div class="form-group">
                     <label for="id_username"></label>
-                    <input type="text" id="id_username" name="username" class="form-control" placeholder="Enter your username or email" required>
+                    <input type="text" id="id_username" name="username" class="form-control"
+                           placeholder="Enter your username or email" required>
                 </div>
 
                 <div class="form-group">
                     <label for="id_password"></label>
-                    <input type="password" id="id_password" name="password" class="form-control" placeholder="Enter your password" required>
+                    <input type="password" id="id_password" name="password" class="form-control"
+                           placeholder="Enter your password" required>
                 </div>
 
                 <!-- Login Button -->
@@ -60,11 +92,18 @@
 
             <div class="btn-container">
                 <!-- Create Account Button -->
-                <a href="{% url 'create_account' %}" class="btn btn-secondary">
+                <a href="{% url 'account_signup' %}" class="btn btn-secondary">
                     Create Account
                 </a>
             </div>
 
+            <!-- Social Login Buttons -->
+            <div class="btn-container">
+                <a href="{% provider_login_url 'github' %}" class="github-btn btn btn-secondary">
+                    <img src="{% static 'images/github-mark-white.svg' %}" alt="GitHub">
+                    <span>Login with GitHub</span>
+                </a>
+            </div>
         </div>
     </div>
 {% endblock %}

@@ -14,9 +14,7 @@ class PostFilter(filters.FilterSet):
         fields = []
 
     def filter_by_all(self, queryset, name, value):
-        return queryset.filter(
-            Q(title__icontains=value) | Q(overview__icontains=value)
-        ).distinct()
+        return queryset.filter(Q(title__icontains=value) | Q(overview__icontains=value)).distinct()
 
 
 class PostListView(ListView):

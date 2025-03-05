@@ -32,6 +32,7 @@ class CommentView(View, FormMixin, SingleObjectMixin):
         form_class (CommentForm): The form class used for creating and updating comments.
         template_name (str): The template used to render the view.
     """
+
     model = Comment
     form_class = CommentForm
     template_name = "entry_detail.html"
@@ -61,9 +62,9 @@ class CommentView(View, FormMixin, SingleObjectMixin):
         return JsonResponse({"success": False, "errors": form.errors}, status=400)
 
     def get(self, *args, **kwargs):
-            entry = get_object_or_404(Entry, slug=self.kwargs["slug"], status=1)
-            comments = entry.comments.all()
-            return JsonResponse(data={"success": True, "comments": list(comments.values())}, status=200)
+        entry = get_object_or_404(Entry, slug=self.kwargs["slug"], status=1)
+        comments = entry.comments.all()
+        return JsonResponse(data={"success": True, "comments": list(comments.values())}, status=200)
 
     @method_decorator(login_required(login_url="/login/"))
     def post(self, *args, **kwargs):
