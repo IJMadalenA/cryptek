@@ -55,6 +55,8 @@ DEBUG = env.bool("DEBUG")  # https://docs.djangoproject.com/es/5.1/ref/settings/
 LOCAL = env.bool("LOCAL")
 PERMISSIONS = env.bool("PERMISSIONS")
 
+SITE_ID = 1  # https://docs.djangoproject.com/es/5.1/ref/settings/#site-id.
+
 ADMINS = (
     None
     if DEBUG
@@ -77,6 +79,7 @@ DJANGO_DEFAULT_APPS = [
     "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
+    "django.contrib.sites",  # https://docs.djangoproject.com/es/5.1/ref/contrib/sites/
 ]
 THIRD_PARTY_APPS = [
     "csp",
@@ -84,13 +87,15 @@ THIRD_PARTY_APPS = [
     "django_filters",
     "markdownx",
     "debug_toolbar",
-    # "allauth",
-    # "allauth.account",
-    # "allauth.socialaccount",
-    # "allauth.socialaccount.providers.coinbase",
-    # "allauth.socialaccount.providers.github",
-    # "allauth.socialaccount.providers.google",
-    # "allauth.socialaccount.providers.linkedin_oauth2",
+    # django-allauth.
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    # django-allauth providers.
+    "allauth.socialaccount.providers.coinbase",
+    "allauth.socialaccount.providers.github",
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.linkedin_oauth2",
 ]
 CUSTOM_APPS = [
     "library_tomb.apps.LibraryTombConfig",
@@ -113,7 +118,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # # Allauth middleware.
-    # "allauth.account.middleware.AccountMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]  # https://docs.djangoproject.com/es/5.1/ref/settings/#middleware.
 
 ROOT_URLCONF = "cryptek.urls"
@@ -197,7 +202,7 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTHENTICATION_BACKENDS = (
     # "django.contrib.auth.backends.ModelBackend",
     "cryptek.backends.EmailOrUsernameAuthenticationBackend",
-    # "allauth.account.auth_backends.AuthenticationBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
 )
 AUTH_USER_MODEL = (
     "conscious_element.CryptekUser"  # https://docs.djangoproject.com/es/5.1/ref/settings/#auth-user-model.
@@ -298,7 +303,6 @@ EMAIL_TOKEN_TIMEOUT = 86400  # 24 hours
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_EMAIL_REQUIRED = True
 
-SOCIALACCOUNT_PROVIDERS = {"google": {"EMAIL_AUTHENTICATION": True}}
 SOCIALACCOUNT_FORMS = {
     "disconnect": "allauth.socialaccount.forms.DisconnectForm",
     "signup": "allauth.socialaccount.forms.SignupForm",
@@ -400,7 +404,6 @@ MESSAGE_TAGS = {
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
-
 # DJANGO DEBUG TOOLBAR. https://django-debug-toolbar.readthedocs.io/en/latest/installation.html ========================
 INTERNAL_IPS = [
     "127.0.0.1",
@@ -425,3 +428,17 @@ DEBUG_TOOLBAR_PANELS = [
 # Django RateLimit. https://django-ratelimit.readthedocs.io/en/stable/ =================================================
 RATELIMIT_HASH_ALGORITHM = "hashlib.sha256"
 RATELIMIT_ENABLE = False if DEBUG else True
+
+# Django Allauth. https://django-allauth.readthedocs.io/en/latest/installation.html ====================================
+SOCIALACCOUNT_PROVIDERS = {
+    "github": {
+        "SCOPE": [
+            "user",
+            "email",
+            "repo",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+    }
+}

@@ -45,6 +45,7 @@ third_party_apps_urls = [
     ),
     path("markdownx/", include("markdownx.urls")),
     path("csp-violations/", csp_report_view, name="csp_report_view"),
+    path("accounts/", include("allauth.urls")),
 ]
 
 urlpatterns = (
