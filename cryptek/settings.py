@@ -92,7 +92,6 @@ THIRD_PARTY_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     # django-allauth providers.
-    "allauth.socialaccount.providers.coinbase",
     "allauth.socialaccount.providers.github",
     "allauth.socialaccount.providers.google",
     "allauth.socialaccount.providers.linkedin_oauth2",
@@ -439,5 +438,23 @@ SOCIALACCOUNT_PROVIDERS = {
         "AUTH_PARAMS": {
             "access_type": "online",
         },
-    }
+    },
+    "google": {
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+    },
+    "linkedin_oauth2": {
+        "SCOPE": [
+            "r_liteprofile",
+            "r_emailaddress",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "offline",
+        },
+    },
 }
