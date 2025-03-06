@@ -435,7 +435,6 @@ SOCIALACCOUNT_PROVIDERS = {
         "SCOPE": [
             "user",
             "email",
-            "repo",
         ],
         "AUTH_PARAMS": {
             "access_type": "online",
