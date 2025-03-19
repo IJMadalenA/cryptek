@@ -1,5 +1,4 @@
 Django~=5.1.7
-cryptek~=0.1.0
 transformers~=4.49.0
 django-environ~=0.11.2
 django-debug-toolbar~=5.0.1
