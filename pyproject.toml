@@ -28,8 +28,6 @@ Markdown = "^3.7"
 pillow = "^11.0.0"
 tblib = "^3.0.0"
 transformers = "^4.48.1"
-tensorflow = "^2.18.0"
-tf-keras = "^2.18.0"
 django-redis = "^5.4.0"
 django-allauth = { extras = ["socialaccount"], version = "^65.4.1" }
 cython = "^3.0.12"
