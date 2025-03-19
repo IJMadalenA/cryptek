@@ -1,6 +1,6 @@
+from blog_app.factories.entry_factory import EntryFactory
+from blog_app.models.entry import Entry
 from cryptek.qa_templates import ClassBaseViewTestCase
-from library_tomb.factories.entry_factory import EntryFactory
-from library_tomb.models.entry import Entry
 
 
 class EntryViewTestCase(ClassBaseViewTestCase):

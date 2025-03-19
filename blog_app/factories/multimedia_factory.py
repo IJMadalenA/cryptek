@@ -1,8 +1,8 @@
 from factory import SubFactory
 from factory.django import DjangoModelFactory
 
-from library_tomb.factories.entry_factory import EntryFactory
-from library_tomb.models.multimedia import Multimedia
+from blog_app.factories.entry_factory import EntryFactory
+from blog_app.models.multimedia import Multimedia
 
 
 class MultimediaFactory(DjangoModelFactory):

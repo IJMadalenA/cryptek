@@ -10,8 +10,8 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views import View
 from django.views.generic import FormView
 
+from blog_app.utils.token_generator import EmailConfirmationTokenGenerator
 from conscious_element.forms.create_account_form import CreateAccountForm
-from library_tomb.utils.token_generator import EmailConfirmationTokenGenerator
 
 
 # --- Asynchronous function ---

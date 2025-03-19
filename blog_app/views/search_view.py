@@ -1,9 +1,8 @@
 from django.db.models import Q
-from django.shortcuts import render
 from django.views.generic import ListView
 from django_filters import rest_framework as filters
 
-from library_tomb.models.entry import Entry
+from blog_app.models.entry import Entry
 
 
 class PostFilter(filters.FilterSet):

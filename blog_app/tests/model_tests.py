@@ -1,10 +1,10 @@
+from blog_app.factories.category_factory import CategoryFactory
+from blog_app.factories.comment_factory import CommentFactory
+from blog_app.factories.entry_factory import EntryFactory
+from blog_app.factories.like_factory import LikeFactory
+from blog_app.factories.multimedia_factory import MultimediaFactory
+from blog_app.factories.tag_factory import TagFactory
 from cryptek.test_and_check.base_model_test import BaseModelTestCase
-from library_tomb.factories.category_factory import CategoryFactory
-from library_tomb.factories.comment_factory import CommentFactory
-from library_tomb.factories.entry_factory import EntryFactory
-from library_tomb.factories.like_factory import LikeFactory
-from library_tomb.factories.multimedia_factory import MultimediaFactory
-from library_tomb.factories.tag_factory import TagFactory
 
 
 class CategoryTestCase(BaseModelTestCase):

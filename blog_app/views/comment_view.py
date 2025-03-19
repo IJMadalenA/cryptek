@@ -10,10 +10,10 @@ from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import FormMixin
 from django_ratelimit.decorators import ratelimit
 
+from blog_app.forms.comment_form import CommentForm
+from blog_app.models.comment import Comment
+from blog_app.models.entry import Entry
 from cryptek.ai_system.comment_moderation import CommentModeration
-from library_tomb.forms.comment_form import CommentForm
-from library_tomb.models.comment import Comment
-from library_tomb.models.entry import Entry
 
 
 @method_decorator(ratelimit(key="ip", rate="10/m"), name="dispatch")

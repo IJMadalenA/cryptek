@@ -1,7 +1,7 @@
 from rest_framework.fields import CharField, DateTimeField, ImageField
 from rest_framework.serializers import ModelSerializer
 
-from library_tomb.models.entry import Entry
+from blog_app.models.entry import Entry
 
 
 class EntrySerializerOut(ModelSerializer):

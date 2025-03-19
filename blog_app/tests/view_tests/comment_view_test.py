@@ -3,11 +3,11 @@ import time
 import unittest
 from random import randint
 
+from blog_app.factories.comment_factory import CommentFactory
+from blog_app.factories.entry_factory import EntryFactory
+from blog_app.models.comment import Comment
 from conscious_element.factory.cryptek_user_factory import CryptekUserFactory
 from cryptek.qa_templates import ClassBaseViewTestCase
-from library_tomb.factories.comment_factory import CommentFactory
-from library_tomb.factories.entry_factory import EntryFactory
-from library_tomb.models.comment import Comment
 
 
 class CommentViewGetPostTestCase(ClassBaseViewTestCase):

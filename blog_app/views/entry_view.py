@@ -3,9 +3,9 @@ import logging
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import FormMixin
 
-from library_tomb.forms.comment_form import CommentForm
-from library_tomb.models.entry import Entry
-from library_tomb.serializers.entry_serializer import EntrySerializerOut
+from blog_app.forms.comment_form import CommentForm
+from blog_app.models.entry import Entry
+from blog_app.serializers.entry_serializer import EntrySerializerOut
 
 logger = logging.getLogger(__name__)
 

@@ -1,6 +1,6 @@
+from allauth.account.views import LoginView as AllAuthLoginView
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 
 
@@ -21,9 +21,8 @@ class CustomLoginForm(AuthenticationForm):
         )
 
 
-class CustomLoginView(LoginView):
+class CustomLoginView(AllAuthLoginView):
     authentication_form = CustomLoginForm
-    template_name = "login.html"
     success_url = reverse_lazy("blog/")
     redirect_authenticated_user = True
 

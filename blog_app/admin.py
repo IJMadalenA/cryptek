@@ -3,12 +3,12 @@ from django.contrib.admin.decorators import action
 from django.contrib.admin.options import ShowFacets
 from markdownx.admin import MarkdownxModelAdmin
 
-from library_tomb.models.category import Category
-from library_tomb.models.comment import Comment
-from library_tomb.models.entry import Entry
-from library_tomb.models.like import Like
-from library_tomb.models.multimedia import Multimedia
-from library_tomb.models.tag import Tag
+from blog_app.models.category import Category
+from blog_app.models.comment import Comment
+from blog_app.models.entry import Entry
+from blog_app.models.like import Like
+from blog_app.models.multimedia import Multimedia
+from blog_app.models.tag import Tag
 
 
 @register(Category)

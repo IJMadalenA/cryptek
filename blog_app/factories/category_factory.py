@@ -1,7 +1,7 @@
 from factory import Sequence
 from factory.django import DjangoModelFactory
 
-from library_tomb.models.category import Category
+from blog_app.models.category import Category
 
 
 class CategoryFactory(DjangoModelFactory):

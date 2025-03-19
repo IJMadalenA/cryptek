@@ -2,8 +2,8 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views import View
 
-from library_tomb.models.entry import Entry
-from library_tomb.models.like import Like
+from blog_app.models.entry import Entry
+from blog_app.models.like import Like
 
 
 class LikeView(View):

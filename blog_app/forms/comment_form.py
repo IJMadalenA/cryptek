@@ -1,7 +1,7 @@
 from django.forms.models import ModelForm
 from django.forms.widgets import Textarea
 
-from library_tomb.models.comment import Comment
+from blog_app.models.comment import Comment
 
 
 class CommentForm(ModelForm):

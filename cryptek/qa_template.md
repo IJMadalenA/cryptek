@@ -85,7 +85,7 @@ A base class for testing class-based views with authentication.
 ### Example 1: Testing GET Requests
 
 ```python
-from library_tomb.tests.view_tests.comment_view_test import CommentViewGetPostTestCase
+from blog_app.tests.view_tests.comment_view_test import CommentViewGetPostTestCase
 
 
 class MyGetTestCase(CommentViewGetPostTestCase):
@@ -97,7 +97,7 @@ class MyGetTestCase(CommentViewGetPostTestCase):
 ### Example 2: Testing POST Requests
 
 ```python
-from library_tomb.tests.view_tests.comment_view_test import CommentViewGetPostTestCase
+from blog_app.tests.view_tests.comment_view_test import CommentViewGetPostTestCase
 
 
 class MyPostTestCase(CommentViewGetPostTestCase):
@@ -110,7 +110,7 @@ class MyPostTestCase(CommentViewGetPostTestCase):
 ### Example 3: Testing PUT Requests
 
 ```python
-from library_tomb.tests.view_tests.comment_view_test import CommentViewPutDeleteTestCase
+from blog_app.tests.view_tests.comment_view_test import CommentViewPutDeleteTestCase
 
 
 class MyPutTestCase(CommentViewPutDeleteTestCase):
@@ -123,7 +123,7 @@ class MyPutTestCase(CommentViewPutDeleteTestCase):
 ### Example 4: Testing DELETE Requests
 
 ```python
-from library_tomb.tests.view_tests.comment_view_test import CommentViewPutDeleteTestCase
+from blog_app.tests.view_tests.comment_view_test import CommentViewPutDeleteTestCase
 
 
 class MyDeleteTestCase(CommentViewPutDeleteTestCase):
@@ -135,7 +135,7 @@ class MyDeleteTestCase(CommentViewPutDeleteTestCase):
 ### Example 5: using login and logout statements.
 
 ```python
-from library_tomb.tests.view_tests.comment_view_test import CommentViewGetPostTestCase
+from blog_app.tests.view_tests.comment_view_test import CommentViewGetPostTestCase
 
 
 class MyLoginLogoutTestCase(CommentViewGetPostTestCase):

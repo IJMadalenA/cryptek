@@ -24,12 +24,12 @@ from django.contrib.sitemaps.views import sitemap
 from django.urls import include, path
 from django.views.generic import RedirectView
 
+from blog_app.sitemaps import EntrySitemap
+from blog_app.views import CommentView
+from blog_app.views.email_verification_view import EmailConfirmationView
 from conscious_element.views.about_me import about_me
 from conscious_element.views.login_view import CustomLoginView
 from cryptek.csp_report_view import csp_report_view
-from library_tomb.sitemaps import EntrySitemap
-from library_tomb.views import CommentView
-from library_tomb.views.email_verification_view import EmailConfirmationView
 from message_app.views.contact_me_view import ContactMeView
 
 sitemaps = {
@@ -50,24 +50,24 @@ third_party_apps_urls = [
 
 urlpatterns = (
     [
+        path("", RedirectView.as_view(url="blog", permanent=True), name="to_blog"),
+        path("about/", about_me, name="about_me"),
         path("admin/", admin.site.urls),
         path("account/", include("conscious_element.urls")),
-        path(
-            "verify-email/<uidb64>/<token>/",
-            EmailConfirmationView.as_view(),
-            name="verify_email",
-        ),
-        path("login/", CustomLoginView.as_view(), name="login"),
-        path("logout/", LogoutView.as_view(), name="logout"),
-        path("", RedirectView.as_view(url="blog", permanent=True), name="to_blog"),
-        path("blog/", include("library_tomb.urls"), name="blog"),
-        path("about/", about_me, name="about_me"),
+        path("blog/", include("blog_app.urls"), name="blog"),
         path("contact/", ContactMeView.as_view(), name="contact"),
-        path("entry/<slug:slug>/comment/", CommentView.as_view(), name="get_post_comment"),
         path(
             "entry/<slug:slug>/comment/<int:pk>/",
             CommentView.as_view(),
             name="put_delete_comment",
+        ),
+        path("entry/<slug:slug>/comment/", CommentView.as_view(), name="get_post_comment"),
+        path("login/", CustomLoginView.as_view(), name="login"),
+        path("logout/", LogoutView.as_view(), name="logout"),
+        path(
+            "verify-email/<uidb64>/<token>/",
+            EmailConfirmationView.as_view(),
+            name="verify_email",
         ),
     ]
     + third_party_apps_urls

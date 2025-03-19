@@ -1,9 +1,9 @@
 from factory import SubFactory
 from factory.django import DjangoModelFactory
 
+from blog_app.factories.entry_factory import EntryFactory
+from blog_app.models.comment import Comment
 from conscious_element.factory.cryptek_user_factory import CryptekUserFactory
-from library_tomb.factories.entry_factory import EntryFactory
-from library_tomb.models.comment import Comment
 
 
 class CommentFactory(DjangoModelFactory):

@@ -1,8 +1,7 @@
-from django.db.models import (CASCADE, BooleanField, DateTimeField, ForeignKey,
-                              Model, TextField)
+from django.db.models import CASCADE, BooleanField, DateTimeField, ForeignKey, Model, TextField
 
+from blog_app.models.entry import Entry
 from conscious_element.models.cryptek_user import CryptekUser
-from library_tomb.models.entry import Entry
 
 
 # Comment model

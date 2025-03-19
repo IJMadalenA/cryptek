@@ -7,22 +7,27 @@ from conscious_element.views.session_view import (SessionDeleteOtherView,
 
 urlpatterns = [
     path(
-        "create/",
+        route="create/",
         view=CreateAccountView.as_view(),
         name="create_account",
     ),
     path(
-        "sessions/",
+        route="profile/",
+        view=SessionListView.as_view(),
+        name="profile",
+    ),
+    path(
+        route="sessions/",
         view=SessionListView.as_view(),
         name="session_list",
     ),
     path(
-        "sessions/other/delete/",
+        route="sessions/other/delete/",
         view=SessionDeleteOtherView.as_view(),
         name="session_delete_other",
     ),
     path(
-        "sessions/<str:pk>/delete/",
+        route="sessions/<str:pk>/delete/",
         view=SessionDeleteView.as_view(),
         name="session_delete",
     ),

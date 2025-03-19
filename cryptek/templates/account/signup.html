@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load socialaccount %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'accounts/auth.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+{% block content %}
+    <style>
+        .signup-container {
+            max-width: 450px;
+            margin: 50px auto;
+            padding: 30px;
+            box-shadow: 0 16px 48px #e4ebe3;
+            background-color: white;
+            border-radius: 40px;
+        }
+
+        .signup-title {
+            text-align: center;
+            color: #185034;
+        }
+
+        .btn-secondary {
+            background-color: #ffd700;
+            border-color: #ffd700;
+            color: black;
+        }
+
+        .form-control {
+            border-radius: 20px;
+            background-color: #f3fbf4;
+            padding: 10px 20px;
+            border: 0;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .github-btn {
+            align-items: center;
+            justify-content: center;
+            background-color: #333;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .github-btn img {
+            width: 25px;
+            height: 25px;
+            margin-right: 4px;
+        }
+
+        .github-btn span {
+            margin-left: 8px;
+        }
+    </style>
+
+    <div class="signup-container container mt-5">
+        <h2>{% trans "Sign Up for IJMadalenA Blog" %}</h2>
+        <div class="form-group form-group">
+            <form method="post" action="{% url 'account_signup' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <div class="btn-container">
+                    <button type="submit" class="btn btn-signup">
+                        {% trans "Sign Up" %}
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <p class="mt-3">
+            <a href="{% url 'account_login' %}">{% trans "Already have an account? Login" %}</a>
+        </p>
+
+        <!-- Social Signup Buttons -->
+        <div class="btn-container">
+            <a href="{% provider_login_url 'github' %}" class="github-btn btn btn-secondary">
+                <img src="{% static 'images/github-mark-white.svg' %}" alt="GitHub">
+                <span>Sign Up with GitHub</span>
+            </a>
+
+            <a href="{% provider_login_url 'google' %}" class="github-btn btn btn-secondary">
+                <img src="{% static 'images/google-icon.svg' %}" alt="Google">
+                <span>Sign Up with Google</span>
+            </a>
+
+            <a href="{% provider_login_url 'linkedin_oauth2' %}" class="github-btn btn btn-secondary">
+                <img src="{% static 'images/linkedin-icon.svg' %}" alt="LinkedIn">
+                <span>Sign Up with LinkedIn</span>
+            </a>
+        </div>
+    </div>
+{% endblock %}

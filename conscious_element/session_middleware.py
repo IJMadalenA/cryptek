@@ -16,6 +16,6 @@ class SessionMiddleware(DjangoSessionMiddleware):
             # referer=request.META.get("HTTP_REFERER", ""),
             # accept_language=request.META.get("HTTP_ACCEPT_LANGUAGE", ""),
             # request_path=request.path,
-            # timestamp=datetime.datetime.now(),
+            # timestamp=datetime.now(),
             session_key=session_key,
         )
