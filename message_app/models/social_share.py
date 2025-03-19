@@ -1,7 +1,7 @@
 from django.db.models import (CASCADE, CharField, ForeignKey, IntegerField,
                               Model)
 
-from library_tomb.models.entry import Entry
+from blog_app.models.entry import Entry
 
 
 class SocialShare(Model):
