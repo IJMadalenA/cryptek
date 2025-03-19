@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class LibraryTombConfig(AppConfig):
+class BlogAppConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "library_tomb"
+    name = "blog_app"

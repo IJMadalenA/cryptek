@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False),
-    LOCAL=(bool, False),
+    DEVELOPMENT_MODE=(bool, False),
     PERMISSIONS=(bool, False),
     ALLOWED_HOSTS=(list, ""),
     SECRET_KEY=(str, ""),
@@ -52,7 +52,7 @@ SECRET_KEY = env.str("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG")  # https://docs.djangoproject.com/es/5.1/ref/settings/#debug.
-LOCAL = env.bool("LOCAL")
+DEVELOPMENT_MODE = env.bool("DEVELOPMENT_MODE")
 PERMISSIONS = env.bool("PERMISSIONS")
 
 SITE_ID = 1  # https://docs.djangoproject.com/es/5.1/ref/settings/#site-id.
@@ -97,7 +97,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount.providers.linkedin_oauth2",
 ]
 CUSTOM_APPS = [
-    "library_tomb.apps.LibraryTombConfig",
+    "blog_app.apps.BlogAppConfig",
     "message_app.apps.MessageAppConfig",
     "log_recorder_app.apps.LogRecorderAppConfig",
     "conscious_element.apps.ConsciousElementConfig",
@@ -301,6 +301,12 @@ CSRF_COOKIE_SECURE = False if DEBUG else True
 EMAIL_TOKEN_TIMEOUT = 86400  # 24 hours
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_EMAIL_REQUIRED = True
+Account_SIGNUP_FIELDS = [
+    "username",
+    "email",
+    "password1",
+    "password2",
+]
 
 SOCIALACCOUNT_FORMS = {
     "disconnect": "allauth.socialaccount.forms.DisconnectForm",
@@ -458,3 +464,27 @@ SOCIALACCOUNT_PROVIDERS = {
         },
     },
 }
+# ACCOUNT_CHANGE_EMAIL = True
+# ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "home"
+# ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
+# ACCOUNT_EMAIL_NOTIFICATIONS = True
+# ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = True
+ACCOUNT_EMAIL_VERIFICATION = "none"
+# ACCOUNT_RATE_LIMITS = {
+#     "change_password": "5/m/user",
+#     "manage_email": "10/m/user",
+#     "reset_password": "20/m/ip,5/m/key",
+#     "reauthenticate": "10/m/user",
+#     "reset_password_from_key": "20/m/ip",
+#     "signup": "20/m/ip",
+#     "login": "30/m/ip",
+#     "login_failed": "10/m/ip,5/5m/key",
+#     "confirm_email": "1/3m/key",
+# }
+# ACCOUNT_REAUTHENTICATION_REQUIRED = True
+# ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True
+# ACCOUNT_UNIQUE_EMAIL = True
+# ACCOUNT_USER_MODEL_EMAIL_FIELD = "email"
+# ACCOUNT_USER_MODEL_USERNAME_FIELD = "username"
+# ACCOUNT_USERNAME_MIN_LENGTH = 6
+# ACCOUNT_USERNAME_REQUIRED = True
