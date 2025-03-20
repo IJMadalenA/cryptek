@@ -8,7 +8,6 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import FormMixin
-from django_ratelimit.decorators import ratelimit
 
 from blog_app.forms.comment_form import CommentForm
 from blog_app.models.comment import Comment
@@ -16,7 +15,6 @@ from blog_app.models.entry import Entry
 from cryptek.ai_system.comment_moderation import CommentModeration
 
 
-@method_decorator(ratelimit(key="ip", rate="10/m"), name="dispatch")
 class CommentView(View, FormMixin, SingleObjectMixin):
     """
     A view for handling comments on entries. This view supports various HTTP methods

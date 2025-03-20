@@ -17,7 +17,6 @@ from pathlib import Path
 
 import environ
 from django.contrib import messages
-from django_filters import rest_framework
 
 logger = logging.getLogger(__name__)
 
@@ -84,7 +83,6 @@ DJANGO_DEFAULT_APPS = [
 THIRD_PARTY_APPS = [
     "csp",
     "rest_framework",
-    "django_filters",
     "markdownx",
     "debug_toolbar",
     # django-allauth.
@@ -173,15 +171,15 @@ DATABASES = TEST_DATABASE if "test" in sys.argv else DATABASE
 #     }
 # }
 
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        },
-    }
-}
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": "redis://127.0.0.1:6379/1",
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#         },
+#     }
+# }
 
 # AUTHENTICATION. https://docs.djangoproject.com/es/5.1/ref/settings/#auth =============================================
 AUTH_PASSWORD_VALIDATORS = [
@@ -300,13 +298,6 @@ CSRF_COOKIE_SECURE = False if DEBUG else True
 # Email verification settings.
 EMAIL_TOKEN_TIMEOUT = 86400  # 24 hours
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-ACCOUNT_EMAIL_REQUIRED = True
-Account_SIGNUP_FIELDS = [
-    "username",
-    "email",
-    "password1",
-    "password2",
-]
 
 SOCIALACCOUNT_FORMS = {
     "disconnect": "allauth.socialaccount.forms.DisconnectForm",
@@ -328,24 +319,10 @@ USE_TZ = True  # https://docs.djangoproject.com/es/5.1/ref/settings/#use-tz.
 STATIC_URL = "/static/"  # https://docs.djangoproject.com/es/5.1/ref/settings/#static-url.
 MEDIA_URL = "/media/"
 STATIC_ROOT = os.path.join(BASE_DIR, "cryptek/staticfiles")
-MEDIA_ROOT = "cryptek/media"
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, "cryptek/staticfiles"),
-# ]
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-        "LOCATION": BASE_DIR / "media",  # This is the directory where all uploaded files will be stored
-    },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
+MEDIA_ROOT = os.path.join(BASE_DIR, "cryptek/media")
+
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-# STATICFILES_FINDERS = (
-#     "django.contrib.staticfiles.finders.FileSystemFinder",
-#     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-# )
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field.
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
