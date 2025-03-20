@@ -76,6 +76,7 @@ class CommentViewGetPostTestCase(ClassBaseViewTestCase):
         self.response_code(response=response, status_code=201)
         Comment.objects.filter(content=f"This is a good comment - {random_comment}.").exists()
 
+    @unittest.skip(reason="Skipping this test because the moderation system is disabled.")
     def test_post_moderation_system(self):
         data = {"content": f"This is a shitty comment"}
         response = self.post(data=data)

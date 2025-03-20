@@ -1,14 +1,14 @@
 import logging
 
-from transformers import pipeline
+# from transformers import pipeline
 
 # Suppress the logging output from the transformers library
 logging.getLogger("transformers").setLevel(logging.ERROR)
 
 
 class CommentModeration:
-    def __init__(self, model_name="distilbert-base-uncased-finetuned-sst-2-english"):
-        self.moderation_pipeline = pipeline("sentiment-analysis", model=model_name)
+    # def __init__(self, model_name="distilbert-base-uncased-finetuned-sst-2-english"):
+    # self.moderation_pipeline = pipeline("sentiment-analysis", model=model_name)
 
     def moderate_comment(self, content: (str, bytes), score_threshold: int = None) -> (bool, float):
         """

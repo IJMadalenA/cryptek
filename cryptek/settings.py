@@ -382,7 +382,6 @@ MESSAGE_TAGS = {
 }
 
 # SESSIONS. https://docs.djangoproject.com/es/5.1/ref/settings/#sessions. ==============================================
-# SESSION_ENGINE = "conscious_element.backends"
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
@@ -447,17 +446,17 @@ SOCIALACCOUNT_PROVIDERS = {
 # ACCOUNT_EMAIL_NOTIFICATIONS = True
 # ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = True
 ACCOUNT_EMAIL_VERIFICATION = "none"
-# ACCOUNT_RATE_LIMITS = {
-#     "change_password": "5/m/user",
-#     "manage_email": "10/m/user",
-#     "reset_password": "20/m/ip,5/m/key",
-#     "reauthenticate": "10/m/user",
-#     "reset_password_from_key": "20/m/ip",
-#     "signup": "20/m/ip",
-#     "login": "30/m/ip",
-#     "login_failed": "10/m/ip,5/5m/key",
-#     "confirm_email": "1/3m/key",
-# }
+ACCOUNT_RATE_LIMITS = {
+    "change_password": "5/m/user",
+    "manage_email": "10/m/user",
+    "reset_password": "20/m/ip,5/m/key",
+    "reauthenticate": "10/m/user",
+    "reset_password_from_key": "20/m/ip",
+    "signup": "20/m/ip",
+    "login": "30/m/ip",
+    "login_failed": "10/m/ip,5/5m/key",
+    "confirm_email": "1/3m/key",
+}
 # ACCOUNT_REAUTHENTICATION_REQUIRED = True
 # ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True
 # ACCOUNT_UNIQUE_EMAIL = True

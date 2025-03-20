@@ -12,7 +12,9 @@ from django.views.generic.edit import FormMixin
 from blog_app.forms.comment_form import CommentForm
 from blog_app.models.comment import Comment
 from blog_app.models.entry import Entry
-from cryptek.ai_system.comment_moderation import CommentModeration
+
+
+# from cryptek.ai_system.comment_moderation import CommentModeration
 
 
 class CommentView(View, FormMixin, SingleObjectMixin):
@@ -37,17 +39,17 @@ class CommentView(View, FormMixin, SingleObjectMixin):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.moderation = CommentModeration()
+        # self.moderation = CommentModeration()
 
     def form_valid(self, form):
         if not self.request.user.is_authenticated:
             return JsonResponse({"success": False, "message": "User not authenticated"}, status=403)
 
         content = form.cleaned_data.get("content")
-        acceptable, label = self.moderation.moderate_comment(content)
+        # acceptable, label = self.moderation.moderate_comment(content)
 
-        if not acceptable:
-            return JsonResponse({"success": False, "message": f"Comment not acceptable: {label}"}, status=400)
+        # if not acceptable:
+        #     return JsonResponse({"success": False, "message": f"Comment not acceptable: {label}"}, status=400)
 
         entry = get_object_or_404(Entry, slug=self.kwargs["slug"], status=1)
         comment = form.save(commit=False)
@@ -95,9 +97,9 @@ class CommentView(View, FormMixin, SingleObjectMixin):
             return JsonResponse(
                 {"success": False, "message": "Error - Content not provided or is not a string"}, status=400
             )
-        acceptable, label = self.moderation.moderate_comment(content)
-        if not acceptable:
-            return JsonResponse({"success": False, "message": f"Comment not acceptable: {label}"}, status=400)
+        # acceptable, label = self.moderation.moderate_comment(content)
+        # if not acceptable:
+        #     return JsonResponse({"success": False, "message": f"Comment not acceptable: {label}"}, status=400)
 
         # Django forms only work with GET and POST methods. That's the reason why we can't implement forms here.
         comment.content = content
