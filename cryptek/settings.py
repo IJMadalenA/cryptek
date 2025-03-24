@@ -24,7 +24,6 @@ env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False),
     DEVELOPMENT_MODE=(bool, False),
-    PERMISSIONS=(bool, False),
     ALLOWED_HOSTS=(list, ""),
     SECRET_KEY=(str, ""),
     ADMINS=(
@@ -52,7 +51,6 @@ SECRET_KEY = env.str("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG")  # https://docs.djangoproject.com/es/5.1/ref/settings/#debug.
 DEVELOPMENT_MODE = env.bool("DEVELOPMENT_MODE")
-PERMISSIONS = env.bool("PERMISSIONS")
 
 SITE_ID = 1  # https://docs.djangoproject.com/es/5.1/ref/settings/#site-id.
 

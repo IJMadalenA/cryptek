@@ -13,7 +13,6 @@ from blog_app.forms.comment_form import CommentForm
 from blog_app.models.comment import Comment
 from blog_app.models.entry import Entry
 
-
 # from cryptek.ai_system.comment_moderation import CommentModeration
 
 
@@ -66,7 +65,7 @@ class CommentView(View, FormMixin, SingleObjectMixin):
         comments = entry.comments.all()
         return JsonResponse(data={"success": True, "comments": list(comments.values())}, status=200)
 
-    @method_decorator(login_required(login_url="/login/"))
+    @method_decorator(login_required(login_url="/accounts/login/"))
     def post(self, *args, **kwargs):
         if not self.request.user.is_authenticated:
             return JsonResponse({"success": False, "message": "User not authenticated"}, status=403)
@@ -76,7 +75,7 @@ class CommentView(View, FormMixin, SingleObjectMixin):
             return self.form_valid(form)
         return self.form_invalid(form)
 
-    @method_decorator(login_required(login_url="/login/"))
+    @method_decorator(login_required(login_url="/accounts/login/"))
     def put(self, *args, **kwargs):
         if not self.request.user.is_authenticated:
             return JsonResponse({"success": False, "message": "User not authenticated"}, status=403)
@@ -107,7 +106,7 @@ class CommentView(View, FormMixin, SingleObjectMixin):
 
         return JsonResponse({"success": True, "message": "Comment successfully updated!"}, status=200)
 
-    @method_decorator(login_required(login_url="/login/"))
+    @method_decorator(login_required(login_url="/accounts/login/"))
     def delete(self, *args, **kwargs):
         if not self.request.user.is_authenticated:
             return JsonResponse({"success": False, "message": "User not authenticated"}, status=403)
