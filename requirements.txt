@@ -41,6 +41,8 @@ platformdirs==4.3.7 ; python_version >= "3.12" and python_version < "4.0"
 poetry-core==1.9.1 ; python_version >= "3.12" and python_version < "4.0"
 poetry-plugin-export==1.8.0 ; python_version >= "3.12" and python_version < "4.0"
 poetry==1.8.5 ; python_version >= "3.12" and python_version < "4.0"
+psycopg-binary==3.2.6 ; implementation_name != "pypy" and python_version >= "3.12" and python_version < "4.0"
+psycopg[binary]==3.2.6 ; python_version >= "3.12" and python_version < "4.0"
 ptyprocess==0.7.0 ; python_version >= "3.12" and python_version < "4.0"
 pycparser==2.22 ; python_version >= "3.12" and python_version < "4.0" and (platform_python_implementation != "PyPy" or sys_platform == "darwin")
 pyjwt[crypto]==2.10.1 ; python_version >= "3.12" and python_version < "4.0"

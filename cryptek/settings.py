@@ -27,12 +27,6 @@ env = environ.Env(
     LOCAL=(bool, False),
     ALLOWED_HOSTS=(list, ""),
     SECRET_KEY=(str, ""),
-    ADMINS=(
-        list,
-        [
-            "admin_is",
-        ],
-    ),
 )
 
 # CORE SETTINGS. https://docs.djangoproject.com/es/5.1/ref/settings/#core-settings =====================================
