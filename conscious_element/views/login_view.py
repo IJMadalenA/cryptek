@@ -1,10 +1,10 @@
+from allauth.account.forms import LoginForm
 from allauth.account.views import LoginView as AllAuthLoginView
 from django.contrib import messages
-from django.contrib.auth.forms import AuthenticationForm
 from django.urls import reverse_lazy
 
 
-class CustomLoginForm(AuthenticationForm):
+class CustomLoginForm(LoginForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["username"].widget.attrs.update(
@@ -23,11 +23,11 @@ class CustomLoginForm(AuthenticationForm):
 
 class CustomLoginView(AllAuthLoginView):
     authentication_form = CustomLoginForm
-    success_url = reverse_lazy("blog/")
+    success_url = reverse_lazy("main_page")
     redirect_authenticated_user = True
 
     def form_valid(self, form):
-        messages.success(self.request, f'You are now logged in as {form.cleaned_data["username"]}.')
+        messages.success(self.request, f"You are now logged.")
         return super().form_valid(form)
 
     def form_invalid(self, form):

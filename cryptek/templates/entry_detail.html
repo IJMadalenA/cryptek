@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load markdown_extras %}
 
 {% block content %}
     <style>
@@ -101,12 +102,13 @@
             </div>
 
             <div class="card-body">
-                <p class="card-text">
-                    {{ object.content | safe }}
-                </p>
+                <div class="card-text">
+                    {{ object.content | markdown | safe }}
+                </div>
             </div>
         </div>
 
+        <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
         <script>
             document.addEventListener("DOMContentLoaded", function() {
                 const likeForm = document.querySelector("#like-form");
