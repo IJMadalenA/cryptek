@@ -56,31 +56,45 @@
 
         .footer-container {
             background-color: #f8f9fa;
-            padding: 1.5rem 0;
+            padding: 1.5rem 0 0 0;
+
         }
 
         .footer-logo {
             position: absolute;
-            bottom: 10px;
+            bottom: 0;
             right: 10px;
-            width: 50px;
             opacity: 0.7;
         }
 
         .footer-logo img {
-            width: 100%;
+            margin-right: 10px;
+        }
+
+        .python-powered {
+            height: 45px;
+            opacity: 90%;
+        }
+
+        .digital-ocean-powered {
+            height: 40px;
+            opacity: 90%;
+        }
+
+        .digital-ocean-href {
+            margin-right: 10px;
+            text-decoration: none;
         }
 
         .footer-links {
             display: flex;
             justify-content: center;
             gap: 1.5rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
 
         .footer-links a {
             color: #333;
-            text-decoration: none;
         }
 
         .footer-text {
@@ -88,9 +102,6 @@
             color: #333;
         }
 
-        .footer-bottom {
-            text-align: center;
-        }
     </style>
 </head>
 
@@ -110,12 +121,12 @@
 
                 <!-- Admin Button. -->
                 {% if user.is_superuser %}
-                    <li class="nav-item text-black">
-                        <button type="button" class="btn btn-admin">
-                            <a class="nav-link text-black fw-bold" href="{% url 'admin:index' %}">Admin</a>
-                        </button>
-                    </li>
                 {% endif %}
+                <li class="nav-item text-black">
+                    <button type="button" class="btn btn-admin">
+                        <a class="nav-link text-black fw-bold" href="{% url 'admin:index' %}">Admin</a>
+                    </button>
+                </li>
 
                 <!-- About Me Button. -->
                 <li class="nav-item text-black">
@@ -133,23 +144,23 @@
 
                 <!-- Login/Logout Button. -->
                 {% if user.is_authenticated %}
-                    <li class="nav-item text-black">
-                        <form method="post" class="btn" action="{% url 'logout' %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger">
-                                Logout
-                            </button>
-                        </form>
-                    </li>
                 {% else %}
-                    <li class="nav-item">
-                        <button type="button" class="btn btn-primary btn-block btn-login">
-                            <a class="nav-link text-black fw-bold" href="{% url 'login' %}">
-                                Login
-                            </a>
-                        </button>
-                    </li>
                 {% endif %}
+                <li class="nav-item">
+                    <button type="button" class="btn btn-primary btn-block btn-login">
+                        <a class="nav-link text-black fw-bold" href="{% url 'login' %}">
+                            Login
+                        </a>
+                    </button>
+                </li>
+                <li class="nav-item text-black">
+                    <form method="post" class="btn" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">
+                            Logout
+                        </button>
+                    </form>
+                </li>
 
             </ul>
         </div>
@@ -199,15 +210,32 @@
             <p>Designed and developed by <a href="https://github.com/ijmadalena" target="_blank">IJMadalenA</a>.</p>
             <p>Powered by
                 <a href="https://www.python.org/" target="_blank">Python</a> and
-                <a href="https://www.djangoproject.com/" target="_blank">Django</a>.
+                <a href="https://www.djangoproject.com/" target="_blank">Django</a> on a
+                <a href="https://www.digitalocean.com/?refcode=de2bbc881e20&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge"
+                   target="_blank">DigitalOcean</a> server.
             </p>
         </div>
     </div>
     <div class="footer-logo">
-        <img src="{% static 'images/python-powered.png' %}" alt="python-powered">
-    </div>
-</footer>
+        <a href="https://www.digitalocean.com/?refcode=de2bbc881e20&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge"
+           target="_blank"
+           class="digital-ocean-href">
+            <img class="digital-ocean-powered"
+                 src="{% static 'images/digital-ocean-powered.svg' %}"
+                 alt="DigitalOcean Referral Badge"
+            />
+        </a>
 
+        <a href="https://www.python.org/"
+           target="_blank">
+            <img class="python-powered"
+                 src="{% static 'images/python-powered.svg' %}"
+                 alt="powered by python"
+            />
+        </a>
+    </div>
+
+</footer>
 <!-- Bootstrap 5 JS Added -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-RrcW6IkfMwU3DV2qOU8vNK13t1mdrmjGgJqqlEhE26E9OgWRW2UPD+WW+d1BZPmE"
