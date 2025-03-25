@@ -1,17 +1,7 @@
-from django.db.models import (
-    CASCADE,
-    BooleanField,
-    CharField,
-    DateTimeField,
-    ForeignKey,
-    ImageField,
-    IntegerField,
-    ManyToManyField,
-    Model,
-    OneToOneField,
-    SlugField,
-    TextField,
-)
+from django.db.models import (CASCADE, BooleanField, CharField, DateTimeField,
+                              ForeignKey, ImageField, IntegerField,
+                              ManyToManyField, Model, OneToOneField, SlugField,
+                              TextField)
 from django.urls import reverse
 from django.utils.text import slugify
 from markdownx.models import MarkdownxField
@@ -63,6 +53,11 @@ class Entry(Model):
 
     def get_absolute_url(self):
         return reverse("entry_detail", kwargs={"slug": self.slug})
+
+    def get_full_url(self):
+        return f"https://ijmadalena.com/{
+        reverse('entry_detail', kwargs={'slug': self.slug})
+        }"
 
     def save(self, *args, **kwargs):
         if not self.slug:

@@ -25,6 +25,28 @@
             margin-top: 10px;
         }
 
+        .social-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .social-button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .X {
+            background-color: #000000;
+        }
+
+        .linkedin {
+            background-color: #0077b5;
+        }
+
         @media (max-width: 768px) {
             .header-image {
                 width: 100%;
@@ -57,7 +79,6 @@
                 padding: 10px;
                 max-width: MIN(50%, 800px);
             }
-
         }
     </style>
 
@@ -96,9 +117,14 @@
                         <button type="submit" class="btn btn-secondary">Dislike: {{ object.dislike_count }}</button>
                     </form>
                 {% else %}
-                    <p>Dislikes: {{ object.dislike_count }}</p>
-                    <p>Like: {{ object.like_count }}</p>
                 {% endif %}
+                <p>Dislikes: {{ object.dislike_count }}</p>
+                <p>Like: {{ object.like_count }}</p>
+            </div>
+
+            <div class="social-buttons">
+                <button class="social-button X" onclick="shareOnX()">Share on X</button>
+                <button class="social-button linkedin" onclick="shareOnLinkedIn()">Share on LinkedIn</button>
             </div>
 
             <div class="card-body">
@@ -110,46 +136,20 @@
 
         <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
         <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                const likeForm = document.querySelector("#like-form");
-                const dislikeForm = document.querySelector("#dislike-form");
+            function shareOnX() {
+                const url = window.location.href;
+                const text = document.querySelector('.card-title h1').innerText;
+                const message = `Check out this blog post!\n\n${text}\n\nRead more here: ${url}`;
+                const shareUrl = `https://x.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(message)}`;
+                window.open(shareUrl, '_blank');
+            }
 
-                likeForm.addEventListener("submit", function(event) {
-                    event.preventDefault();
-                    const formData = new FormData(likeForm);
-                    fetch(likeForm.action, {
-                        method: "POST",
-                        body: formData,
-                        headers: {
-                            "X-Requested-With": "XMLHttpRequest",
-                            "X-CSRFToken": "{{ csrf_token }}",
-                        },
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        alert(data.message);
-                    })
-                    .catch(error => console.error("Error:", error));
-                });
-
-                dislikeForm.addEventListener("submit", function(event) {
-                    event.preventDefault();
-                    const formData = new FormData(dislikeForm);
-                    fetch(dislikeForm.action, {
-                        method: "POST",
-                        body: formData,
-                        headers: {
-                            "X-Requested-With": "XMLHttpRequest",
-                            "X-CSRFToken": "{{ csrf_token }}",
-                        },
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        alert(data.message);
-                    })
-                    .catch(error => console.error("Error:", error));
-                });
-            });
+            function shareOnLinkedIn() {
+                const url = window.location.href;
+                const title = document.querySelector('.card-title h1').innerText;
+                const shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`;
+                window.open(shareUrl, '_blank');
+            }
         </script>
     </div>
 {% endblock content %}
