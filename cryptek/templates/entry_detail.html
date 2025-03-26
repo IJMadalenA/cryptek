@@ -3,6 +3,7 @@
 {% load markdown_extras %}
 
 {% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/post_style.css' %}">
     <style>
         .header-image {
             width: 100%;
@@ -90,13 +91,16 @@
                 {% endif %}
             </div>
 
-            <div class="card-title">
-                <h1>
+            <header>
+                <h1 class="page-title">
                     {% block title %}
                         {{ object.title }}
                     {% endblock title %}
                 </h1>
-            </div>
+                <p class="page-description">
+
+                </p>
+            </header>
 
             <div class="card-subtitle">
                 <p class="text-muted">
@@ -112,14 +116,13 @@
                         <button type="submit" class="btn btn-primary">Like: {{ object.like_count }}</button>
                     </form>
                     <form id="dislike-form" method="post" action="{% url 'like_entry' object.slug %}">
-                        {% csrf_token %}
-                        <input type="hidden" name="type" value="dislike">
+                        {% csrf_token %} <input type="hidden" name="type" value="dislike">
                         <button type="submit" class="btn btn-secondary">Dislike: {{ object.dislike_count }}</button>
                     </form>
                 {% else %}
+                    <p>Dislikes: {{ object.dislike_count }}</p>
+                    <p>Like: {{ object.like_count }}</p>
                 {% endif %}
-                <p>Dislikes: {{ object.dislike_count }}</p>
-                <p>Like: {{ object.like_count }}</p>
             </div>
 
             <div class="social-buttons">
@@ -129,7 +132,7 @@
 
             <div class="card-body">
                 <div class="card-text">
-                    {{ object.content | markdown | safe }}
+                    {{ object.content | safe }}
                 </div>
             </div>
         </div>
