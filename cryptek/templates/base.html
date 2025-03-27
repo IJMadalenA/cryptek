@@ -35,12 +35,12 @@
 
                 <!-- Admin Button. -->
                 {% if user.is_superuser %}
+                    <li class="nav-item text-black">
+                        <button type="button" class="btn btn-admin">
+                            <a class="nav-link text-black fw-bold" href="{% url 'admin:index' %}">Admin</a>
+                        </button>
+                    </li>
                 {% endif %}
-                <li class="nav-item text-black">
-                    <button type="button" class="btn btn-admin">
-                        <a class="nav-link text-black fw-bold" href="{% url 'admin:index' %}">Admin</a>
-                    </button>
-                </li>
 
                 <!-- About Me Button. -->
                 <li class="nav-item text-black">

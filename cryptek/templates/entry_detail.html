@@ -59,11 +59,10 @@
             </div>
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
         <script>
             function shareOnX() {
                 const url = window.location.href;
-                const text = document.querySelector('.card-title h1').innerText;
+                const text = document.querySelector('.page-title').innerText;
                 const message = `Check out this blog post!\n\n${text}\n\nRead more here: ${url}`;
                 const shareUrl = `https://x.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(message)}`;
                 window.open(shareUrl, '_blank');
@@ -71,10 +70,11 @@
 
             function shareOnLinkedIn() {
                 const url = window.location.href;
-                const title = document.querySelector('.card-title h1').innerText;
+                const title = document.querySelector('.page-title').innerText;
                 const shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`;
                 window.open(shareUrl, '_blank');
             }
         </script>
+        <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     </div>
 {% endblock content %}

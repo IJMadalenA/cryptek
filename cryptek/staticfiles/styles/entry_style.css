@@ -42,7 +42,7 @@ mark, .highlighted {
     gap: 10px;
     justify-content: left;
     margin-left: 10px;
-    margin-bottom: 10px;
+    margin-top: -15px;
 }
 
 .social-buttons {
@@ -50,6 +50,8 @@ mark, .highlighted {
     gap: 10px;
     justify-content: left;
     margin-left: 10px;
+    margin-top: -10px;
+    padding-bottom: 10px;
 }
 
 .social-button {
@@ -104,6 +106,15 @@ pre {
     overflow-x: auto;
 }
 
+code {
+    background-color: #e8e8e8;
+    line-height: 1.5;
+    border: 1px solid #E5E5E5;
+    padding: 4px;
+    border-radius: 10px;
+    overflow-x: auto;
+}
+
 pre code {
     display: block;
     white-space: pre;
@@ -127,21 +138,21 @@ pre code {
     margin: 0 0 24px 0;
 }
 
+.header-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 5px;
+}
+
+.card-body {
+    padding-bottom: 0;
+    margin-bottom: -20px;
+}
+
 /* Media Queries */
 @media (max-width: 768px) {
-    .header-image {
-        width: 100%;
-        height: auto;
-        margin-bottom: 15px;
-    }
-
-    .card-body {
-        padding: 10px;
-    }
-
     .text-muted {
         font-size: 0.8em;
-
         margin: 0;
     }
 
