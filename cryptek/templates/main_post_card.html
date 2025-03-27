@@ -1,0 +1,32 @@
+<!-- cryptek/templates/main_post_card.html -->
+<a href="{% url 'entry_detail' entry.slug %}" class="main-post-card-link">
+    <div class="main-post-card">
+        <div class="main-post-card-left">
+            <div class="main-post-card-image">
+                {% if entry.header_image %}
+                    <img src="{{ entry.header_image.url }}" alt="{{ entry.title }}">
+                {% endif %}
+            </div>
+            <div class="main-post-card-date">
+                <h5>{{ entry.created_at|date:"d" }}</h5>
+                <h6>{{ entry.created_at|date:"F Y" }}</h6>
+            </div>
+        </div>
+        <div class="main-post-card-right">
+            <h1 class="main-post-card-title">{{ entry.title }}</h1>
+            <div class="main-post-card-author">
+                {% if entry.author.profile_image %}
+                    <img src="{{ entry.author.profile_image.url }}" alt="{{ entry.author }}" class="author-image">
+                {% endif %}
+                <h2 class="author-name">{{ entry.author }}</h2>
+            </div>
+            <div class="separator"></div>
+            <p class="main-post-card-summary">{{ entry.overview }}</p>
+            <div class="post-card-tags">
+                {% for tag in entry.tags.all %}
+                    <span class="post-card-tag">{{ tag.name }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</a>

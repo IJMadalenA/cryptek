@@ -3,156 +3,86 @@
 {% load static %}
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google" content="notranslate"/>
+    <title>IJMadalenA Blog</title>
+
+    <!-- External Styles & Scripts -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.css">
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/addon/runmode/runmode-standalone.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/mode/python/python.min.js"></script>
 
-    <title>IJMadalenA Blog</title>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
-    <meta name="google" content="notranslate"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <!-- Bootstrap 5 CSS -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700|Playfair+Display:700" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'styles/base_style.css' %}">
-
 </head>
 
 <body>
-<!-- Fixed Top Navigation Bar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light shadow navbar-header" id="mainNav">
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow fixed-top">
     <div class="container-fluid">
-        <!-- Home Button. -->
         <a class="navbar-brand" href="{% url 'to_blog' %}">IJMadalenA Blog</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
-                aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ms-auto">
-
-                <!-- Admin Button. -->
                 {% if user.is_superuser %}
-                    <li class="nav-item text-black">
-                        <button type="button" class="btn btn-admin">
-                            <a class="nav-link text-black fw-bold" href="{% url 'admin:index' %}">Admin</a>
-                        </button>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-dark fw-bold" href="{% url 'admin:index' %}">Admin</a>
                     </li>
                 {% endif %}
-
-                <!-- About Me Button. -->
-                <li class="nav-item text-black">
-                    <button type="button" class="btn btn-about-me">
-                        <a class="nav-link text-black fw-bold" href="{% url 'about_me' %}">About Me</a>
-                    </button>
+                <li class="nav-item">
+                    <a class="btn btn-outline-primary fw-bold" href="{% url 'about_me' %}">About Me</a>
                 </li>
-
-                <!-- Contact Me Button. -->
-                <li class="nav-item text-black">
-                    <button type="button" class="btn btn-contact">
-                        <a class="nav-link text-black fw-bold" href="{% url 'contact' %}">Contact</a>
-                    </button>
+                <li class="nav-item">
+                    <a class="btn btn-outline-success fw-bold" href="{% url 'contact' %}">Contact</a>
                 </li>
-
-                <!-- Login/Logout Button. -->
                 {% if user.is_authenticated %}
-                    <li class="nav-item text-black">
-                        <form method="post" class="btn" action="{% url 'logout' %}">
+                    <li class="nav-item">
+                        <form method="post" action="{% url 'logout' %}">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-danger">
-                                Logout
-                            </button>
+                            <button type="submit" class="btn btn-danger">Logout</button>
                         </form>
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <button type="button" class="btn btn-primary btn-block btn-login">
-                            <a class="nav-link text-black fw-bold" href="{% url 'login' %}">
-                                Login
-                            </a>
-                        </button>
+                        <a class="btn btn-primary fw-bold" href="{% url 'login' %}">Login</a>
                     </li>
                 {% endif %}
-
             </ul>
         </div>
     </div>
 </nav>
 
 <!-- Main Layout -->
-<div class="container container-main">
+<div class="container mt-5">
     <div class="row">
-
-        <!-- Left: Main Content Area -->
-        <div class="col-lg-9 row-cols-auto content-area">
-            {% block content %}
-                <!-- Main content will go here -->
-            {% endblock content %}
+        <div class="col-lg-9">
+            {% block content %}{% endblock %}
         </div>
-
-        <!-- Right: Side Column -->
-        <div class="col-lg-3 row-cols-auto right-column">
+        <div class="col-lg-3">
             {% block right_column %}
-
-                <!-- Blocks on the right side -->
-                <div class="block">
-                    {% include 'contact_box.html' %}
-                </div>
-
-                <div class="block">
-                    {% include 'qr_code_box.html' %}
-                </div>
-
-                <!-- Future right-side blocks can be added here -->
-            {% endblock right_column %}
+                <div class="mb-3">{% include 'contact_box.html' %}</div>
+                <div class="mb-3">{% include 'qr_code_box.html' %}</div>
+            {% endblock %}
         </div>
     </div>
 </div>
 
 <!-- Footer -->
-<footer class="footer-container">
-    <div class="footer-links">
+<footer class="footer-container text-center py-3 bg-light mt-5">
+    <div class="footer-links mb-2">
         <a href="{% url 'to_blog' %}">Home</a>
         <a href="{% url 'about_me' %}">About Me</a>
         <a href="{% url 'contact' %}">Contact</a>
     </div>
-    <div class="footer-text">
-        <div class="footer-bottom">
-            <p>&copy; 2024 IJMadalenA. - All rights reserved.</p>
-            <p>Designed and developed by <a href="https://github.com/ijmadalena" target="_blank">IJMadalenA</a>.</p>
-            <p>Powered by
-                <a href="https://www.python.org/" target="_blank">Python</a> and
-                <a href="https://www.djangoproject.com/" target="_blank">Django</a> on a
-                <a href="https://www.digitalocean.com/?refcode=de2bbc881e20&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge"
-                   target="_blank">DigitalOcean</a> server.
-            </p>
-        </div>
-    </div>
-    <div class="footer-logo">
-        <a href="https://www.digitalocean.com/?refcode=de2bbc881e20&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge"
-           target="_blank"
-           class="digital-ocean-href">
-            <img class="digital-ocean-powered"
-                 src="{% static 'images/digital-ocean-powered.svg' %}"
-                 alt="DigitalOcean Referral Badge"
-            />
-        </a>
-
-        <a href="https://www.python.org/"
-           target="_blank">
-            <img class="python-powered"
-                 src="{% static 'images/python-powered.svg' %}"
-                 alt="powered by python"
-            />
-        </a>
-    </div>
-
+    <p>&copy; 2024 IJMadalenA - All rights reserved.</p>
+    <p>Designed by <a href="https://github.com/ijmadalena" target="_blank">IJMadalenA</a></p>
 </footer>
-<!-- Bootstrap 5 JS Added -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-RrcW6IkfMwU3DV2qOU8vNK13t1mdrmjGgJqqlEhE26E9OgWRW2UPD+WW+d1BZPmE"
-        crossorigin="anonymous"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

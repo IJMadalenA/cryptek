@@ -28,7 +28,7 @@ class EntryList(ListView):
         .filter(status=1)
         .order_by("-created_at")
     )
-    template_name = "index.html"
+    template_name = "home.html"
     paginate_by = 4
 
 
