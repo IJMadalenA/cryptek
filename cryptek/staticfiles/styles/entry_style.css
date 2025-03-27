@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:400,700|Lora|Playfair+Display:700i,900');
+
+/* General Styles */
+h1,
+h2,
+h3,
+p,
+i,
+a,
+.authorName a {
+    color: rgba(0, 0, 0, 0.84);
+    text-rendering: optimizeLegibility;
+}
+
+p, i {
+    /*margin-top: 21px;*/
+    font-family: cursive;
+    font-size: 21px;
+    line-height: 1.58;
+}
+
+code {
+    font-size: 18px;
+}
+
+mark, .highlighted {
+    background: #7DFFB3;
+}
+
+.header-image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 24px;
+    display: block;
+    object-fit: cover;
+}
+
+/* Buttons */
+.like-dislike-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: left;
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+.social-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: left;
+    margin-left: 10px;
+}
+
+.social-button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+}
+
+.X {
+    background-color: #000000;
+}
+
+.linkedin {
+    background-color: #0077b5;
+}
+
+/* Card Subtitle */
+.card-subtitle {
+    margin-left: 10px;
+}
+
+/* Header */
+header {
+    margin-left: 10px;
+}
+
+/* Blockquote */
+blockquote {
+    font-family: "Playfair Display", serif;
+    font-size: 30px;
+    font-style: italic;
+    letter-spacing: -0.36px;
+    line-height: 44.4px;
+    overflow-wrap: break-word;
+    margin: 55px 0 33px 0;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.68);
+    padding: 0 0 0 50px;
+}
+
+/* Preformatted Text */
+pre {
+    background-color: #e8e8e8;
+    font-size: 18px;
+    line-height: 1.5;
+    border: 1px solid #E5E5E5;
+    padding: 32px;
+    font-family: source-code-pro, Menlo, Monaco, "Courier New", Courier, monospace;
+    border-radius: 10px;
+    overflow-x: auto;
+}
+
+pre code {
+    display: block;
+    white-space: pre;
+    max-width: 100%;
+    min-width: 100px;
+}
+
+/* Mermaid Diagrams */
+.mermaid {
+    margin: 0 auto;
+    padding: 30px;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* Subtitle */
+.subtitle {
+    font-family: "Lato", sans-serif;
+    color: rgba(0, 0, 0, 0.54);
+    margin: 0 0 24px 0;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .header-image {
+        width: 100%;
+        height: auto;
+        margin-bottom: 15px;
+    }
+
+    .card-body {
+        padding: 10px;
+    }
+
+    .text-muted {
+        font-size: 0.8em;
+
+        margin: 0;
+    }
+
+    .card-text {
+        font-size: 1em;
+    }
+
+    .like-dislike-buttons {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .card-body {
+        padding: 10px;
+        max-width: MIN(50%, 800px);
+    }
+}

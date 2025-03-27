@@ -3,85 +3,7 @@
 {% load markdown_extras %}
 
 {% block content %}
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/post_style.css' %}">
-    <style>
-        .header-image {
-            width: 100%;
-            height: auto;
-            margin-bottom: 20px;
-            border-radius: 24px;
-            display: block;
-            object-fit: cover;
-        }
-
-        h1 {
-            font-size: 2em;
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        .like-dislike-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .social-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .social-button {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            cursor: pointer;
-        }
-
-        .X {
-            background-color: #000000;
-        }
-
-        .linkedin {
-            background-color: #0077b5;
-        }
-
-        @media (max-width: 768px) {
-            .header-image {
-                width: 100%;
-                height: auto;
-                margin-bottom: 15px;
-            }
-
-            .card-body {
-                padding: 10px;
-            }
-
-            h1 {
-                font-size: 1.5em;
-            }
-
-            .text-muted {
-                font-size: 0.8em;
-            }
-
-            .card-text {
-                font-size: 1em;
-            }
-
-            .like-dislike-buttons {
-                flex-direction: column;
-                gap: 5px;
-            }
-
-            .card-body {
-                padding: 10px;
-                max-width: MIN(50%, 800px);
-            }
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/entry_style.css' %}">
 
     <div class="container">
         <div class="card mt-3 left top">
@@ -132,7 +54,7 @@
 
             <div class="card-body">
                 <div class="card-text">
-                    {{ object.content | safe }}
+                    {{ object.content | markdown | safe }}
                 </div>
             </div>
         </div>

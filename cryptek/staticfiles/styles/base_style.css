@@ -1,0 +1,130 @@
+
+body {
+    font-family: "Roboto", sans-serif;
+    background-color: rgb(254, 254, 254);
+    padding-top: 80px;
+    position: relative;
+    min-height: 100vh;
+}
+
+a {
+    text-decoration: underline;
+}
+
+
+/* Headings */
+h1 {
+    font-family: "Playfair Display", serif;
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-family: "Playfair Display", serif;
+    font-size: 26px;
+    font-weight: 700;
+    padding: 0;
+    text-align: left;
+    letter-spacing: -0.45px;
+    margin: 35px 0 13px -1.883px;
+}
+
+h3 {
+    font-family: "Playfair Display", serif;
+    font-size: 22px;
+    font-weight: 700;
+    padding: 0;
+    margin: 35px 0 13px -1.883px;
+    text-align: left;
+    letter-spacing: -0.45px;
+}
+
+aside {
+    font-size: 18px;
+    font-weight: 700;
+    padding: 0;
+    margin: 35px;
+    text-align: left;
+    letter-spacing: -0.45px;
+}
+
+
+#mainNav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1030;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card p {
+    color: #666;
+}
+
+.content-area {
+    padding-right: 15px;
+}
+
+.container {
+    max-width: MAX(80%, 800px);
+}
+
+.right-column {
+    padding-left: 15px;
+}
+
+.right-column .block {
+    margin-bottom: 20px;
+}
+
+.btn-login {
+    background-color: #185034;
+    border-color: #185034;
+}
+
+.footer-container {
+    background-color: #f8f9fa;
+    padding: 1.5rem 0 0 0;
+
+}
+
+.footer-logo {
+    position: absolute;
+    bottom: 0;
+    right: 10px;
+    opacity: 0.7;
+}
+
+.footer-logo img {
+    margin-right: 10px;
+}
+
+.python-powered {
+    height: 45px;
+    opacity: 90%;
+}
+
+.digital-ocean-powered {
+    height: 40px;
+    opacity: 90%;
+}
+
+.digital-ocean-href {
+    margin-right: 10px;
+    text-decoration: none;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.footer-links a {
+    color: #333;
+}
+
+.footer-text {
+    text-align: center;
+    color: #333;
+}
