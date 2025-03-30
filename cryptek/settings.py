@@ -79,6 +79,7 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "markdownx",
     "debug_toolbar",
+    "widget_tweaks",
     # django-allauth.
     "allauth",
     "allauth.account",

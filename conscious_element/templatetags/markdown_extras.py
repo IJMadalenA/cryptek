@@ -1,5 +1,6 @@
 import re
 
+import bleach
 import markdown as md
 from django import template
 from django.template.defaultfilters import stringfilter
@@ -11,6 +12,21 @@ register = template.Library()
 @stringfilter
 def markdown(value):
     html = md.markdown(value, extensions=["markdown.extensions.fenced_code"])
+
+    allowed_tags = list(bleach.sanitizer.ALLOWED_TAGS) + [
+        "p",
+        "pre",
+        "span",
+        "div",
+        "img",
+        "h1",
+        "h2",
+        "h3",
+        "code",
+        "aside",
+        "hr",
+    ]
+    allowed_attributes = {"a": ["href", "title"], "img": ["src", "alt", "loading"], "code": ["class"]}
 
     """
     The selected code uses a regular expression to find and replace Mermaid code blocks in the HTML generated from Markdown. 
@@ -38,7 +54,11 @@ def markdown(value):
     html: The input HTML string where the replacement occurs.
     """
 
+    html = md.markdown(value, extensions=["fenced_code", "codehilite", "tables"])
+
     mermaid_pattern = re.compile(r'<pre><code class="language-mermaid">(.*?)</code></pre>', re.DOTALL)
     html = mermaid_pattern.sub(r'<div class="mermaid">\1</div>', html)
+
+    html = bleach.clean(html, tags=allowed_tags, attributes=allowed_attributes)
 
     return html

@@ -1,53 +1,85 @@
 {% extends "base.html" %}
+{% load widget_tweaks %}
 
 {% block content %}
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <h2 class="text-center mb-4">Contact Me</h2>
-                <form method="post" novalidate class="shadow p-4 bg-white rounded">
-                    {% csrf_token %}
-                    {% if form.errors %}
-                        <div class="alert alert-danger" role="alert">
-                            {{ form.errors }}
-                        </div>
-                    {% endif %}
+    <div class="container mx-auto px-6 py-12 max-w-lg">
+        <h2 class="text-3xl font-bold text-center text-gray-900 mb-6">Contact Me</h2>
 
-                    {% if user.is_authenticated %}
-                        <div class="form-group">
-                            <label for="id_full_name" class="font-weight-bold">Your Name:</label>
-                            <p id="id_full_name" class="form-control-plaintext">{{ user.first_name }} {{ user.last_name }}</p>
-                        </div>
-                    {% else %}
-                        <div class="form-group">
-                            <label for="id_first_name" class="font-weight-bold">Your First Name:</label>
-                            {{ form.first_name }}
-                        </div>
-                        <div class="form-group">
-                            <label for="id_last_name" class="font-weight-bold">Your Last Name:</label>
-                            {{ form.last_name }}
-                        </div>
-                    {% endif %}
+        <form method="post" novalidate class="shadow-lg rounded-lg p-8 border border-gray-300">
+            {% csrf_token %}
 
-                    <div class="form-group">
-                        <label for="id_email" class="font-weight-bold">Your Email:</label>
-                        {% if user.is_authenticated %}
-                            <p id="id_email" class="form-control-plaintext">{{ user.email }}</p>
-                        {% else %}
-                            {{ form.email }}
-                        {% endif %}
-                    </div>
+            <!-- Mensajes de error -->
+            {% if form.errors %}
+                <div class="mb-4 p-3 bg-red-100 border-l-4 border-red-500 text-red-700 text-sm rounded">
+                    <strong>There were some errors:</strong>
+                    <ul class="list-disc pl-5">
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
 
-                    <div class="form-group">
-                        <label for="id_message" class="font-weight-bold">Your Message:</label>
-                        {{ form.message }}
-                    </div>
+            <!-- Nombre (Si está autenticado, mostrarlo en texto plano) -->
+            {% if user.is_authenticated %}
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">Your Name:</label>
+                    <p class="text-gray-900 font-semibold">{{ form.first_name.value }} {{ form.last_name.value }}</p>
+                </div>
+            {% else %}
+                <div class="mb-4">
+                    <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-gray-700">Your
+                        First Name:</label>
+                    {{ form.first_name|add_class:"input-field w-full px-4 py-2 bg-gray-200 text-gray-900 border border-gray-400 rounded-lg" }}
+                </div>
+                <div class="mb-4">
+                    <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-gray-700">Your
+                        Last Name:</label>
+                    {{ form.last_name|add_class:"input-field w-full px-4 py-2 bg-gray-200 text-gray-900 border border-gray-400 rounded-lg" }}
+                </div>
+            {% endif %}
 
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary">Send</button>
-                    </div>
-                </form>
+            <!-- Email (Si está autenticado, mostrarlo en texto plano) -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Your Email:</label>
+                {% if form.is_authenticated.value %}
+                    <p class="text-gray-900 font-semibold">{{ form.email.value }}</p>
+                {% else %}
+                    {{ form.email|add_class:"input-field w-full px-4 py-2 bg-gray-200 text-gray-900 border border-gray-400 rounded-lg" }}
+                {% endif %}
             </div>
-        </div>
+
+            <!-- Mensaje -->
+            <div class="mb-4">
+                <label for="{{ form.message.id_for_label }}" class="block text-sm font-medium text-gray-700">Your
+                    Message:</label>
+                {{ form.message|add_class:"input-field w-full px-4 py-2 bg-gray-200 text-gray-900 border border-gray-400 rounded-lg" }}
+            </div>
+
+            <!-- Botón de envío -->
+            <div class="text-center">
+                <button type="submit"
+                        class="input-field w-full bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-all duration-300 hover:bg-green-700">
+                    Send Message
+                </button>
+            </div>
+        </form>
     </div>
+
+    <!-- Estilos adicionales -->
+    <style>
+        /* Estilo para los campos del formulario */
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            @apply w-full px-4 py-3 bg-gray-200 border border-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 shadow-sm;
+        }
+
+        /* Ajustar altura del textarea */
+        textarea {
+            @apply h-32 resize-none;
+        }
+    </style>
 {% endblock %}

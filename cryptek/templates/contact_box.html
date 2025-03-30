@@ -1,31 +1,31 @@
+{% load static %}
 {% block contact_box %}
-    <div class="card shadow-sm contact-me">
-        <div class="card-body text-center">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/sidebar_card_style.css' %}">
 
-            <!-- Card Tittle. -->
-            <h5 class="card-title font-weight-bold">
-                Get in Touch.
-            </h5>
+    <div class="card sidebar-card">
+        <div class="card-body">
 
-            <!-- Card Text. -->
-            <p class="text-muted">
-                This blog is made entirely with our Favourite full stack
-                <a href="https://www.djangoproject.com/" target="_blank">
-                    Framework Django
-                </a> and deployed with
-                <a href="https://www.digitalocean.com/?refcode=de2bbc881e20&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge"
-                   target="_blank">
-                    DigitalOcean.
-                </a>
-                If you want to know how to do it, you have the code on my
-                <a href="https://github.com/ijmadalena" target="_blank">
-                    GitHub
-                </a> or you can contact me. </p>
+            <!-- Card Title -->
+            <h5 class="card-title">Get in Touch</h5>
 
-            <!-- Card Button. -->
-            <a href="{% url 'contact' %}"
-               class="btn btn-success">Contact Me.
-            </a>
+            <!-- Card Text -->
+            <div class="card-text">
+                <p>
+                    This blog is made entirely with our favourite full stack
+                    <a href="https://www.djangoproject.com/" target="_blank">Framework Django</a>
+                    and deployed with
+                    <a href="https://www.digitalocean.com/?refcode=de2bbc881e20&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge"
+                       target="_blank">DigitalOcean</a>.
+                </p>
+                <p>
+                    If you want to know how to do it, you have the code on my
+                    <a href="https://github.com/ijmadalena" target="_blank">GitHub</a>
+                    or you can contact me.
+                </p>
+            </div>
+
+            <!-- Card Button -->
+            <a href="{% url 'contact' %}" class="btn sidebar-btn">Contact Me</a>
 
         </div>
     </div>

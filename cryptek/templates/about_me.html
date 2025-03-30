@@ -2,48 +2,48 @@
 {% load static %}
 
 {% block content %}
-    <div class="container mt-5">
-        <h1>About Me</h1>
-        <p>Hello! I am Ismael Madalena A., a passionate software developer with experience in a variety of technologies.
-            Here
-            are some of the technologies I specialize in:</p>
+    <div class="container mx-auto px-6 py-12 max-w-3xl text-center">
+        <!-- Título -->
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">About Me</h1>
+        <p class="text-gray-600 text-lg leading-relaxed">
+            Hello! I am <span class="font-semibold text-gray-900">Ismael Madalena A.</span>, a passionate software
+            developer with experience in various technologies.
+            Here are some of the technologies I specialize in:
+        </p>
 
-        <div class="row mt-4 mb-4">
-            <div class="col-md-3 text-center">
-                <img src="{% static 'images/python-icon.svg' %}" alt="Python" class="img-fluid">
-                <p>Python</p>
+        <!-- Tecnologías -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-8">
+            <div class="flex flex-col items-center">
+                <img src="{% static 'images/python-icon.svg' %}" alt="Python" class="w-16 h-16" loading="lazy">
+                <p class="text-gray-700 mt-2 text-sm font-semibold">Python</p>
             </div>
-            <div class="col-md-3 text-center">
-                <img src="{% static 'images/django-icon-square.svg' %}" alt="Django" class="img-fluid">
-                <p>Django</p>
+            <div class="flex flex-col items-center">
+                <img src="{% static 'images/django-icon-square.svg' %}" alt="Django" class="w-16 h-16" loading="lazy">
+                <p class="text-gray-700 mt-2 text-sm font-semibold">Django</p>
             </div>
-            <div class="col-md-3 text-center">
-                <img src="{% static 'images/postgresql-icon.svg' %}" alt="Postgres" class="img-fluid">
-                <p>Postgres</p>
+            <div class="flex flex-col items-center">
+                <img src="{% static 'images/postgresql-icon.svg' %}" alt="PostgreSQL" class="w-16 h-16" loading="lazy">
+                <p class="text-gray-700 mt-2 text-sm font-semibold">PostgreSQL</p>
             </div>
-            <div class="col-md-3 text-center">
-                <img src="{% static 'images/docker-icon.svg' %}" alt="Docker" class="img-fluid">
-                <p>Docker</p>
+            <div class="flex flex-col items-center">
+                <img src="{% static 'images/docker-icon.svg' %}" alt="Docker" class="w-16 h-16" loading="lazy">
+                <p class="text-gray-700 mt-2 text-sm font-semibold">Docker</p>
             </div>
         </div>
 
-        <p>You can connect with me on LinkedIn or view my projects on GitHub using the links below:</p>
-
-        <ul>
-            <li>
-                <a href="https://www.linkedin.com/in/ijmadalena/" target="_blank">
-                    <img src="{% static 'images/linkedin-icon.svg' %}" alt="LinkedIn"
-                         style="width: 20px; height: 20px; vertical-align: middle; margin-right: 5px;">
-                    LinkedIn
-                </a>
-            </li>
-            <li>
-                <a href="https://github.com/IJMadalenA" target="_blank">
-                    <img src="{% static 'images/github-mark.svg' %}" alt="GitHub"
-                         style="width: 20px; height: 20px; vertical-align: middle; margin-right: 5px;">
-                    GitHub
-                </a>
-            </li>
-        </ul>
+        <!-- Redes sociales -->
+        <p class="text-gray-600 text-lg mt-10">You can connect with me on:</p>
+        <div class="flex justify-center gap-6 mt-4">
+            <a href="https://www.linkedin.com/in/ijmadalena/" target="_blank"
+               class="flex items-center space-x-2 text-gray-800 hover:text-blue-700 transition">
+                <img src="{% static 'images/linkedin-icon.svg' %}" alt="LinkedIn" class="w-6 h-6" loading="lazy">
+                <span class="text-lg font-medium">LinkedIn</span>
+            </a>
+            <a href="https://github.com/IJMadalenA" target="_blank"
+               class="flex items-center space-x-2 text-gray-800 hover:text-gray-900 transition">
+                <img src="{% static 'images/github-mark.svg' %}" alt="GitHub" class="w-6 h-6" loading="lazy">
+                <span class="text-lg font-medium">GitHub</span>
+            </a>
+        </div>
     </div>
 {% endblock %}

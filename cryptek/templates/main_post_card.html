@@ -1,30 +1,44 @@
-<!-- cryptek/templates/main_post_card.html -->
-<a href="{% url 'entry_detail' entry.slug %}" class="main-post-card-link">
-    <div class="main-post-card">
-        <div class="main-post-card-left">
-            <div class="main-post-card-image">
-                {% if entry.header_image %}
-                    <img src="{{ entry.header_image.url }}" alt="{{ entry.title }}">
-                {% endif %}
-            </div>
-            <div class="main-post-card-date">
-                <h5>{{ entry.created_at|date:"d" }}</h5>
-                <h6>{{ entry.created_at|date:"F Y" }}</h6>
+<a href="{% url 'entry_detail' entry.slug %}"
+   class="block transition-transform transform ease-in-out duration-150 hover:scale-[1.007]">
+    <div class="relative flex flex-col md:flex-row bg-white text-gray-900 rounded-lg shadow-md overflow-hidden">
+        <!-- Imagen y fecha -->
+        <div class="relative md:w-1/3">
+            {% if entry.header_image %}
+                <img src="{{ entry.header_image.url }}" alt="{{ entry.title }}"
+                     class="w-full h-48 md:h-full object-cover" loading="lazy">
+            {% endif %}
+            <div class="absolute bottom-2 left-2 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-medium">
+                {{ entry.created_at|date:"d M Y" }}
             </div>
         </div>
-        <div class="main-post-card-right">
-            <h1 class="main-post-card-title">{{ entry.title }}</h1>
-            <div class="main-post-card-author">
+
+        <!-- Contenido -->
+        <div class="p-6 flex flex-col justify-between md:w-2/3">
+            <h1 class="text-2xl font-bold mb-2 group-hover:text-green-700 transition-colors duration-200 line-clamp-2">
+                {{ entry.title|truncatechars:80 }}
+            </h1>
+
+            <!-- Autor -->
+            <div class="flex items-center space-x-3 mb-2">
                 {% if entry.author.profile_image %}
-                    <img src="{{ entry.author.profile_image.url }}" alt="{{ entry.author }}" class="author-image">
+                    <img src="{{ entry.author.profile_image.url }}" alt="{{ entry.author }}"
+                         class="w-10 h-10 rounded-full object-cover" loading="lazy">
                 {% endif %}
-                <h2 class="author-name">{{ entry.author }}</h2>
+                <h2 class="text-lg font-semibold text-green-800">{{ entry.author }}</h2>
             </div>
-            <div class="separator"></div>
-            <p class="main-post-card-summary">{{ entry.overview }}</p>
-            <div class="post-card-tags">
+
+            <!-- Separador -->
+            <div class="w-full h-px bg-gray-200 my-2"></div>
+
+            <!-- Descripción -->
+            <p class="text-gray-700 text-sm mb-3">{{ entry.overview }}</p>
+
+            <!-- Tags -->
+            <div class="flex flex-wrap gap-2">
                 {% for tag in entry.tags.all %}
-                    <span class="post-card-tag">{{ tag.name }}</span>
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-medium">
+                        {{ tag.name }}
+                    </span>
                 {% endfor %}
             </div>
         </div>

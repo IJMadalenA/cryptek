@@ -5,75 +5,165 @@
 {% block content %}
     <link rel="stylesheet" type="text/css" href="{% static 'styles/entry_style.css' %}">
 
-    <div class="container">
-        <div class="card mt-3 left top">
-            <div class="header-image">
-                {% if object.header_image %}
-                    <img src="{{ object.header_image.url }}" alt="Header Image" class="header-image">
-                {% endif %}
-            </div>
+    <!-- Overrides para tipografía y elementos Markdown -->
+    <style>
+        /* Encabezados y párrafos */
+        .prose h1 {
+            font-size: 2.75rem;
+            margin-bottom: 1rem;
+            margin-left: 0;
+        }
 
-            <header>
-                <h1 class="page-title">
-                    {% block title %}
-                        {{ object.title }}
-                    {% endblock title %}
-                </h1>
-                <p class="page-description">
+        .prose h2 {
+            font-size: 2.25rem;
+            margin-bottom: 0.75rem;
+            margin-left: 1rem; /* Mayor sangría que h1 */
+        }
 
-                </p>
-            </header>
+        .prose h3 {
+            font-size: 1.75rem;
+            margin-bottom: 0.75rem;
+            font-weight: bold;
+            margin-left: 2rem; /* Mayor sangría que h2 */
+        }
 
-            <div class="card-subtitle">
-                <p class="text-muted">
-                    {{ object.author }} | {{ object.created_at | date:"d M Y" }}
-                </p>
-            </div>
+        .prose p {
+            margin-bottom: 1.25rem;
+            line-height: 1.75;
+        }
 
-            <div class="like-dislike-buttons">
-                {% if user.is_authenticated %}
-                    <form id="like-form" method="post" action="{% url 'like_entry' object.slug %}">
-                        {% csrf_token %}
-                        <input type="hidden" name="type" value="like">
-                        <button type="submit" class="btn btn-primary">Like: {{ object.like_count }}</button>
-                    </form>
-                    <form id="dislike-form" method="post" action="{% url 'like_entry' object.slug %}">
-                        {% csrf_token %} <input type="hidden" name="type" value="dislike">
-                        <button type="submit" class="btn btn-secondary">Dislike: {{ object.dislike_count }}</button>
-                    </form>
-                {% else %}
-                    <p>Dislikes: {{ object.dislike_count }}</p>
-                    <p>Like: {{ object.like_count }}</p>
-                {% endif %}
-            </div>
+        /* Listas: forzamos que muestren la tipografía cursiva (o hereden la fuente) */
+        .prose ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            margin-bottom: 1.25rem;
+            font-family: inherit !important;
+        }
 
-            <div class="social-buttons">
-                <button class="social-button X" onclick="shareOnX()">Share on X</button>
-                <button class="social-button linkedin" onclick="shareOnLinkedIn()">Share on LinkedIn</button>
-            </div>
+        .prose li {
+            margin-bottom: 0.5rem;
+            font-family: inherit !important;
+        }
 
-            <div class="card-body">
-                <div class="card-text">
-                    {{ object.content | markdown | safe }}
+        /* Estilos para <aside> dentro del contenido Markdown */
+        article.prose aside {
+            background-color: #f9fafb;
+            padding: 1rem;
+            border-left: 4px solid #e5e7eb;
+            margin-bottom: 1.25rem;
+        }
+    </style>
+
+    <div class="max-w-3xl mx-auto px-4 py-8">
+
+        <!-- Encabezado compacto y horizontal -->
+        <header class="flex flex-col md:flex-row items-center mb-8 border-b pb-4">
+            {% if object.header_image %}
+                <div class="flex-shrink-0">
+                    <!-- Imagen ampliada: 24rem x 24rem -->
+                    <img src="{{ object.header_image.url }}" alt="Header Image"
+                         class="w-96 h-96 object-cover rounded-lg" loading="lazy">
+                </div>
+            {% endif %}
+            <div class="md:ml-6 mt-4 md:mt-0 flex-1 flex flex-col justify-center">
+                <!-- Título sin botones de compartir -->
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800">{{ object.title }}</h1>
+                </div>
+                <div class="mt-1 text-sm text-gray-500">
+                    <span>{{ object.author }}</span> &mdash; <span>{{ object.created_at|date:"d M Y" }}</span>
+                </div>
+                <div class="mt-3 flex space-x-4">
+                    {% if user.is_authenticated %}
+                        <form method="post" action="{% url 'like_entry' object.slug %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="type" value="like">
+                            <button type="submit"
+                                    class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition">
+                                Like: {{ object.like_count }}
+                            </button>
+                        </form>
+                        <form method="post" action="{% url 'like_entry' object.slug %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="type" value="dislike">
+                            <button type="submit"
+                                    class="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700 transition">
+                                Dislike: {{ object.dislike_count }}
+                            </button>
+                        </form>
+                    {% else %}
+                        <div class="text-gray-600">
+                            <span>Likes: {{ object.like_count }}</span>
+                            <span class="ml-4">Dislikes: {{ object.dislike_count }}</span>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
+        </header>
+
+        <!-- Índice del post (Table of Contents) -->
+        <nav id="toc-wrapper" class="mb-8 border-l-4 border-gray-300 pl-4">
+            <h2 class="text-xl font-bold text-gray-700 mb-4">Table of Contents</h2>
+            <ul id="toc" class="list-disc pl-4"></ul>
+        </nav>
+
+        <!-- Contenido del post -->
+        <article class="prose lg:prose-xl">
+            <section class="post-content">
+                {{ object.content | markdown | safe }}
+            </section>
+        </article>
+
+        <!-- Botones para compartir debajo del contenido -->
+        <div class="mt-10 flex space-x-2">
+            <button onclick="shareOnX()" class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                Share on X
+            </button>
+            <button onclick="shareOnLinkedIn()"
+                    class="px-3 py-2 bg-blue-800 text-white rounded hover:bg-blue-900 transition">
+                Share on LinkedIn
+            </button>
         </div>
 
         <script>
+            // Funciones para compartir en redes
             function shareOnX() {
-                const url = window.location.href;
-                const text = document.querySelector('.page-title').innerText;
-                const message = `Check out this blog post!\n\n${text}\n\nRead more here: ${url}`;
-                const shareUrl = `https://x.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(message)}`;
-                window.open(shareUrl, '_blank');
+              const url = window.location.href;
+              const text = document.querySelector('h1').innerText;
+              const message = `Check out this blog post!\n\n${text}\n\nRead more here: ${url}`;
+              const shareUrl = `https://x.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(message)}`;
+              window.open(shareUrl, '_blank');
+            }
+            function shareOnLinkedIn() {
+              const url = window.location.href;
+              const title = document.querySelector('h1').innerText;
+              const shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`;
+              window.open(shareUrl, '_blank');
             }
 
-            function shareOnLinkedIn() {
-                const url = window.location.href;
-                const title = document.querySelector('.page-title').innerText;
-                const shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`;
-                window.open(shareUrl, '_blank');
-            }
+            // Generación automática del índice (Table of Contents)
+            document.addEventListener('DOMContentLoaded', function() {
+              const toc = document.getElementById('toc');
+              if (!toc) return;
+              const headers = document.querySelectorAll('.post-content h2, .post-content h3');
+              headers.forEach(header => {
+                if (!header.id) {
+                  header.id = header.textContent.toLowerCase().trim()
+                                 .replace(/\s+/g, '-')
+                                 .replace(/[^\w\-]/g, '');
+                }
+                const li = document.createElement('li');
+                if (header.tagName.toLowerCase() === 'h3') {
+                  li.classList.add('ml-4'); // Mayor sangría para h3
+                }
+                const a = document.createElement('a');
+                a.href = '#' + header.id;
+                a.textContent = header.textContent;
+                a.classList.add('text-blue-600', 'hover:underline');
+                li.appendChild(a);
+                toc.appendChild(li);
+              });
+            });
         </script>
         <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     </div>

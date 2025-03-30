@@ -1,30 +1,58 @@
-<!-- cryptek/templates/post_card.html -->
-<div class="post-card">
-    <a href="{% url 'entry_detail' entry.slug %}" class="post-card-link">
-        <div class="post-card-image">
+<a href="{% url 'entry_detail' entry.slug %}"
+   class="block group transition-transform transform ease-in-out duration-200 hover:scale-[1.007]">
+    <div class="bg-white text-gray-900 rounded-lg shadow-md overflow-hidden w-full h-[18rem] sm:h-[20rem] md:h-[25rem] flex flex-col">
+        <!-- Imagen con overlays -->
+        <div class="relative">
             {% if entry.header_image %}
-                <img src="{{ entry.header_image.url }}" alt="{{ entry.title }}">
+                <img src="{{ entry.header_image.url }}"
+                     alt="{{ entry.title|truncatechars:80 }}"
+                     class="w-full h-[11rem] sm:h-[12rem] md:h-[15rem] object-cover rounded-t-lg" loading="lazy">
             {% endif %}
-        </div>
-        <div class="post-card-content">
-            <h2 class="post-card-title">{{ entry.title }}</h2>
-            <p class="post-card-summary">{{ entry.overview }}</p>
-            <p class="post-card-meta">
-                <span class="post-card-date">{{ entry.created_at|date:"d M Y" }}</span>
-                {% if entry.author.profile_image %}
-                    <span class="post-card-author">
-                        <img src="{{ entry.author.profile_image.url }}" alt="{{ entry.author }}" class="author-image">
-                        {{ entry.author }}
-                    </span>
-                {% else %}
-                    <span class="post-card-author">{{ entry.author }}</span>
-                {% endif %}
-            </p>
-            <div class="post-card-tags">
-                {% for tag in entry.tags.all %}
-                    <span class="post-card-tag">{{ tag.name }}</span>
-                {% endfor %}
+
+            <!-- Overlay derecho: fecha y tags -->
+            <div class="absolute bottom-2 right-2 space-y-1 text-right">
+                <!-- Burbuja de fecha -->
+                <div>
+          <span class="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-medium">
+            {{ entry.created_at|date:"d M Y" }}
+          </span>
+                </div>
+                <!-- Burbujitas de tags -->
+                <div class="flex flex-wrap gap-1 justify-end">
+                    {% for tag in entry.tags.all %}
+                        <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full text-xs font-medium">
+              {{ tag.name }}
+            </span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Overlay izquierdo: burbuja de autor -->
+            <div class="absolute bottom-2 left-2">
+        <span class="flex items-center space-x-1 bg-green-100 text-green-800 px-2 py-0.5 rounded-full text-xs font-medium">
+          {% if entry.author.profile_image %}
+              <img src="{{ entry.author.profile_image.url }}"
+                   alt="{{ entry.author }}"
+                   class="w-4 h-4 rounded-full object-cover " loading="lazy">
+          {% endif %}
+            <span>{{ entry.author }}</span>
+        </span>
             </div>
         </div>
-    </a>
-</div>
+
+        <!-- Contenido -->
+        <div class="p-4 flex flex-col flex-grow min-h-0">
+            <!-- Título y resumen -->
+            <div class="flex-1 overflow-hidden">
+                <h2 class="text-lg font-bold mb-2 group-hover:text-green-700 transition-colors line-clamp-2"
+                    title="{{ entry.title }}">
+                    {{ entry.title|truncatechars:80 }}
+                </h2>
+                <!-- Resumen reducido: solo dos líneas y margen inferior levemente menor -->
+                <p class="hidden md:block text-gray-700 text-sm mb-2 overflow-hidden line-clamp-2">
+                    {{ entry.overview|truncatechars:200 }}
+                </p>
+            </div>
+        </div>
+    </div>
+</a>

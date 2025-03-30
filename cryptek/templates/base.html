@@ -1,88 +1,129 @@
 <!DOCTYPE html>
 <html lang="es">
 {% load static %}
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="google" content="notranslate"/>
     <title>IJMadalenA Blog</title>
-
-    <!-- External Styles & Scripts -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/lib/codemirror.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/addon/runmode/runmode-standalone.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.61.0/mode/python/python.min.js"></script>
-
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700|Playfair+Display:700" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/base_style.css' %}">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-
-<body>
+<body class="bg-stone-50 text-gray-900 flex flex-col min-h-screen">
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light shadow fixed-top">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'to_blog' %}">IJMadalenA Blog</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ms-auto">
-                {% if user.is_superuser %}
-                    <li class="nav-item">
-                        <a class="btn btn-outline-dark fw-bold" href="{% url 'admin:index' %}">Admin</a>
-                    </li>
-                {% endif %}
-                <li class="nav-item">
-                    <a class="btn btn-outline-primary fw-bold" href="{% url 'about_me' %}">About Me</a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-outline-success fw-bold" href="{% url 'contact' %}">Contact</a>
-                </li>
-                {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <form method="post" action="{% url 'logout' %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger">Logout</button>
-                        </form>
-                    </li>
-                {% else %}
-                    <li class="nav-item">
-                        <a class="btn btn-primary fw-bold" href="{% url 'login' %}">Login</a>
-                    </li>
-                {% endif %}
-            </ul>
+<nav class="bg-gray-900 shadow-md">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <!-- Logo -->
+        <a href="{% url 'to_blog' %}" class="text-2xl font-bold text-white">
+            IJMadalenA Blog
+        </a>
+        <!-- Botón de menú móvil (visible solo en pantallas pequeñas) -->
+        <div class="md:hidden">
+            <button id="mobile-menu-button" class="text-white focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+        <!-- Menú de escritorio -->
+        <div class="hidden md:flex space-x-2" id="desktop-menu">
+            {% if user.is_superuser %}
+                <a href="{% url 'admin:index' %}"
+                   class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+                    Admin
+                </a>
+            {% endif %}
+            <a href="{% url 'about_me' %}"
+               class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
+                About Me
+            </a>
+            <a href="{% url 'contact' %}"
+               class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
+                Contact
+            </a>
+            {% if user.is_authenticated %}
+                <form method="post" action="{% url 'logout' %}" class="inline">
+                    {% csrf_token %}
+                    <button type="submit"
+                            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                        Logout
+                    </button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}"
+                   class="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition">
+                    Login
+                </a>
+            {% endif %}
+        </div>
+    </div>
+    <!-- Menú móvil (oculto por defecto) -->
+    <div id="mobile-menu" class="md:hidden hidden">
+        <div class="px-6 pb-4 space-y-2">
+            {% if user.is_superuser %}
+                <a href="{% url 'admin:index' %}"
+                   class="block px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+                    Admin
+                </a>
+            {% endif %}
+            <a href="{% url 'about_me' %}"
+               class="block px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
+                About Me
+            </a>
+            <a href="{% url 'contact' %}"
+               class="block px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
+                Contact
+            </a>
+            {% if user.is_authenticated %}
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit"
+                            class="block w-full text-left px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                        Logout
+                    </button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}"
+                   class="block px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition">
+                    Login
+                </a>
+            {% endif %}
         </div>
     </div>
 </nav>
 
-<!-- Main Layout -->
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-lg-9">
-            {% block content %}{% endblock %}
-        </div>
-        <div class="col-lg-3">
-            {% block right_column %}
-                <div class="mb-3">{% include 'contact_box.html' %}</div>
-                <div class="mb-3">{% include 'qr_code_box.html' %}</div>
-            {% endblock %}
-        </div>
+<!-- Main Content -->
+<main class="container mx-auto px-6 mt-10 grid grid-cols-1 lg:grid-cols-4 gap-6 flex-grow">
+    <div class="lg:col-span-3">
+        {% block content %}{% endblock %}
     </div>
-</div>
+    <aside class="bg-gray-100 p-6 rounded-lg shadow-md">
+        {% block right_column %}
+            <div class="mb-4">{% include 'contact_box.html' %}</div>
+            <div class="mb-4">{% include 'qr_code_box.html' %}</div>
+        {% endblock %}
+    </aside>
+</main>
 
 <!-- Footer -->
-<footer class="footer-container text-center py-3 bg-light mt-5">
-    <div class="footer-links mb-2">
-        <a href="{% url 'to_blog' %}">Home</a>
-        <a href="{% url 'about_me' %}">About Me</a>
-        <a href="{% url 'contact' %}">Contact</a>
+<footer class="mt-10 py-6 text-center bg-gray-900 text-gray-300">
+    <div class="space-x-4">
+        <a href="{% url 'to_blog' %}" class="hover:text-white transition">Home</a>
+        <a href="{% url 'about_me' %}" class="hover:text-white transition">About Me</a>
+        <a href="{% url 'contact' %}" class="hover:text-white transition">Contact</a>
     </div>
-    <p>&copy; 2024 IJMadalenA - All rights reserved.</p>
-    <p>Designed by <a href="https://github.com/ijmadalena" target="_blank">IJMadalenA</a></p>
+    <p class="mt-2 text-gray-400">&copy; 2024 IJMadalenA - All rights reserved.</p>
 </footer>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Script para alternar el menú móvil -->
+<script>
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+</script>
 </body>
 </html>

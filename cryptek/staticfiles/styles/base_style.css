@@ -120,6 +120,22 @@ aside {
     margin-bottom: 0.5rem;
 }
 
+.footer-images {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+}
+
+.footer-images a {
+    margin-left: 10px;
+}
+
+.footer-images img {
+    height: 40px;
+    width: auto;
+}
+
 .footer-links a {
     color: #333;
 }

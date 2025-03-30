@@ -1,46 +1,71 @@
 {% extends "base.html" %}
+{% load widget_tweaks %}
 {% load i18n %}
 {% load socialaccount %}
 {% load static %}
 
 {% block content %}
-    <link rel="stylesheet" href="{% static 'styles/login_style.css' %}">
-
-    <div class="login-container">
-        <h2 class="login-title">{% trans "Login to IJMadalenA Blog" %}</h2>
-
-        <form method="post" action="{% url 'account_login' %}">
-            {% csrf_token %}
-            {{ form.as_p }}
-
-            <div class="btn-container">
-                <button type="submit" class="btn btn-login">
+    <div class="flex justify-center items-center py-24">
+        <div class="bg-white shadow-lg rounded-2xl p-8 max-w-sm w-full">
+            <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">{% trans "Login to IJMadalenA Blog" %}</h2>
+            <form method="post" action="{% url 'account_login' %}" class="space-y-4">
+                {% csrf_token %}
+                <!-- Campos del formulario -->
+                <div>
+                    {{ form.login|add_class:"input-field w-full text-black font-bold py-2 px-4 rounded-lg shadow-md transition-all duration-300" }}
+                </div>
+                <div>
+                    {{ form.password|add_class:"input-field w-full text-black font-bold py-2 px-4 rounded-lg shadow-md transition-all duration-300" }}
+                </div>
+                <div class="flex items-center">
+                    {{ form.remember }}
+                    <label class="ml-2 text-sm text-gray-600">{% trans "Remember Me" %}</label>
+                </div>
+                <!-- Botón de login -->
+                <button type="submit"
+                        class="w-full bg-green-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 hover:bg-green-700">
                     {% trans "Login" %}
                 </button>
+            </form>
+            <!-- Enlaces de recuperación y registro -->
+            <div class="text-center mt-4 text-sm text-gray-600">
+                <p>
+                    <a href="{% url 'account_reset_password' %}" class="text-green-600 hover:underline">
+                        {% trans "Forgot Password?" %}
+                    </a>
+                </p>
+                <p>
+                    <a href="{% url 'account_signup' %}" class="text-green-600 hover:underline">
+                        {% trans "Don't have an account? Sign up" %}
+                    </a>
+                </p>
             </div>
-        </form>
-
-        <div class="login-links">
-            <p><a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a></p>
-            <p><a href="{% url 'account_signup' %}">{% trans "Don't have an account? Sign up" %}</a></p>
-        </div>
-
-        <!-- Social Login Buttons -->
-        <div class="social-login">
-            <a href="{% provider_login_url 'github' %}" class="social-btn github">
-                <img src="{% static 'images/github-mark-white.svg' %}" alt="GitHub">
-                <span>Login with GitHub</span>
-            </a>
-
-            <a href="{% provider_login_url 'google' %}" class="social-btn google">
-                <img src="{% static 'images/google-icon.svg' %}" alt="Google">
-                <span>Login with Google</span>
-            </a>
-
-            <a href="{% provider_login_url 'linkedin_oauth2' %}" class="social-btn linkedin">
-                <img src="{% static 'images/linkedin-icon.svg' %}" alt="LinkedIn">
-                <span>Login with LinkedIn</span>
-            </a>
+            <!-- Login con redes sociales -->
+            <div class="mt-6">
+                <div class="text-center text-gray-500 text-sm mb-2">{% trans "Or login with" %}</div>
+                <a href="{% provider_login_url 'github' %}"
+                   class="flex items-center justify-center w-full bg-gray-900 text-white py-2 px-4 rounded-lg shadow-md transition duration-300 hover:bg-gray-800 mb-2">
+                    <img src="{% static 'images/github-mark-white.svg' %}" class="w-5 h-5 mr-2" alt="GitHub">
+                    <span>Login with GitHub</span>
+                </a>
+                <a href="{% provider_login_url 'google' %}"
+                   class="flex items-center justify-center w-full bg-red-600 text-white py-2 px-4 rounded-lg shadow-md transition duration-300 hover:bg-red-700 mb-2">
+                    <img src="{% static 'images/google-icon.svg' %}" class="w-5 h-5 mr-2" alt="Google">
+                    <span>Login with Google</span>
+                </a>
+                <a href="{% provider_login_url 'linkedin_oauth2' %}"
+                   class="flex items-center justify-center w-full bg-blue-600 text-white py-2 px-4 rounded-lg shadow-md transition duration-300 hover:bg-blue-700">
+                    <img src="{% static 'images/linkedin-icon.svg' %}" class="w-5 h-5 mr-2" alt="LinkedIn">
+                    <span>Login with LinkedIn</span>
+                </a>
+            </div>
         </div>
     </div>
+
+    <!-- Estilos con Tailwind -->
+    <style>
+        .input-field {
+            @apply w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500;
+        }
+    </style>
 {% endblock %}
