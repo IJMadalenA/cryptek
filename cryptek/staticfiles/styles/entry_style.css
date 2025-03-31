@@ -1,39 +1,7 @@
-@import url('https://fonts.googleapis.com/css?family=Lato:400,700|Lora|Playfair+Display:700i,900');
-
-/* General Styles */
-h1,
-h2,
-h3,
-p,
-i,
-a,
-.authorName a {
-    color: rgba(0, 0, 0, 0.84);
-    text-rendering: optimizeLegibility;
-}
-
-p, i {
-    /*margin-top: 21px;*/
-    font-family: cursive;
-    font-size: 21px;
-    line-height: 1.58;
-}
+/*@import url('https://fonts.googleapis.com/css?family=Lato:400,700|Lora|Playfair+Display:700i,900');*/
 
 code {
     font-size: 18px;
-}
-
-mark, .highlighted {
-    background: #7DFFB3;
-}
-
-.header-image {
-    width: 100%;
-    height: auto;
-    margin-bottom: 20px;
-    border-radius: 24px;
-    display: block;
-    object-fit: cover;
 }
 
 /* Buttons */
@@ -43,41 +11,6 @@ mark, .highlighted {
     justify-content: left;
     margin-left: 10px;
     margin-top: -15px;
-}
-
-.social-buttons {
-    display: flex;
-    gap: 10px;
-    justify-content: left;
-    margin-left: 10px;
-    margin-top: -10px;
-    padding-bottom: 10px;
-}
-
-.social-button {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 10px;
-    color: white;
-    cursor: pointer;
-}
-
-.X {
-    background-color: #000000;
-}
-
-.linkedin {
-    background-color: #0077b5;
-}
-
-/* Card Subtitle */
-.card-subtitle {
-    margin-left: 10px;
-}
-
-/* Header */
-header {
-    margin-left: 10px;
 }
 
 /* Blockquote */
@@ -129,24 +62,6 @@ pre code {
     max-width: 100%;
     display: flex;
     justify-content: center;
-}
-
-/* Subtitle */
-.subtitle {
-    font-family: "Lato", sans-serif;
-    color: rgba(0, 0, 0, 0.54);
-    margin: 0 0 24px 0;
-}
-
-.header-image {
-    width: 100%;
-    height: auto;
-    margin-bottom: 5px;
-}
-
-.card-body {
-    padding-bottom: 0;
-    margin-bottom: -20px;
 }
 
 /* Media Queries */

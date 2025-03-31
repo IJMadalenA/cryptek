@@ -1,31 +1,33 @@
 {% load static %}
 {% block contact_box %}
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/sidebar_card_style.css' %}">
-
-    <div class="card sidebar-card">
-        <div class="card-body">
+    <div class="card sidebar-card bg-white text-gray-900 rounded-lg shadow-md p-4">
+        <div class="card-body flex flex-col gap-4">
 
             <!-- Card Title -->
-            <h5 class="card-title">Get in Touch</h5>
+            <h5 class="card-title text-lg font-bold text-green-800">Get in Touch</h5>
 
             <!-- Card Text -->
-            <div class="card-text">
+            <div class="card-text text-sm text-gray-700">
                 <p>
                     This blog is made entirely with our favourite full stack
-                    <a href="https://www.djangoproject.com/" target="_blank">Framework Django</a>
+                    <a href="https://www.djangoproject.com/" class="text-green-500 underline" target="_blank">Framework
+                        Django</a>
                     and deployed with
                     <a href="https://www.digitalocean.com/?refcode=de2bbc881e20&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge"
-                       target="_blank">DigitalOcean</a>.
+                       class="text-green-500 underline" target="_blank">DigitalOcean</a>.
                 </p>
                 <p>
                     If you want to know how to do it, you have the code on my
-                    <a href="https://github.com/ijmadalena" target="_blank">GitHub</a>
+                    <a href="https://github.com/ijmadalena" class="text-green-500 underline" target="_blank">GitHub</a>
                     or you can contact me.
                 </p>
             </div>
 
             <!-- Card Button -->
-            <a href="{% url 'contact' %}" class="btn sidebar-btn">Contact Me</a>
+            <a href="{% url 'contact' %}"
+               class="btn sidebar-btn bg-green-600 text-white rounded-full px-4 py-2 text-center hover:bg-green-700 transition-colors">
+                Contact Me
+            </a>
 
         </div>
     </div>

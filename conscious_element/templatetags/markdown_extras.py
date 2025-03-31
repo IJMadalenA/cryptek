@@ -25,8 +25,19 @@ def markdown(value):
         "code",
         "aside",
         "hr",
+        "blockquote",
+        "ul",
+        "ol",
+        "li",
+        "strong",
+        "mermaid",
     ]
-    allowed_attributes = {"a": ["href", "title"], "img": ["src", "alt", "loading"], "code": ["class"]}
+    allowed_attributes = {
+        "a": ["href", "title"],
+        "img": ["src", "alt", "loading"],
+        "code": ["class"],
+        "div": ["class", "mermaid"],
+    }
 
     """
     The selected code uses a regular expression to find and replace Mermaid code blocks in the HTML generated from Markdown. 
@@ -54,7 +65,14 @@ def markdown(value):
     html: The input HTML string where the replacement occurs.
     """
 
-    html = md.markdown(value, extensions=["fenced_code", "codehilite", "tables"])
+    html = md.markdown(
+        value,
+        extensions=[
+            "fenced_code",
+            # "codehilite",
+            "tables",
+        ],
+    )
 
     mermaid_pattern = re.compile(r'<pre><code class="language-mermaid">(.*?)</code></pre>', re.DOTALL)
     html = mermaid_pattern.sub(r'<div class="mermaid">\1</div>', html)

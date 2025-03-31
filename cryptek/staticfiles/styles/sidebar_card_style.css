@@ -11,24 +11,12 @@
     transform: translateY(-3px);
 }
 
-.sidebar-card h5 {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 10px;
-}
-
 .sidebar-card p {
     font-size: 0.95rem;
     color: #555;
     line-height: 1.5;
 }
 
-.sidebar-card a {
-    color: #007bff;
-    text-decoration: none;
-    font-weight: 600;
-}
 
 .sidebar-card a:hover {
     text-decoration: underline;

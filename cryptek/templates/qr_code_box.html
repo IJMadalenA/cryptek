@@ -2,50 +2,63 @@
 {% load static %}
 
 {% block qr_code %}
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/sidebar_card_style.css' %}">
+    <div class="qr-card bg-white shadow-lg rounded-lg p-3 text-center">
+        <!-- Título con icono (la imagen se sitúa a la derecha, con margen) y color ajustado -->
+        <h4 class="text-lg font-semibold text-gray-700 mb-4 text-green-800">
+            Support me with BTC
+            <img src="{% static 'images/fundraising-heart.svg' %}"
+                 alt="Heart Icon"
+                 class="inline-block ml-2 w-5 h-5 align-middle">.
+        </h4>
 
-    <div class="btc-donation-card card shadow-sm">
-        <div class="card-body text-center">
+        <!-- Contenedor del código QR: se reduce la altura para minimizar el espacio vacío -->
+        <div class="qr-container relative h-48 mx-auto">
+            <img id="qr1" src="{% static 'images/qr-code-complete.svg' %}"
+                 alt="Bitcoin QR Code - Complete"
+                 class="qr-image absolute inset-0 w-full h-full object-contain rounded-lg border active transition-opacity duration-300 opacity-100"
+                 loading="lazy">
+            <img id="qr2" src="{% static 'images/qr-code-only-address.svg' %}"
+                 alt="Bitcoin QR Code - Only Address"
+                 class="qr-image absolute inset-0 w-full h-full object-contain rounded-lg border transition-opacity duration-300 opacity-0"
+                 loading="lazy">
+        </div>
 
-            <h5 class="card-title">Support me with some BTC.</h5>
-
-            <!-- QR Code Container -->
-            <div class="qr-container">
-                <img id="qr1" src="{% static 'images/qr-code-complete.svg' %}"
-                     alt="Bitcoin QR Code - Complete" class="qr-image active" loading="lazy">
-                <img id="qr2" src="{% static 'images/qr-code-only-address.svg' %}"
-                     alt="Bitcoin QR Code - Only Address" class="qr-image d-none" loading="lazy">
-            </div>
-
-            <!-- QR Switch Buttons -->
-            <div class="qr-btn-group">
-                <button type="button" id="btn-qr1" class="qr-btn active" onclick="switchQR('qr1', 'btn-qr1')">
-                    Industry Standard
-                </button>
-                <button type="button" id="btn-qr2" class="qr-btn" onclick="switchQR('qr2', 'btn-qr2')">
-                    Only Address
-                </button>
-            </div>
-
+        <!-- Botones para cambiar entre códigos -->
+        <div class="flex justify-center gap-2 mt-4">
+            <button id="btn-qr1"
+                    class="qr-btn bg-green-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-green-700 active:bg-green-800 transition"
+                    onclick="switchQR('qr1', 'btn-qr1')">
+                Complete
+            </button>
+            <button id="btn-qr2"
+                    class="qr-btn bg-gray-500 text-white px-2 py-1 rounded-lg shadow-md hover:bg-gray-600 active:bg-gray-700 transition"
+                    onclick="switchQR('qr2', 'btn-qr2')">
+                Address Only
+            </button>
         </div>
     </div>
 
+    <!-- Script de funcionalidad -->
     <script>
         function switchQR(qrId, btnId) {
-            // Hide all QR images
+            // Oculta todas las imágenes (se superponen en el mismo contenedor)
             document.querySelectorAll('.qr-image').forEach(img => {
-                img.classList.add('d-none');
-                img.classList.remove('active');
+                img.classList.add('opacity-0');
+                img.classList.remove('opacity-100', 'active');
             });
 
-            // Show selected QR image
-            document.getElementById(qrId).classList.remove('d-none');
-            document.getElementById(qrId).classList.add('active');
+            // Muestra la imagen seleccionada
+            const selectedQR = document.getElementById(qrId);
+            selectedQR.classList.remove('opacity-0');
+            selectedQR.classList.add('opacity-100', 'active');
 
-            // Update button states
-            document.querySelectorAll('.qr-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(btnId).classList.add('active');
+            // Actualiza el estado de los botones: resetea a gris y aplica verde al botón seleccionado
+            document.querySelectorAll('.qr-btn').forEach(btn => {
+                btn.classList.remove('bg-green-600', 'hover:bg-green-700', 'active:bg-green-800');
+                btn.classList.add('bg-gray-500', 'hover:bg-gray-600', 'active:bg-gray-700');
+            });
+            document.getElementById(btnId).classList.remove('bg-gray-500', 'hover:bg-gray-600', 'active:bg-gray-700');
+            document.getElementById(btnId).classList.add('bg-green-600', 'hover:bg-green-700', 'active:bg-green-800');
         }
     </script>
 {% endblock qr_code %}
