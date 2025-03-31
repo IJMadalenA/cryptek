@@ -50,13 +50,7 @@ LOCAL = env.bool("DEVELOPMENT_MODE")
 
 SITE_ID = 1  # https://docs.djangoproject.com/es/5.1/ref/settings/#site-id.
 
-ADMINS = (
-    None
-    if DEBUG
-    else env.list(
-        "ADMINS",
-    )
-)  # https://docs.djangoproject.com/es/5.1/ref/settings/#admins.
+ADMINS = env.list("ADMINS")  # https://docs.djangoproject.com/es/5.1/ref/settings/#admins.
 MANAGERS = ADMINS  # https://docs.djangoproject.com/es/5.1/ref/settings/#managers.
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")  # https://docs.djangoproject.com/es/5.1/ref/settings/#allowed-hosts.
