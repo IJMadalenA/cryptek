@@ -53,7 +53,7 @@ SITE_ID = 1  # https://docs.djangoproject.com/es/5.1/ref/settings/#site-id.
 ADMINS = (
     None
     if DEBUG
-    else env.tuple(
+    else env.list(
         "ADMINS",
     )
 )  # https://docs.djangoproject.com/es/5.1/ref/settings/#admins.
