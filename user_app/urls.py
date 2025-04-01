@@ -1,14 +1,8 @@
 from django.urls import path
 
-from user_app.views.create_account_view import CreateAccountView
 from user_app.views.session_view import SessionDeleteOtherView, SessionDeleteView, SessionListView
 
 urlpatterns = [
-    path(
-        route="create/",
-        view=CreateAccountView.as_view(),
-        name="create_account",
-    ),
     path(
         route="profile/",
         view=SessionListView.as_view(),
