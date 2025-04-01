@@ -27,11 +27,11 @@ from django.views.generic import RedirectView
 from blog_app.sitemaps import EntrySitemap
 from blog_app.views import CommentView
 from blog_app.views.email_verification_view import EmailConfirmationView
-from conscious_element.views.about_me import about_me
-from conscious_element.views.login_view import CustomLoginView
-from conscious_element.views.singup_view import CustomSignupView
 from cryptek.csp_report_view import csp_report_view
 from message_app.views.contact_me_view import ContactMeView
+from user_app.views.about_me import about_me
+from user_app.views.login_view import CustomLoginView
+from user_app.views.singup_view import CustomSignupView
 
 sitemaps = {
     "entries": EntrySitemap,
@@ -54,7 +54,7 @@ urlpatterns = (
         path("", RedirectView.as_view(url="blog", permanent=True), name="to_blog"),
         path("about/", about_me, name="about_me"),
         path("admin/", admin.site.urls),
-        path("account/", include("conscious_element.urls")),
+        path("account/", include("user_app.urls")),
         path("blog/", include("blog_app.urls"), name="blog"),
         path("contact/", ContactMeView.as_view(), name="contact"),
         path(

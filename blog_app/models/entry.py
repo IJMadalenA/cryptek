@@ -1,14 +1,24 @@
-from django.db.models import (CASCADE, BooleanField, CharField, DateTimeField,
-                              ForeignKey, ImageField, IntegerField,
-                              ManyToManyField, Model, OneToOneField, SlugField,
-                              TextField)
+from django.db.models import (
+    CASCADE,
+    BooleanField,
+    CharField,
+    DateTimeField,
+    ForeignKey,
+    ImageField,
+    IntegerField,
+    ManyToManyField,
+    Model,
+    OneToOneField,
+    SlugField,
+    TextField,
+)
 from django.urls import reverse
 from django.utils.text import slugify
 from markdownx.models import MarkdownxField
 
 from blog_app.models.category import Category
 from blog_app.models.tag import Tag
-from conscious_element.models.cryptek_user import CryptekUser
+from user_app.models.cryptek_user import CryptekUser
 
 STATUS = (
     (0, "Draft"),

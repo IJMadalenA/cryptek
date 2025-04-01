@@ -3,7 +3,7 @@ from factory.django import DjangoModelFactory
 
 from blog_app.factories.entry_factory import EntryFactory
 from blog_app.models.comment import Comment
-from conscious_element.factory.cryptek_user_factory import CryptekUserFactory
+from user_app.factory.cryptek_user_factory import CryptekUserFactory
 
 
 class CommentFactory(DjangoModelFactory):

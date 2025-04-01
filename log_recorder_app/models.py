@@ -1,7 +1,6 @@
-from django.db.models import (CASCADE, DateTimeField, ForeignKey, Model,
-                              TextField)
+from django.db.models import CASCADE, DateTimeField, ForeignKey, Model, TextField
 
-from conscious_element.models.cryptek_user import CryptekUser
+from user_app.models.cryptek_user import CryptekUser
 
 
 # AuditLog model

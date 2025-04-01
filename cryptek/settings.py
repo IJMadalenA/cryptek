@@ -87,7 +87,7 @@ CUSTOM_APPS = [
     "blog_app.apps.BlogAppConfig",
     "message_app.apps.MessageAppConfig",
     "log_recorder_app.apps.LogRecorderAppConfig",
-    "conscious_element.apps.ConsciousElementConfig",
+    "user_app.apps.UserAppConfig",
 ]
 INSTALLED_APPS = DJANGO_DEFAULT_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
 
@@ -97,7 +97,7 @@ MIDDLEWARE = [
     "csp.middleware.CSPMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     # "django.contrib.sessions.middleware.SessionMiddleware",
-    "conscious_element.session_middleware.SessionMiddleware",
+    "user_app.session_middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -194,9 +194,7 @@ AUTHENTICATION_BACKENDS = (
     "cryptek.backends.EmailOrUsernameAuthenticationBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 )
-AUTH_USER_MODEL = (
-    "conscious_element.CryptekUser"  # https://docs.djangoproject.com/es/5.1/ref/settings/#auth-user-model.
-)
+AUTH_USER_MODEL = "user_app.CryptekUser"  # https://docs.djangoproject.com/es/5.1/ref/settings/#auth-user-model.
 
 LOGIN_URL = "login"  # https://docs.djangoproject.com/es/5.1/ref/settings/#login-url.
 LOGIN_REDIRECT_URL = "home"  # https://docs.djangoproject.com/es/5.1/ref/settings/#login-redirect-url.
@@ -434,7 +432,7 @@ SOCIALACCOUNT_PROVIDERS = {
         },
     },
 }
-ACCOUNT_ADAPTER = "conscious_element.adapters.CustomAccountAdapter"
+ACCOUNT_ADAPTER = "user_app.adapters.CustomAccountAdapter"
 # ACCOUNT_CHANGE_EMAIL = True
 # ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "home"
 # ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
