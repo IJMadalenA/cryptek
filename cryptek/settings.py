@@ -292,7 +292,6 @@ CSRF_COOKIE_SECURE = False if DEBUG else True
 
 # Email verification settings.
 EMAIL_TOKEN_TIMEOUT = 86400  # 24 hours
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 
 SOCIALACCOUNT_FORMS = {
     "disconnect": "allauth.socialaccount.forms.DisconnectForm",
@@ -435,12 +434,15 @@ SOCIALACCOUNT_PROVIDERS = {
         },
     },
 }
+ACCOUNT_ADAPTER = "conscious_element.adapters.CustomAccountAdapter"
 # ACCOUNT_CHANGE_EMAIL = True
 # ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "home"
 # ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
 # ACCOUNT_EMAIL_NOTIFICATIONS = True
 # ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = True
-ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_SIGNUP_FIELDS = ["username", "email*", "password1", "password2"]
+ACCOUNT_LOGIN_METHODS = ["username", "email"]
+ACCOUNT_EMAIL_VERIFICATION = "optional"
 ACCOUNT_RATE_LIMITS = {
     "change_password": "5/m/user",
     "manage_email": "10/m/user",

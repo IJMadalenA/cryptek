@@ -1,9 +1,23 @@
 from conscious_element.backends import SessionStore
+from conscious_element.factory.blocked_email_domain_factory import (
+    BlockedEmailDomainExtensionFactory,
+    BlockedEmailDomainFactory,
+)
 from conscious_element.factory.cryptek_user_factory import CryptekUserFactory
 from conscious_element.factory.follow_factory import FollowFactory
 from conscious_element.factory.profile_factory import ProfileFactory
 from conscious_element.factory.session_factory import SessionFactory
 from cryptek.test_and_check.base_factory_test import BaseFactoryTest
+
+
+class BlockedEmailDomainFactoryTestCase(BaseFactoryTest):
+    class Meta:
+        factory = BlockedEmailDomainFactory
+
+
+class BlockedEmailDomainExtensionFactoryTestCase(BaseFactoryTest):
+    class Meta:
+        factory = BlockedEmailDomainExtensionFactory
 
 
 class CryptekUserFactoryTestCase(BaseFactoryTest):

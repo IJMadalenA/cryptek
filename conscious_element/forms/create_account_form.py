@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 class CreateAccountForm(UserCreationForm):
     username = forms.CharField(
         max_length=30,
-        required=False,
+        required=True,
         label="Username",
         widget=forms.TextInput(attrs={"class": "form-control"}),
     )
@@ -31,11 +31,11 @@ class CreateAccountForm(UserCreationForm):
 
     class Meta:
         model = get_user_model()
-        # fields = ["username", "first_name", "last_name", "email", "password1", "password2"]
         fields = ("username", "email", "first_name", "last_name")
 
     def __init__(self, *args, **kwargs):
         super(CreateAccountForm, self).__init__(*args, **kwargs)
+        self.fields["email"].widget.attrs.update({"class": "form-control"})
         self.fields["username"].widget.attrs.update({"class": "form-control"})
         self.fields["password1"].widget.attrs.update({"class": "form-control"})
         self.fields["password2"].widget.attrs.update({"class": "form-control"})
