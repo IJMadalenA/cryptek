@@ -1,6 +1,7 @@
 from django.urls import path
 
-from user_app.views.session_view import SessionDeleteOtherView, SessionDeleteView, SessionListView
+from user_app.views.session_view import (SessionDeleteOtherView,
+                                         SessionDeleteView, SessionListView)
 
 urlpatterns = [
     path(

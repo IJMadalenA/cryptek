@@ -1,2 +1,2 @@
 from .login_view_test import LoginViewTestCase
-from .singup_view_test import SignupViewTestCase, EmailValidationTestCase
+from .singup_view_test import EmailValidationTestCase, SignupViewTestCase
