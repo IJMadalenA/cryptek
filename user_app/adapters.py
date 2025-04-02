@@ -4,8 +4,7 @@ import requests
 from allauth.account.adapter import DefaultAccountAdapter
 from django.core.exceptions import ValidationError
 
-from user_app.models.blocked_email_domain import (BlockedEmailDomain,
-                                                  BlockedEmailDomainExtension)
+from user_app.models.blocked_email_domain import BlockedEmailDomain, BlockedEmailDomainExtension
 
 HUNTER_API_KEY = environ.Env().str("HUNTER_API_KEY")
 
@@ -31,8 +30,12 @@ def email_is_legitimate(email):
         return False
 
     # HUNTER.IO API Call
-    response = requests.get(f"https://api.hunter.io/v2/email-verifier?email={email}&api_key={HUNTER_API_KEY}")
-    data = response.json().get("data", {})
+    try:
+        response = requests.get(f"https://api.hunter.io/v2/email-verifier?email={email}&api_key={HUNTER_API_KEY}")
+        data = response.json().get("data", {})
+    except requests.exceptions.RequestException:
+        return False  # If the API fails, we assume that the email is invalid.
+
     is_disposable = data.get("disposable", True)
     smtp_check = data.get("smtp_check", False)
     mx_records_from_hunter = data.get("mx_records", False)
@@ -64,8 +67,6 @@ def _block_domain(username, domain, extension):
     Helper function to block a domain by adding it to the BlockedEmailDomain database.
     """
     # Ensure correct handling of domain extensions
-    print("Blocking domain:", domain)
-    print("Domain extension:", extension)
     domain_ext, _ = BlockedEmailDomainExtension.objects.get_or_create(domain_extension=extension)
     if not BlockedEmailDomain.objects.filter(domain=domain).exists():
         BlockedEmailDomain.objects.create(username=username, domain=domain, domain_extension=domain_ext)

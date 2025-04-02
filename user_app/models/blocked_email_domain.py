@@ -1,5 +1,4 @@
-from django.db.models import (CASCADE, BooleanField, CharField, DateTimeField,
-                              ForeignKey, Model)
+from django.db.models import CASCADE, BooleanField, CharField, DateTimeField, ForeignKey, Model
 
 
 class BlockedEmailDomainExtension(Model):
