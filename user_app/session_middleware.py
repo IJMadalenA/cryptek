@@ -1,6 +1,5 @@
 from django.conf import settings
-from django.contrib.sessions.middleware import \
-    SessionMiddleware as DjangoSessionMiddleware
+from django.contrib.sessions.middleware import SessionMiddleware as DjangoSessionMiddleware
 
 
 class SessionMiddleware(DjangoSessionMiddleware):

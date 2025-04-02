@@ -1,7 +1,6 @@
 from cryptek.test_and_check.base_factory_test import BaseFactoryTest
 from user_app.backends import SessionStore
-from user_app.factory.blocked_email_domain_factory import (
-    BlockedEmailDomainExtensionFactory, BlockedEmailDomainFactory)
+from user_app.factory.blocked_email_domain_factory import BlockedEmailDomainExtensionFactory, BlockedEmailDomainFactory
 from user_app.factory.cryptek_user_factory import CryptekUserFactory
 from user_app.factory.follow_factory import FollowFactory
 from user_app.factory.profile_factory import ProfileFactory
