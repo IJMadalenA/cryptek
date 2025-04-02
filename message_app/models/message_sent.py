@@ -1,6 +1,13 @@
-from django.db.models import (DO_NOTHING, BooleanField, CharField,
-                              DateTimeField, EmailField, ForeignKey, Model,
-                              TextField)
+from django.db.models import (
+    DO_NOTHING,
+    BooleanField,
+    CharField,
+    DateTimeField,
+    EmailField,
+    ForeignKey,
+    Model,
+    TextField,
+)
 
 from user_app.models.cryptek_user import CryptekUser
 

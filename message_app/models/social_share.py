@@ -1,5 +1,4 @@
-from django.db.models import (CASCADE, CharField, ForeignKey, IntegerField,
-                              Model)
+from django.db.models import CASCADE, CharField, ForeignKey, IntegerField, Model
 
 from blog_app.models.entry import Entry
 
