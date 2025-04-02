@@ -69,16 +69,3 @@ virtualenv==20.30.0 ; python_version >= "3.12" and python_version < "4.0"
 webencodings==0.5.1 ; python_version >= "3.12" and python_version < "4.0"
 whitenoise==6.9.0 ; python_version >= "3.12" and python_version < "4.0"
 xattr==1.1.4 ; python_version >= "3.12" and python_version < "4.0" and sys_platform == "darwin"
-
-Django~=5.1.7
-django-allauth~=65.6.0
-django-debug-toolbar~=5.1.0
-cryptek~=0.1.0
-django-environ~=0.11.2
-factory_boy~=3.3.3
-django-filter~=25.1
-djangorestframework~=3.16.0
-dnspython~=2.7.0
-requests~=2.32.3
-bleach~=6.2.0
-Markdown~=3.7
