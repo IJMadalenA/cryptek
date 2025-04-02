@@ -4,7 +4,8 @@ import requests
 from allauth.account.adapter import DefaultAccountAdapter
 from django.core.exceptions import ValidationError
 
-from user_app.models.blocked_email_domain import BlockedEmailDomain, BlockedEmailDomainExtension
+from user_app.models.blocked_email_domain import (BlockedEmailDomain,
+                                                  BlockedEmailDomainExtension)
 
 HUNTER_API_KEY = environ.Env().str("HUNTER_API_KEY")
 

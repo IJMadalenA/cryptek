@@ -11,85 +11,51 @@
 </head>
 <body class="bg-stone-50 text-gray-900 flex flex-col min-h-screen">
 <!-- Navbar -->
-<nav class="bg-gray-900 shadow-md">
+<nav class="bg-green-950 shadow-md">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
         <!-- Logo -->
         <a href="{% url 'to_blog' %}" class="text-2xl font-bold text-white">
             IJMadalenA Blog
         </a>
-        <!-- Botón de menú móvil (visible solo en pantallas pequeñas) -->
-        <div class="md:hidden">
-            <button id="mobile-menu-button" class="text-white focus:outline-none">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                     xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
-            </button>
-        </div>
+
         <!-- Menú de escritorio -->
-        <div class="hidden md:flex space-x-2" id="desktop-menu">
+
+        <div class="hidden md:flex items-center space-x-4" id="desktop-menu">
             {% if user.is_superuser %}
                 <a href="{% url 'admin:index' %}"
                    class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
                     Admin
                 </a>
             {% endif %}
-            <a href="{% url 'about_me' %}"
-               class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
-                About Me
-            </a>
-            <a href="{% url 'contact' %}"
-               class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
-                Contact
-            </a>
-            {% if user.is_authenticated %}
-                <form method="post" action="{% url 'logout' %}" class="inline">
-                    {% csrf_token %}
-                    <button type="submit"
-                            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
-                        Logout
-                    </button>
-                </form>
-            {% else %}
-                <a href="{% url 'login' %}"
-                   class="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition">
-                    Login
-                </a>
-            {% endif %}
-        </div>
-    </div>
-    <!-- Menú móvil (oculto por defecto) -->
-    <div id="mobile-menu" class="md:hidden hidden">
-        <div class="px-6 pb-4 space-y-2">
-            {% if user.is_superuser %}
-                <a href="{% url 'admin:index' %}"
-                   class="block px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
-                    Admin
-                </a>
-            {% endif %}
-            <a href="{% url 'about_me' %}"
-               class="block px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
-                About Me
-            </a>
-            <a href="{% url 'contact' %}"
-               class="block px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
-                Contact
-            </a>
-            {% if user.is_authenticated %}
-                <form method="post" action="{% url 'logout' %}">
-                    {% csrf_token %}
-                    <button type="submit"
-                            class="block w-full text-left px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
-                        Logout
-                    </button>
-                </form>
-            {% else %}
-                <a href="{% url 'login' %}"
-                   class="block px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition">
-                    Login
-                </a>
-            {% endif %}
+            <a href="{% url 'about_me' %}" class="px-4 py-2 text-white hover:text-gray-200 transition">About Me</a>
+            <a href="{% url 'contact' %}" class="px-4 py-2 text-white hover:text-gray-200 transition">Contact</a>
+
+            <!-- Menú de usuario -->
+            <div class="relative">
+                <button id="user-menu-button" class="focus:outline-none">
+                    <svg class="w-8 h-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M5.121 17.804A4 4 0 018 15h8a4 4 0 012.879 2.804M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                </button>
+                <!-- Dropdown -->
+                <div id="user-menu" class="hidden absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'user_app:personal_profile' %}"
+                           class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Perfil</a>
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">Logout
+                            </button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Login</a>
+                        <a href="{% url 'signup' %}" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Sign Up</a>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 </nav>
@@ -108,21 +74,21 @@
 </main>
 
 <!-- Footer -->
-<footer class="mt-10 py-6 text-center bg-gray-900 text-gray-300">
+<footer class="mt-10 py-6 text-center bg-green-950 text-white">
     <div class="space-x-4">
-        <a href="{% url 'to_blog' %}" class="hover:text-white transition">Home</a>
-        <a href="{% url 'about_me' %}" class="hover:text-white transition">About Me</a>
-        <a href="{% url 'contact' %}" class="hover:text-white transition">Contact</a>
+        <a href="{% url 'to_blog' %}" class="hover:text-gray-300 transition">Home</a>
+        <a href="{% url 'about_me' %}" class="hover:text-gray-300 transition">About Me</a>
+        <a href="{% url 'contact' %}" class="hover:text-gray-300 transition">Contact</a>
     </div>
-    <p class="mt-2 text-gray-400">&copy; 2024 IJMadalenA - All rights reserved.</p>
+    <p class="mt-2 text-gray-200">&copy; 2024 IJMadalenA - All rights reserved.</p>
 </footer>
 
-<!-- Script para alternar el menú móvil -->
+<!-- Script para alternar el menú de usuario -->
 <script>
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-    mobileMenuButton.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
+    const userMenuButton = document.getElementById('user-menu-button');
+    const userMenu = document.getElementById('user-menu');
+    userMenuButton.addEventListener('click', () => {
+        userMenu.classList.toggle('hidden');
     });
 </script>
 </body>

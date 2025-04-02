@@ -10,6 +10,11 @@ description = ""
 authors = ["IJMadalenA"]
 readme = "README.md"
 
+[tool.isort]
+profile = "black"
+line_length = 119
+src_paths = ["src"]
+
 [tool.poetry.dependencies]
 python = "^3.12"
 Django = "^5.1.2"
@@ -30,7 +35,7 @@ django-allauth = { extras = ["socialaccount"], version = "^65.4.1" }
 cython = "^3.0.12"
 dj-database-url = "^2.3.0"
 django-debug-toolbar = "^5.0.1"
-psycopg = {extras = ["binary"], version = "^3.2.6"}
+psycopg = { extras = ["binary"], version = "^3.2.6" }
 django-widget-tweaks = "^1.5.0"
 bleach = "^6.2.0"
 dnspython = "^2.7.0"

@@ -382,13 +382,14 @@ class ClassBaseViewTestCase(TestCase, BaseTestCase):
             msg=f"Login failed - {self.user_instance.username} - {_password}",
         )
 
-    def create_user(self):
-        return get_user_model().objects.create_user(username="testuser", password="testpassword")
+    @staticmethod
+    def create_user(username="test_user", password="test_password"):
+        return get_user_model().objects.create_user(username=username, password=password)
 
     def authenticate(self):
         self.client.login(username=self.login.username, password="password")
 
-    def unauthenticate(self):
+    def unauthenticated(self):
         self.client.logout()
 
     def get(self, *args, **kwargs):

@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block content %}
+    <div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-2xl font-bold text-center mb-4">Edit Profile</h2>
+
+        <!-- Profile picture preview -->
+        <div class="flex flex-col items-center mb-6">
+            <div class="relative w-32 h-32 bg-green-100 rounded-full flex items-center justify-center">
+                {% if form.instance.profile_picture %}
+                    <img id="profile-preview" class="w-full h-full rounded-full object-cover border-4 border-green-500"
+                         src="{{ form.instance.profile_picture.url }}" alt="Profile Picture">
+                {% else %}
+                    <img id="profile-preview" class="w-20 h-20" src="{% static 'images/user-profile-default.svg' %}"
+                         alt="Default Profile">
+                {% endif %}
+            </div>
+
+            <!-- File input for profile picture -->
+            <label class="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-green-700 transition">
+                Change Picture
+                <input type="file" name="profile_picture" id="id_profile_picture" class="hidden">
+            </label>
+        </div>
+
+        <!-- Profile Update Form -->
+        <form method="post" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+
+            <!-- Bio -->
+            <label class="block font-semibold">Bio</label>
+            {{ form.bio|add_class:"w-full p-2 border rounded-lg" }}
+
+            <!-- Location & Birthdate -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block font-semibold">Location</label>
+                    {{ form.location|add_class:"w-full p-2 border rounded-lg" }}
+                </div>
+                <div>
+                    <label class="block font-semibold">Birth Date</label>
+                    {{ form.birth_date|add_class:"w-full p-2 border rounded-lg" }}
+                </div>
+            </div>
+
+            <!-- Website & Phone Number -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block font-semibold">Website</label>
+                    {{ form.website|add_class:"w-full p-2 border rounded-lg" }}
+                </div>
+                <div>
+                    <label class="block font-semibold">Phone Number</label>
+                    {{ form.phone_number|add_class:"w-full p-2 border rounded-lg" }}
+                </div>
+            </div>
+
+            <!-- Social Links -->
+            <label class="block font-semibold">Social Links (JSON format)</label>
+            {{ form.social_links|add_class:"w-full p-2 border rounded-lg" }}
+
+            <!-- Visibility -->
+            <label class="block font-semibold">Profile Visibility</label>
+            {{ form.visibility|add_class:"w-full p-2 border rounded-lg" }}
+
+            <!-- Submit Button -->
+            <div class="flex justify-center mt-4">
+                <button type="submit"
+                        class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- JavaScript for profile picture preview -->
+    <script>
+        document.getElementById('id_profile_picture').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profile-preview').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+{% endblock %}
