@@ -13,6 +13,7 @@ from blog_app.forms.comment_form import CommentForm
 from blog_app.models.comment import Comment
 from blog_app.models.entry import Entry
 
+
 # from cryptek.ai_system.comment_moderation import CommentModeration
 
 
