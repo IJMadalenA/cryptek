@@ -62,11 +62,11 @@ class Entry(Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse("entry_detail", kwargs={"slug": self.slug})
+        return reverse("blog_app:entry_detail", kwargs={"slug": self.slug})
 
     def get_full_url(self):
         return f"https://ijmadalena.com/{
-        reverse('entry_detail', kwargs={'slug': self.slug})
+        reverse('blog_app:entry_detail', kwargs={'slug': self.slug})
         }"
 
     def save(self, *args, **kwargs):

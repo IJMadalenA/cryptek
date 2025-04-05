@@ -39,6 +39,7 @@ class EntryDetail(FormMixin, DetailView):
 
     model = Entry
     template_name = "entry_detail.html"
+    context_object_name = "entry"
     form_class = CommentForm
     queryset = Entry.objects.defer(
         "overview",

@@ -1,7 +1,6 @@
 from django.contrib.admin import ModelAdmin, register
 from django.contrib.admin.decorators import action
 from django.contrib.admin.options import ShowFacets
-from markdownx.admin import MarkdownxModelAdmin
 
 from blog_app.models.category import Category
 from blog_app.models.comment import Comment
@@ -49,7 +48,7 @@ class MultimediaAdmin(ModelAdmin):
 
 
 @register(Entry)
-class EntryAdmin(MarkdownxModelAdmin):
+class EntryAdmin(ModelAdmin):
     list_display = (
         "title",
         "status",
@@ -77,10 +76,16 @@ class EntryAdmin(MarkdownxModelAdmin):
         "tags__name",
     )
     show_facets = ShowFacets.ALWAYS
-    readonly_fields = ("author", "slug", "created_at", "updated_at")
+
+    def get_readonly_fields(self, request, obj=None):
+        """Allow superusers to edit 'author', but keep it readonly for others."""
+        if request.user.is_superuser:
+            return "slug", "created_at", "updated_at"  # 'author' is editable
+        return "author", "slug", "created_at", "updated_at"  # 'author' is readonly
 
     def save_model(self, request, obj, form, change):
-        if not change:
+        """Assign the author only if the entry is new and the user is not a superuser."""
+        if not change and not request.user.is_superuser:
             obj.author = request.user
         super().save_model(request, obj, form, change)
 
