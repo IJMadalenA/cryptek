@@ -29,7 +29,7 @@ STATUS = (
 
 # Entry model
 class Entry(Model):
-    title = CharField(max_length=200)
+    title = CharField(max_length=100)
     content = MarkdownxField()
     overview = TextField(
         blank=True,

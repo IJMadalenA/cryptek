@@ -326,6 +326,11 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "handlers": {
+        "mail_log": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": "email_debug.log",
+        },
         "file": {
             "level": "WARNING",
             "class": "logging.FileHandler",
@@ -341,9 +346,9 @@ LOGGING = {
     },
     "loggers": {
         "django_csp": {
-            "handlers": ["file", "console"],
+            "handlers": ["file", "console", "mail_log"],
             "level": "WARNING",
-            "propagate": False,
+            "propagate": True,
         },
         "django.security.DisallowedHost": {
             # https://docs.djangoproject.com/es/5.1/ref/logging/#django-security
@@ -357,13 +362,13 @@ LOGGING = {
 # EMAIL CONFIGURATION. https://docs.djangoproject.com/es/5.1/ref/settings/#default-from-email. =========================
 DEV_EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 PROD_EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_BACKEND = DEV_EMAIL_BACKEND if DEBUG else PROD_EMAIL_BACKEND
+EMAIL_BACKEND = DEV_EMAIL_BACKEND if DEVELOPMENT_MODE else PROD_EMAIL_BACKEND
 EMAIL_HOST = env.str("EMAIL_HOST")
 EMAIL_PORT = env.int("EMAIL_PORT")
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = env.str("EMAIL_USERNAME")
 EMAIL_HOST_PASSWORD = env.str("EMAIL_PASSWORD")
-
+DEFAULT_FROM_EMAIL = env.str("DEFAULT_FROM_EMAIL")
 # MESSAGES. https://docs.djangoproject.com/es/5.1/ref/settings/#messages. ==============================================
 MESSAGE_TAGS = {
     messages.DEBUG: "debug",
@@ -438,9 +443,10 @@ ACCOUNT_ADAPTER = "user_app.adapters.CustomAccountAdapter"
 # ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
 # ACCOUNT_EMAIL_NOTIFICATIONS = True
 # ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = True
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 ACCOUNT_SIGNUP_FIELDS = ["username", "email*", "password1", "password2"]
 ACCOUNT_LOGIN_METHODS = ["username", "email"]
-ACCOUNT_EMAIL_VERIFICATION = "optional"
+ACCOUNT_EMAIL_VERIFICATION = "optional"  # mandatory
 ACCOUNT_RATE_LIMITS = {
     "change_password": "5/m/user",
     "manage_email": "10/m/user",
