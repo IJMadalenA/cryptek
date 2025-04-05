@@ -23,7 +23,7 @@ class CustomLoginForm(LoginForm):
 
 class CustomLoginView(AllAuthLoginView):
     authentication_form = CustomLoginForm
-    success_url = reverse_lazy("main_page")
+    success_url = reverse_lazy("blog_app:main_page")
     redirect_authenticated_user = True
 
     def form_valid(self, form):
