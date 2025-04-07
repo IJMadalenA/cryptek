@@ -2,7 +2,6 @@ from django.contrib.admin import ModelAdmin, register
 from django.contrib.admin.decorators import action
 from django.contrib.admin.options import ShowFacets
 
-from blog_app.forms.entry_form import EntryAdminForm
 from blog_app.models.category import Category
 from blog_app.models.comment import Comment
 from blog_app.models.entry import Entry
@@ -50,7 +49,6 @@ class MultimediaAdmin(ModelAdmin):
 
 @register(Entry)
 class EntryAdmin(ModelAdmin):
-    form = EntryAdminForm
     list_display = (
         "title",
         "status",
@@ -81,8 +79,8 @@ class EntryAdmin(ModelAdmin):
     show_facets = ShowFacets.ALWAYS
 
     def get_readonly_fields(self, request, obj=None):
-        base_readonly_fields = ["slug", "created_at", "updated_at", "cdn_image_url", "cdn_image_public_id"]
         """Allow superusers to edit 'author', but keep it readonly for others."""
+        base_readonly_fields = ["slug", "created_at", "updated_at", "cdn_image_url", "cdn_image_public_id"]
         if request.user.is_superuser:
             return base_readonly_fields  # 'author' is editable
         return base_readonly_fields + ["author", "updated_at"]  # 'author' is readonly

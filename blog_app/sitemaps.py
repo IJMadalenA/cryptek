@@ -4,7 +4,7 @@ from blog_app.models.entry import Entry
 
 
 class EntrySitemap(Sitemap):
-    changefreq = "monthly"
+    changefreq = "weekly"
     priority = 0.8
 
     def items(self):
