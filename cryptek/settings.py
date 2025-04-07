@@ -15,6 +15,7 @@ import os
 import sys
 from pathlib import Path
 
+import cloudinary
 import environ
 from django.contrib import messages
 
@@ -312,6 +313,13 @@ STATIC_URL = "/static/"  # https://docs.djangoproject.com/es/5.1/ref/settings/#s
 MEDIA_URL = "/media/"
 STATIC_ROOT = os.path.join(BASE_DIR, "cryptek/staticfiles")
 MEDIA_ROOT = os.path.join(BASE_DIR, "cryptek/media")
+
+cloudinary.config(
+    cloud_name=env.str("CLOUDINARY_CLOUD_NAME"),
+    api_key=env.str("CLOUDINARY_API_KEY"),
+    api_secret=env.str("CLOUDINARY_API_SECRET"),
+    secure=True,
+)
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
