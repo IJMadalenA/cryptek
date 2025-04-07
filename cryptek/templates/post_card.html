@@ -3,8 +3,8 @@
     <div class="bg-white text-gray-900 rounded-lg shadow-md overflow-hidden w-full h-[18rem] sm:h-[20rem] md:h-[25rem] flex flex-col">
         <!-- Imagen con overlays -->
         <div class="relative">
-            {% if entry.header_image %}
-                <img src="{{ entry.header_image.url }}"
+            {% if entry.cdn_image_url %}
+                <img src="{{ entry.get_header_image_optimized }}"
                      alt="{{ entry.title|truncatechars:80 }}"
                      class="w-full h-[11rem] sm:h-[12rem] md:h-[15rem] object-cover rounded-t-lg" loading="lazy">
             {% endif %}
