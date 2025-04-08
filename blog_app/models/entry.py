@@ -37,24 +37,24 @@ STATUS = (
 
 # Entry model
 class Entry(Model):
-    title = CharField(max_length=100)
-    content = MarkdownxField()
+    title = CharField(max_length=100, null=False, blank=False)
+    content = MarkdownxField(null=False, blank=False)
     overview = TextField(
-        blank=True,
-        null=True,
+        blank=False,
+        null=False,
         max_length=200,
     )
-    author = ForeignKey(CryptekUser, on_delete=CASCADE, related_name="entries")
-    categories = ManyToManyField(Category, related_name="entries", blank=True)
+    author = ForeignKey(CryptekUser, on_delete=CASCADE, related_name="entries", null=True, blank=True)
+    categories = ManyToManyField(Category, related_name="entries", blank=False)
     tags = ManyToManyField(Tag, related_name="entries", blank=True)
-    created_at = DateTimeField(auto_now_add=True)
+    created_at = DateTimeField(auto_now_add=True, editable=False)
     updated_at = DateTimeField(auto_now=True)
     status = IntegerField(
         choices=STATUS,
         default=0,
     )
     featured = BooleanField(default=False)
-    publish_date = DateTimeField(blank=True, null=True)
+    publish_date = DateTimeField(blank=True, null=True, default=None)
     header_image = ImageField(upload_to="header_images/", blank=True, null=True)
     cdn_image_url = URLField(blank=True, null=True, unique=True)
     cdn_image_public_id = CharField(max_length=200, blank=True, null=True)
@@ -130,8 +130,8 @@ class EntryVersion(Model):
 
 # EntryReactions model
 class EntryReaction(Model):
-    entry = ForeignKey(Entry, on_delete=CASCADE, related_name="reactions")
-    user = ForeignKey(CryptekUser, on_delete=CASCADE, related_name="reactions")
+    entry = ForeignKey(Entry, on_delete=CASCADE, related_name="reactions", null=False, blank=False)
+    user = ForeignKey(CryptekUser, on_delete=CASCADE, related_name="reactions", null=False, blank=False)
     reaction = CharField(max_length=50)  # e.g., 'like', 'love', 'haha', etc.
 
     def __str__(self):
@@ -140,7 +140,7 @@ class EntryReaction(Model):
 
 # EntryAnalytics model
 class EntryAnalytics(Model):
-    entry = OneToOneField(Entry, on_delete=CASCADE, related_name="analytics")
+    entry = OneToOneField(Entry, on_delete=CASCADE, related_name="analytics", null=False, blank=False)
     views = IntegerField(default=0)
     read_time = IntegerField(default=0)  # in seconds
 
