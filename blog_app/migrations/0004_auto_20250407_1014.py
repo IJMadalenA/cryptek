@@ -11,7 +11,7 @@ def add_default_categories(apps, schema_editor):
             "name": "Software Development",
             "subtitle": "Building Better Systems, Code by Code",
             "description": "Explore modern software development principles, tools, and techniques to create robust, scalable solutions.",
-            "slug": "software-dev",
+            "slug": "software-development",
         },
         {
             "name": "Management & Culture",
