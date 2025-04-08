@@ -11,25 +11,25 @@ def add_default_categories(apps, schema_editor):
             "name": "Software Development",
             "subtitle": "Building Better Systems, Code by Code",
             "description": "Explore modern software development principles, tools, and techniques to create robust, scalable solutions.",
-            "slug": "software-development-thumbnail",
+            "slug": "software-development",
         },
         {
             "name": "Management & Culture",
             "subtitle": "The Heartbeat of Successful Teams",
             "description": "Strategies for leading teams and fostering organizational cultures that drive innovation and collaboration.",
-            "slug": "management-culture-thumbnail",
+            "slug": "management-culture",
         },
         {
             "name": "Cybersecurity",
             "subtitle": "Guarding Digital Frontiers",
             "description": "Comprehensive insights into digital security to prevent threats and safeguard critical systems.",
-            "slug": "cybersecurity-thumbnail",
+            "slug": "cybersecurity",
         },
         {
             "name": "Technology Trends",
             "subtitle": "Shaping the Future Today",
             "description": "Stay updated on emerging technologies transforming industries and societies worldwide.",
-            "slug": "technology-trends-thumbnail",
+            "slug": "technology-trends",
         },
     ]
 
