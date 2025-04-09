@@ -54,9 +54,14 @@
                     <span>Login with Google</span>
                 </a>
                 <a href="{% provider_login_url 'linkedin_oauth2' %}"
-                   class="flex items-center justify-center w-full bg-blue-600 text-white py-2 px-4 rounded-lg shadow-md transition duration-300 hover:bg-blue-700">
+                   class="flex items-center justify-center w-full bg-blue-600 text-white py-2 px-4 rounded-lg shadow-md transition duration-300 hover:bg-blue-700 mb-2">
                     <img src="{% static 'images/linkedin-icon.svg' %}" class="w-5 h-5 mr-2" alt="LinkedIn">
                     <span>Login with LinkedIn</span>
+                </a>
+                <a href="{% provider_login_url 'digitalocean' %}"
+                   class="flex items-center justify-center w-full bg-blue-400 text-white py-2 px-4 rounded-lg shadow-md transition duration-300 hover:bg-blue-500">
+                    <img src="{% static 'images/digital-ocean-icon.svg' %}" class="w-5 h-5 mr-2" alt="DigitalOcean">
+                    <span>Login with DigitalOcean</span>
                 </a>
             </div>
         </div>

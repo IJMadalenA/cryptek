@@ -83,6 +83,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount.providers.github",
     "allauth.socialaccount.providers.google",
     "allauth.socialaccount.providers.linkedin_oauth2",
+    "allauth.socialaccount.providers.digitalocean",
 ]
 CUSTOM_APPS = [
     "blog_app.apps.BlogAppConfig",
@@ -439,6 +440,15 @@ SOCIALACCOUNT_PROVIDERS = {
         "SCOPE": [
             "r_liteprofile",
             "r_emailaddress",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "offline",
+        },
+    },
+    "digitalocean": {
+        "SCOPE": [
+            "read",
+            "write",
         ],
         "AUTH_PARAMS": {
             "access_type": "offline",
