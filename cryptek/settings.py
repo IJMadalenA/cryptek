@@ -145,25 +145,13 @@ TEST_DATABASE = {
         "AUTOCOMMIT": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#autocommit.
     },
 }
-PROD_DATABASE = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": env.str("POSTGRES_DB"),
-        "USER": env.str("POSTGRES_USER"),
-        "PASSWORD": env.str("POSTGRES_PASSWORD"),
-        "HOST": env.str("POSTGRES_HOST"),
-        "PORT": env.int("POSTGRES_PORT"),
-        "ATOMIC_REQUESTS": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#atomic-requests.
-        "AUTOCOMMIT": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#autocommit.
-    }
-}
 
 if "test" in sys.argv:
     DATABASES = TEST_DATABASE
 elif DEVELOPMENT_MODE:
     DATABASES = DATABASE
 else:
-    DATABASES = PROD_DATABASE
+    DATABASES = {"default": dj_database_url.config(default=env.str("POSTGRES_URL"))}
 
 # CACHES = {
 #     "default": {

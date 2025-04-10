@@ -31,7 +31,7 @@
             <div class="w-full h-px bg-gray-200 my-2"></div>
 
             <!-- Description -->
-            <p class="text-gray-700 text-sm mb-3">{{ entry.overview }}</p>
+            <p class="text-gray-700 text-sm mb-3">{{ entry.overview|truncatechars:200 }}</p>
 
             <!-- Categories -->
             <div class="flex flex-wrap gap-2">
