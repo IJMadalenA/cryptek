@@ -12,7 +12,7 @@
             </div>
         </div>
 
-        <!-- Contenido -->
+        <!-- Content -->
         <div class="p-6 flex flex-col justify-between md:w-2/3">
             <h1 class="text-2xl font-bold mb-2 group-hover:text-green-700 transition-colors duration-200 line-clamp-2">
                 {{ entry.title|truncatechars:80 }}
@@ -30,14 +30,14 @@
             <!-- Separador -->
             <div class="w-full h-px bg-gray-200 my-2"></div>
 
-            <!-- Descripción -->
+            <!-- Description -->
             <p class="text-gray-700 text-sm mb-3">{{ entry.overview }}</p>
 
-            <!-- Tags -->
+            <!-- Categories -->
             <div class="flex flex-wrap gap-2">
-                {% for tag in entry.tags.all %}
+                {% for category in entry.categories.all %}
                     <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-medium">
-                        {{ tag.name }}
+                        {{ category.name }}
                     </span>
                 {% endfor %}
             </div>
