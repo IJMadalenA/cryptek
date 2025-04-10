@@ -16,6 +16,7 @@ import sys
 from pathlib import Path
 
 import cloudinary
+import dj_database_url
 import environ
 from django.contrib import messages
 
@@ -25,7 +26,6 @@ env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False),
     DEVELOPMENT_MODE=(bool, False),
-    LOCAL=(bool, False),
     ALLOWED_HOSTS=(list, ""),
     SECRET_KEY=(str, ""),
 )
@@ -47,7 +47,6 @@ SECRET_KEY = env.str("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG")  # https://docs.djangoproject.com/es/5.1/ref/settings/#debug.
 DEVELOPMENT_MODE = env.bool("DEVELOPMENT_MODE")
-LOCAL = env.bool("DEVELOPMENT_MODE")
 
 SITE_ID = 1  # https://docs.djangoproject.com/es/5.1/ref/settings/#site-id.
 
@@ -146,25 +145,13 @@ TEST_DATABASE = {
         "AUTOCOMMIT": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#autocommit.
     },
 }
-PROD_DATABASE = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": env.str("POSTGRES_DB"),
-        "USER": env.str("POSTGRES_USER"),
-        "PASSWORD": env.str("POSTGRES_PASSWORD"),
-        "HOST": env.str("POSTGRES_HOST", default="localhost"),
-        "PORT": env.int("POSTGRES_PORT", default=5432),
-        "ATOMIC_REQUESTS": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#atomic-requests.
-        "AUTOCOMMIT": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#autocommit.
-    }
-}
 
 if "test" in sys.argv:
     DATABASES = TEST_DATABASE
-elif LOCAL:
+elif DEVELOPMENT_MODE:
     DATABASES = DATABASE
 else:
-    DATABASES = PROD_DATABASE
+    DATABASES = {"default": dj_database_url.config(env.str("POSTGRES_URL"))}
 
 # CACHES = {
 #     "default": {
