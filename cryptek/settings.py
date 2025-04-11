@@ -162,7 +162,7 @@ else:
     # Main database configuration.
     try:
         DATABASES = {"default": dj_database_url.config(default=os.environ.get("POSTGRES_URL"))}
-        # Intento de conexión
+        # Try to connect to the production database.
         from django.db import connections
 
         connections["default"].cursor()
@@ -229,53 +229,44 @@ CONTENT_SECURITY_POLICY = {
         # General content
         "default-src": (
             "'self'",
-            "'unsafe-inline'",  # Temporarily allow inline styling
-            "http://localhost:8000/*",
-            "https://fonts.googleapis.com",
-            "https://maxcdn.bootstrapcdn.com",
+            "https://ijmadalena.com",
         ),
         "base-uri": ("'self'",),
-        "form-action": ("'self'",),
-        "child-src": ("'self'",),
-        "connect-src": ("'self'",),
+        "form-action": ("'self'", "https://ijmadalena.com"),
+        "child-src": ("'self'", "https://ijmadalena.com"),
+        "connect-src": (
+            "'self'",
+            "https://ijmadalena.com",
+        ),
         # Allow image and media sources
-        "img-src": ("'self'", "data:"),
-        "media-src": ("'self'",),
-        "disposition": ("'self'",),
+        "img-src": ("'self'", "data:", "https://ijmadalena.com", "https://res.cloudinary.com"),
+        "media-src": ("'self'", "https://ijmadalena.com"),
         # Fonts and Styles Configuration
         "font-src": (
             "'self'",
-            "http://localhost:8000/*",
-            "https://fonts.gstatic.com",  # Required for Google Fonts
-            "data:",  # To allow inline base64 fonts if used
+            "https://fonts.gstatic.com",
+            "data:",
+            "https://ijmadalena.com",
         ),
         "style-src": (
             "'self'",
-            "'unsafe-inline'",  # Needed if you can't avoid inline styles
-            "http://localhost:8000/*",
-            "https://fonts.googleapis.com",  # Google Fonts stylesheets
-            "https://maxcdn.bootstrapcdn.com",  # Bootstrap stylesheets
+            "https://fonts.googleapis.com",
+            "https://maxcdn.bootstrapcdn.com",
+            "https://ijmadalena.com",
         ),
         "style-src-elem": (
             "'self'",
-            "'unsafe-inline'",  # Temporarily allow inline styling
-            "http://localhost:8000/*",
             "https://fonts.googleapis.com",
             "https://maxcdn.bootstrapcdn.com",
-        ),
-        "effective-directive": (
-            "style-src-elem",
-            "http://localhost:8000/*",
-        ),
-        "original-policy": (
-            "'self'",
-            "'unsafe-inline'",  # Temporarily allow inline styling
-            "http://localhost:8000/*",
-            "https://fonts.googleapis.com",
-            "https://maxcdn.bootstrapcdn.com",
+            "https://ijmadalena.com",
         ),
         # Scripts
-        "script-src": ("'self'",),
+        "script-src": (
+            "'self'",
+            "https://cdnjs.cloudflare.com",
+            "https://cdn.jsdelivr.net",
+            "https://ijmadalena.com",
+        ),
     },
 }
 
