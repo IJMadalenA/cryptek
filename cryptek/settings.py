@@ -129,7 +129,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "cryptek.wsgi.application"  # https://docs.djangoproject.com/es/5.1/ref/settings/#wsgi-application.
 
 # DATABASES. https://docs.djangoproject.com/en/5.1/ref/settings/#databases =============================================
-DATABASE = {
+DEV_DATABASE = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
@@ -146,12 +146,29 @@ TEST_DATABASE = {
     },
 }
 
+# Fallback database configuration in case production connection fails.
+FALLBACK_DATABASE = {
+    "ENGINE": "django.db.backends.sqlite3",
+    "NAME": BASE_DIR / "fallback_db.sqlite3",
+    "ATOMIC_REQUESTS": True,
+    "AUTOCOMMIT": True,
+}
+# Adjust based on the environment
 if "test" in sys.argv:
     DATABASES = TEST_DATABASE
 elif DEVELOPMENT_MODE:
-    DATABASES = DATABASE
+    DATABASES = DEV_DATABASE
 else:
-    DATABASES = {"default": dj_database_url.config(default=os.environ.get("POSTGRES_URL"))}
+    # Main database configuration.
+    try:
+        DATABASES = {"default": dj_database_url.config(default=os.environ.get("POSTGRES_URL"))}
+        # Intento de conexión
+        from django.db import connections
+
+        connections["default"].cursor()
+    except Exception:
+        print("Error al conectar con la base de datos de producción, usando SQLite como respaldo.")
+        DATABASES = {"default": FALLBACK_DATABASE}
 
 # CACHES = {
 #     "default": {
