@@ -252,12 +252,14 @@ CONTENT_SECURITY_POLICY = {
             "'self'",
             "https://fonts.googleapis.com",
             "https://maxcdn.bootstrapcdn.com",
+            "https://cdn.tailwindcss.com",
             "https://ijmadalena.com",
         ),
         "style-src-elem": (
             "'self'",
             "https://fonts.googleapis.com",
             "https://maxcdn.bootstrapcdn.com",
+            "https://cdn.tailwindcss.com",
             "https://ijmadalena.com",
         ),
         # Scripts
@@ -265,6 +267,7 @@ CONTENT_SECURITY_POLICY = {
             "'self'",
             "https://cdnjs.cloudflare.com",
             "https://cdn.jsdelivr.net",
+            "https://cdn.tailwindcss.com",
             "https://ijmadalena.com",
         ),
     },
