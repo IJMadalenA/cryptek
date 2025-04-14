@@ -136,7 +136,7 @@ DATABASES = {
         "PORT": env.int("POSTGRES_PORT"),
         "OPTIONS": {
             "SSLMODE": "require",
-        }
+        },
     }
 }
 
