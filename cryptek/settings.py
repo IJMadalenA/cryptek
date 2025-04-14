@@ -159,8 +159,8 @@ else:
             "PASSWORD": env.str("POSTGRES_PASSWORD"),
             "HOST": env.str("POSTGRES_HOST"),
             "PORT": env.int("POSTGRES_PORT"),
-            "ATOMIC_REQUESTS": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#atomic-requests.
-            "AUTOCOMMIT": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#autocommit.
+            "ATOMIC_REQUESTS": True,
+            "AUTOCOMMIT": True,
             "OPTIONS": {
                 "sslmode": "require",
             },
