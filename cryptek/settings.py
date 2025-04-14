@@ -134,9 +134,7 @@ DATABASES = {
         "PASSWORD": env.str("POSTGRES_PASSWORD"),
         "HOST": env.str("POSTGRES_HOST"),
         "PORT": env.int("POSTGRES_PORT"),
-        "OPTIONS": {
-            "SSLMODE": "require",
-        },
+        "OPTIONS": {"sslmode": "require"},
     }
 }
 
