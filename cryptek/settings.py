@@ -151,19 +151,7 @@ if "test" in sys.argv:
 elif DEVELOPMENT_MODE:
     DATABASES = DEV_DATABASE
 else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": env.str("POSTGRES_DB"),
-            "USER": env.str("POSTGRES_USER"),
-            "PASSWORD": env.str("POSTGRES_PASSWORD"),
-            "HOST": env.str("POSTGRES_HOST"),
-            "PORT": env.int("POSTGRES_PORT"),
-            "ATOMIC_REQUESTS": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#atomic-requests.
-            "AUTOCOMMIT": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#autocommit.
-            "SSLMODE": "require",
-        }
-    }
+    DATABASES = {"default": dj_database_url.config(default=os.environ.get("POSTGRES_URL"))}
 
 # CACHES = {
 #     "default": {
