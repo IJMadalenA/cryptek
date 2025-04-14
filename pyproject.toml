@@ -33,7 +33,6 @@ tblib = "^3.0.0"
 django-redis = "^5.4.0"
 django-allauth = { extras = ["socialaccount"], version = "^65.4.1" }
 cython = "^3.0.12"
-dj-database-url = "^2.3.0"
 django-debug-toolbar = "^5.0.1"
 psycopg = { extras = ["binary"], version = "^3.2.6" }
 django-widget-tweaks = "^1.5.0"

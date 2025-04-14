@@ -653,21 +653,6 @@ files = [
 ]
 
 [[package]]
-name = "dj-database-url"
-version = "2.3.0"
-description = "Use Database URLs in your Django Application."
-optional = false
-python-versions = "*"
-files = [
-    {file = "dj_database_url-2.3.0-py3-none-any.whl", hash = "sha256:bb0d414ba0ac5cd62773ec7f86f8cc378a9dbb00a80884c2fc08cc570452521e"},
-    {file = "dj_database_url-2.3.0.tar.gz", hash = "sha256:ae52e8e634186b57e5a45e445da5dc407a819c2ceed8a53d1fac004cc5288787"},
-]
-
-[package.dependencies]
-Django = ">=4.2"
-typing_extensions = ">=3.10.0.0"
-
-[[package]]
 name = "django"
 version = "5.2"
 description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
@@ -2488,4 +2473,4 @@ postgresql = []
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "34f1eeab5ebe9148be85fa07d93168566009276e17cc7988aee0ce94ddef2354"
+content-hash = "f1a1e5fa7240be8466148315a9ce2dbfdeac673f661b523d2837ae79df0f8127"
