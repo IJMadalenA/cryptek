@@ -128,15 +128,10 @@ WSGI_APPLICATION = "cryptek.wsgi.application"  # https://docs.djangoproject.com/
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": env.str("POSTGRES_DB", None),
-        "USER": env.str("POSTGRES_USER", None),
-        "PASSWORD": env.str("POSTGRES_PASSWORD", None),
-        "HOST": env.str("POSTGRES_HOST", None),
-        "PORT": env.int("POSTGRES_PORT", None),
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
         "ATOMIC_REQUESTS": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#atomic-requests.
         "AUTOCOMMIT": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#autocommit.
-        "OPTIONS": {"sslmode": "require"},
     }
 }
 
