@@ -26,8 +26,6 @@ env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False),
     DEVELOPMENT_MODE=(bool, False),
-    ALLOWED_HOSTS=(list, ""),
-    SECRET_KEY=(str, ""),
 )
 
 # CORE SETTINGS. https://docs.djangoproject.com/es/5.1/ref/settings/#core-settings =====================================
@@ -145,27 +143,25 @@ TEST_DATABASE = {
         "AUTOCOMMIT": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#autocommit.
     },
 }
-# Adjust based on the environment
+PROD_DATABASE = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": env.str("POSTGRES_DB"),
+        "USER": env.str("POSTGRES_USER"),
+        "PASSWORD": env.str("POSTGRES_PASSWORD"),
+        "HOST": env.str("POSTGRES_HOST"),
+        "PORT": env.int("POSTGRES_PORT"),
+        "ATOMIC_REQUESTS": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#atomic-requests.
+        "AUTOCOMMIT": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#autocommit.
+    }
+}
+
 if "test" in sys.argv:
     DATABASES = TEST_DATABASE
 elif DEVELOPMENT_MODE:
     DATABASES = DEV_DATABASE
 else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": env.str("POSTGRES_DB"),
-            "USER": env.str("POSTGRES_USER"),
-            "PASSWORD": env.str("POSTGRES_PASSWORD"),
-            "HOST": env.str("POSTGRES_HOST"),
-            "PORT": env.int("POSTGRES_PORT"),
-            "ATOMIC_REQUESTS": True,
-            "AUTOCOMMIT": True,
-            "OPTIONS": {
-                "sslmode": "require",
-            },
-        }
-    }
+    DATABASES = PROD_DATABASE
 
 # CACHES = {
 #     "default": {
