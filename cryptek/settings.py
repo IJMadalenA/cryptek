@@ -136,7 +136,7 @@ DATABASES = {
         "USER": env.str("POSTGRES_USER"),
         "PASSWORD": env.str("POSTGRES_PASSWORD"),
         "HOST": env.str("POSTGRES_HOST", default="localhost"),
-        "PORT": env.int("POSTGRES_PORT", default=5432),
+        "PORT": env.str("POSTGRES_PORT", default=5432),
         "ATOMIC_REQUESTS": True,
         "AUTOCOMMIT": True,
     }
