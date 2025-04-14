@@ -161,6 +161,9 @@ else:
             "PORT": env.int("POSTGRES_PORT"),
             "ATOMIC_REQUESTS": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#atomic-requests.
             "AUTOCOMMIT": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#autocommit.
+            "OPTIONS": {
+                "sslmode": "require",
+            },
         }
     }
 
