@@ -16,7 +16,6 @@ import sys
 from pathlib import Path
 
 import cloudinary
-import dj_database_url
 import environ
 from django.contrib import messages
 
