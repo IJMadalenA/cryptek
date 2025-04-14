@@ -129,23 +129,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "cryptek.wsgi.application"  # https://docs.djangoproject.com/es/5.1/ref/settings/#wsgi-application.
 
 # DATABASES. https://docs.djangoproject.com/en/5.1/ref/settings/#databases =============================================
-DATABASE = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-        "ATOMIC_REQUESTS": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#atomic-requests.
-        "AUTOCOMMIT": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#autocommit.
-    },
-}
-TEST_DATABASE = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "test_db.sqlite3",
-        "ATOMIC_REQUESTS": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#atomic-requests.
-        "AUTOCOMMIT": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#autocommit.
-    },
-}
-PROD_DATABASE = {
+DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": env.str("POSTGRES_DB"),
@@ -157,8 +141,6 @@ PROD_DATABASE = {
         "AUTOCOMMIT": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#autocommit.
     }
 }
-
-DATABASES = PROD_DATABASE
 
 # CACHES = {
 #     "default": {
