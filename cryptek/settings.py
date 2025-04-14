@@ -151,7 +151,12 @@ if "test" in sys.argv:
 elif DEVELOPMENT_MODE:
     DATABASES = DEV_DATABASE
 else:
-    DATABASES = {"default": dj_database_url.config(default=env.str("DATABASE_URL"))}
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+        }
+    }
+    DATABASES["default"] = dj_database_url.config()
 
 # CACHES = {
 #     "default": {
