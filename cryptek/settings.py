@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import logging
 import os
-import sys
 from pathlib import Path
 
 import cloudinary
@@ -126,6 +125,21 @@ TEMPLATES = [
 WSGI_APPLICATION = "cryptek.wsgi.application"  # https://docs.djangoproject.com/es/5.1/ref/settings/#wsgi-application.
 
 # DATABASES. https://docs.djangoproject.com/en/5.1/ref/settings/#databases =============================================
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": env.str("POSTGRES_DB"),
+        "USER": env.str("POSTGRES_USER"),
+        "PASSWORD": env.str("POSTGRES_PASSWORD"),
+        "HOST": env.str("POSTGRES_HOST"),
+        "PORT": env.int("POSTGRES_PORT"),
+        "OPTIONS": {
+            "SSLMODE": "require",
+        }
+    }
+}
+
 DEV_DATABASE = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -141,16 +155,6 @@ TEST_DATABASE = {
         "ATOMIC_REQUESTS": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#atomic-requests.
         "AUTOCOMMIT": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#autocommit.
     },
-}
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": env.str("POSTGRES_DB"),
-        "USER": env.str("POSTGRES_USER"),
-        "PASSWORD": env.str("POSTGRES_PASSWORD"),
-        "HOST": env.str("POSTGRES_HOST"),
-        "PORT": env.int("POSTGRES_PORT"),
-    }
 }
 
 # CACHES = {
