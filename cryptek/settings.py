@@ -137,8 +137,8 @@ DATABASES = {
         "PASSWORD": env.str("POSTGRES_PASSWORD"),
         "HOST": env.str("POSTGRES_HOST", default="localhost"),
         "PORT": env.int("POSTGRES_PORT", default=5432),
-        "ATOMIC_REQUESTS": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#atomic-requests.
-        "AUTOCOMMIT": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#autocommit.
+        "ATOMIC_REQUESTS": True,
+        "AUTOCOMMIT": True,
     }
 }
 
