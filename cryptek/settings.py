@@ -145,30 +145,13 @@ TEST_DATABASE = {
         "AUTOCOMMIT": True,  # https://docs.djangoproject.com/es/5.1/ref/settings/#autocommit.
     },
 }
-
-# Fallback database configuration in case production connection fails.
-FALLBACK_DATABASE = {
-    "ENGINE": "django.db.backends.sqlite3",
-    "NAME": BASE_DIR / "fallback_db.sqlite3",
-    "ATOMIC_REQUESTS": True,
-    "AUTOCOMMIT": True,
-}
 # Adjust based on the environment
 if "test" in sys.argv:
     DATABASES = TEST_DATABASE
 elif DEVELOPMENT_MODE:
     DATABASES = DEV_DATABASE
 else:
-    # Main database configuration.
-    try:
-        DATABASES = {"default": dj_database_url.config(default=os.environ.get("POSTGRES_URL"))}
-        # Try to connect to the production database.
-        from django.db import connections
-
-        connections["default"].cursor()
-    except Exception:
-        print("Error al conectar con la base de datos de producción, usando SQLite como respaldo.")
-        DATABASES = {"default": FALLBACK_DATABASE}
+    DATABASES = {"default": dj_database_url.config(default=os.environ.get("POSTGRES_URL"))}
 
 # CACHES = {
 #     "default": {
