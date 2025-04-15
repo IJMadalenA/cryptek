@@ -130,15 +130,22 @@ TEMPLATES = [
 WSGI_APPLICATION = "cryptek.wsgi.application"  # https://docs.djangoproject.com/es/5.1/ref/settings/#wsgi-application.
 
 # DATABASES. https://docs.djangoproject.com/en/5.1/ref/settings/#databases =============================================
-DATABASES = {
-    "default": dj_database_url.config(
-        default=os.getenv("DATABASE_URL"),
-        conn_max_age=900,
-        conn_health_checks=True,
-    )
-}
-
-DATABASES["default"]["OPTIONS"] = {"sslmode": "require"}
+if DEVELOPMENT_MODE:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+else:
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=os.getenv("DATABASE_URL"),
+            conn_max_age=900,
+            conn_health_checks=True,
+        )
+    }
+    DATABASES["default"]["OPTIONS"] = {"sslmode": "require"}
 
 # CACHES = {
 #     "default": {
