@@ -16,6 +16,7 @@ import sys
 from pathlib import Path
 
 import cloudinary
+import dj_database_url
 import environ
 from django.contrib import messages
 
@@ -130,16 +131,10 @@ WSGI_APPLICATION = "cryptek.wsgi.application"  # https://docs.djangoproject.com/
 
 # DATABASES. https://docs.djangoproject.com/en/5.1/ref/settings/#databases =============================================
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": env.str("POSTGRES_DB"),
-        "USER": env.str("POSTGRES_USER"),
-        "PASSWORD": env.str("POSTGRES_PASSWORD"),
-        "HOST": env.str("POSTGRES_HOST", default="localhost"),
-        "PORT": env.str("POSTGRES_PORT", default=5432),
-        "ATOMIC_REQUESTS": True,
-        "AUTOCOMMIT": True,
-    }
+    "default": dj_database_url.config(
+        conn_max_age=600,
+        conn_health_checks=True,
+    ),
 }
 
 # CACHES = {
