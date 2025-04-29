@@ -61,14 +61,14 @@
 </nav>
 
 <!-- Main Content -->
-<main class="container mx-auto px-6 mt-10 grid grid-cols-1 lg:grid-cols-4 gap-6 flex-grow">
-    <div class="lg:col-span-3">
+<main class="flex flex-col md:flex-row gap-6 md:gap-8 max-w-[1200px] xl:max-w-[1500px] 2xl:max-w-[1800px] mx-auto pl-4 md:pl-12 lg:pl-20 xl:pl-32 pr-2 md:pr-4 lg:pr-6 xl:pr-8 py-6">
+    <section class="flex-1 min-w-0">
         {% block content %}{% endblock %}
-    </div>
-    <aside class="bg-gray-100 p-6 rounded-lg shadow-md">
+    </section>
+    <aside class="w-full md:w-[380px] lg:w-[440px] xl:w-[500px] 2xl:w-[560px] flex-shrink-0 bg-gray-100 p-6 rounded-lg shadow-md mt-6 md:mt-0">
         {% block right_column %}
-            <div class="mb-4">{% include 'gemini_tip_box.html' %}</div>
             <div class="mb-4">{% include 'contact_box.html' %}</div>
+            <div class="mb-4">{% include 'code_tip_box.html' %}</div>
             <div class="mb-4">{% include 'qr_code_box.html' %}</div>
         {% endblock %}
     </aside>

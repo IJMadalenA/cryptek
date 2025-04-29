@@ -7,7 +7,6 @@
 
     <!-- Overrides para tipografía y elementos Markdown -->
     <style>
-        /* Encabezados y párrafos */
         .prose h1 {
             font-size: 2.75rem;
             margin-bottom: 1rem;
@@ -17,14 +16,14 @@
         .prose h2 {
             font-size: 2.25rem;
             margin-bottom: 0.75rem;
-            margin-left: 1rem; /* Mayor sangría que h1 */
+            margin-left: 1rem;
         }
 
         .prose h3 {
             font-size: 1.75rem;
             margin-bottom: 0.75rem;
             font-weight: bold;
-            margin-left: 2rem; /* Mayor sangría que h2 */
+            margin-left: 2rem;
         }
 
         .prose p {
@@ -32,7 +31,6 @@
             line-height: 1.75;
         }
 
-        /* Listas: forzamos que muestren la tipografía cursiva (o hereden la fuente) */
         .prose ul {
             list-style-type: disc;
             padding-left: 1.5rem;
@@ -45,7 +43,6 @@
             font-family: inherit !important;
         }
 
-        /* Estilos para <aside> dentro del contenido Markdown */
         article.prose aside {
             background-color: #f9fafb;
             padding: 1rem;
@@ -55,12 +52,10 @@
     </style>
 
     <div class="max-w-3xl mx-auto px-4 py-8">
-
         <!-- Encabezado compacto y horizontal -->
         <header class="flex flex-col md:flex-row items-center mb-8 border-b pb-4">
             {% if object.cdn_image_url %}
                 <div class="flex-shrink-0">
-                    <!-- Imagen ampliada: 24rem x 24rem -->
                     <img src="{{ object.get_header_image_optimized }}" alt="Header Image"
                          class="w-96 h-96 object-cover rounded-lg" loading="lazy">
                 </div>
@@ -120,8 +115,7 @@
                 Share on X
             </button>
             <button onclick="shareOnLinkedIn()"
-                    class="px-3 py-2 bg-blue-800 text-white rounded hover:bg-blue-900 transition">
-                Share on LinkedIn
+                    class="px-3 py-2 bg-blue-800 text-white rounded hover:bg-blue-900 transition">Share on LinkedIn
             </button>
         </div>
 
@@ -148,13 +142,11 @@
               const headers = document.querySelectorAll('.post-content h2, .post-content h3');
               headers.forEach(header => {
                 if (!header.id) {
-                  header.id = header.textContent.toLowerCase().trim()
-                                 .replace(/\s+/g, '-')
-                                 .replace(/[^\w\-]/g, '');
+                  header.id = header.textContent.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\-]/g, '');
                 }
                 const li = document.createElement('li');
                 if (header.tagName.toLowerCase() === 'h3') {
-                  li.classList.add('ml-4'); // Mayor sangría para h3
+                  li.classList.add('ml-4');
                 }
                 const a = document.createElement('a');
                 a.href = '#' + header.id;
@@ -167,4 +159,4 @@
         </script>
         <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     </div>
-{% endblock content %}
+{% endblock %}

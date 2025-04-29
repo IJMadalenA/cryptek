@@ -2,6 +2,7 @@ from django.contrib.admin import ModelAdmin, register
 from django.contrib.admin.decorators import action
 from django.contrib.admin.options import ShowFacets
 
+from blog_app.models import CodeTip
 from blog_app.models.category import Category
 from blog_app.models.comment import Comment
 from blog_app.models.entry import Entry
@@ -12,6 +13,11 @@ from blog_app.models.tag import Tag
 
 @register(Category)
 class CategoryAdmin(ModelAdmin):
+    pass
+
+
+@register(CodeTip)
+class CodeTipAdmin(ModelAdmin):
     pass
 
 

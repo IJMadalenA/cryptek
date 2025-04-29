@@ -1,8 +1,7 @@
+from blog_app.models.code_tip import CodeTip
 from django.shortcuts import render
-
-from cryptek.ai_system.gemini_tip import get_gemini_tip
 
 
 def gemini_tip_box(request):
-    tip = get_gemini_tip()
+    tip = CodeTip.generate_code_tip()
     return render(request, "gemini_tip_box.html", {"tip": tip})

@@ -25,6 +25,7 @@ from django.urls import include, path
 from django.views.generic import RedirectView
 
 from blog_app.sitemaps import EntrySitemap
+from blog_app.views.code_tip_view import code_tip_api
 from blog_app.views.email_verification_view import EmailConfirmationView
 from cryptek.csp_report_view import csp_report_view
 from message_app.views.contact_me_view import ContactMeView
@@ -64,6 +65,7 @@ urlpatterns = (
             EmailConfirmationView.as_view(),
             name="verify_email",
         ),
+        path('api/code-tip/', code_tip_api, name='code_tip_api'),
     ]
     + third_party_apps_urls
     + debug_toolbar_urls()
