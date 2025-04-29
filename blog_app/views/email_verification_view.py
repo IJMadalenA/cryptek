@@ -1,10 +1,9 @@
+from blog_app.utils.token_generator import EmailConfirmationTokenGenerator
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.views import View
-
-from blog_app.utils.token_generator import EmailConfirmationTokenGenerator
 
 User = get_user_model()
 email_token = EmailConfirmationTokenGenerator()

@@ -1,6 +1,5 @@
-from django.db.models import CASCADE, CharField, ForeignKey, IntegerField, Model
-
 from blog_app.models.entry import Entry
+from django.db.models import CASCADE, CharField, ForeignKey, IntegerField, Model
 
 
 class SocialShare(Model):

@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
-
 from user_app.models.session import Session
 from user_app.templatetags.session_filters import device, location
 

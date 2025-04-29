@@ -1,5 +1,4 @@
 from django.db.models import CASCADE, CharField, ForeignKey, Model
-
 from user_app.models.cryptek_user import CryptekUser
 
 

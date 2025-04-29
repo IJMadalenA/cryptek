@@ -6,7 +6,6 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import UpdateView
 from rest_framework import permissions
-
 from user_app.forms.profile_form import ProfileUpdateForm
 from user_app.models.profile import Profile
 

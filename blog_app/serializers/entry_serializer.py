@@ -1,7 +1,6 @@
+from blog_app.models.entry import Entry
 from rest_framework.fields import CharField, DateTimeField, ImageField
 from rest_framework.serializers import ModelSerializer
-
-from blog_app.models.entry import Entry
 
 
 class EntrySerializerOut(ModelSerializer):

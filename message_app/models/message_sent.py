@@ -8,7 +8,6 @@ from django.db.models import (
     Model,
     TextField,
 )
-
 from user_app.models.cryptek_user import CryptekUser
 
 

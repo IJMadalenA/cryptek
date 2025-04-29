@@ -1,6 +1,5 @@
 from factory import SelfAttribute, SubFactory
 from factory.django import DjangoModelFactory
-
 from user_app.factory.cryptek_user_factory import CryptekUserFactory
 from user_app.models.follow import Follow
 

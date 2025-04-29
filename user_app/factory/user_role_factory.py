@@ -1,5 +1,4 @@
 from factory.django import DjangoModelFactory
-
 from user_app.models.user_role import UserRole
 
 

@@ -1,5 +1,7 @@
 import logging
 
+from blog_app.models.category import Category
+from blog_app.models.tag import Tag
 from cloudinary import CloudinaryImage
 from cloudinary.exceptions import Error as CloudinaryError
 from cloudinary.uploader import upload
@@ -21,9 +23,6 @@ from django.db.models import (
 from django.urls import reverse
 from django.utils.text import slugify
 from markdownx.models import MarkdownxField
-
-from blog_app.models.category import Category
-from blog_app.models.tag import Tag
 from user_app.models.cryptek_user import CryptekUser
 
 logger = logging.getLogger(__name__)

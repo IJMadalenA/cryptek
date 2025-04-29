@@ -6,7 +6,6 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
-
 from message_app.forms.contact_me_form import ContactMeForm
 
 logger = logging.getLogger(__name__)

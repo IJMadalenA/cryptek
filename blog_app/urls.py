@@ -1,6 +1,6 @@
 from django.urls import path
-
 from message_app.views.contact_success_view import ContactSuccessView
+
 from . import views
 from .sitemaps import EntrySitemap
 from .views.like_view import LikeView

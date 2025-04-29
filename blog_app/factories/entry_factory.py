@@ -1,9 +1,8 @@
+from blog_app.models.entry import Entry, EntryAnalytics, EntryReaction, EntryVersion
 from django.utils.text import slugify
 from factory import Faker, LazyAttribute, SubFactory
 from factory.django import DjangoModelFactory
 from factory.fuzzy import FuzzyChoice, FuzzyText
-
-from blog_app.models.entry import Entry, EntryAnalytics, EntryReaction, EntryVersion
 from user_app.factory.cryptek_user_factory import CryptekUserFactory
 
 

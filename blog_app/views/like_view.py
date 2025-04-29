@@ -1,9 +1,8 @@
+from blog_app.models.entry import Entry
+from blog_app.models.like import Like
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views import View
-
-from blog_app.models.entry import Entry
-from blog_app.models.like import Like
 
 
 class LikeView(View):

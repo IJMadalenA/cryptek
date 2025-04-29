@@ -1,7 +1,6 @@
+from blog_app.models.tag import Tag
 from factory import Sequence
 from factory.django import DjangoModelFactory
-
-from blog_app.models.tag import Tag
 
 
 class TagFactory(DjangoModelFactory):

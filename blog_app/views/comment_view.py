@@ -1,6 +1,9 @@
 # views/comment_view.py
 import ast
 
+from blog_app.forms.comment_form import CommentForm
+from blog_app.models.comment import Comment
+from blog_app.models.entry import Entry
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404
@@ -8,11 +11,6 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import FormMixin
-
-from blog_app.forms.comment_form import CommentForm
-from blog_app.models.comment import Comment
-from blog_app.models.entry import Entry
-
 
 # from cryptek.ai_system.comment_moderation import CommentModeration
 

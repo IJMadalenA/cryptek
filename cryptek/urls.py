@@ -65,7 +65,7 @@ urlpatterns = (
             EmailConfirmationView.as_view(),
             name="verify_email",
         ),
-        path('api/code-tip/', code_tip_api, name='code_tip_api'),
+        path("api/code-tip/", code_tip_api, name="code_tip_api"),
     ]
     + third_party_apps_urls
     + debug_toolbar_urls()

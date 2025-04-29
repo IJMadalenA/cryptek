@@ -1,7 +1,6 @@
+from blog_app.models.comment import Comment
 from django.forms.models import ModelForm
 from django.forms.widgets import Textarea
-
-from blog_app.models.comment import Comment
 
 
 class CommentForm(ModelForm):

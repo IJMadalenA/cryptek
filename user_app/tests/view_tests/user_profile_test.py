@@ -1,6 +1,5 @@
-from django.contrib.auth import get_user_model
-
 from cryptek.qa_templates import ClassBaseViewTestCase
+from django.contrib.auth import get_user_model
 from user_app.models.profile import Profile
 
 User = get_user_model()

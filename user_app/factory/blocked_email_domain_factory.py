@@ -2,7 +2,6 @@ from django.utils import timezone
 from factory import Sequence
 from factory.django import DjangoModelFactory
 from factory.fuzzy import FuzzyChoice, FuzzyDateTime
-
 from user_app.models.blocked_email_domain import BlockedEmailDomain, BlockedEmailDomainExtension
 
 

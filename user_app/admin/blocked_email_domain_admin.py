@@ -1,5 +1,4 @@
 from django.contrib import admin
-
 from user_app.models.blocked_email_domain import BlockedEmailDomain, BlockedEmailDomainExtension
 
 

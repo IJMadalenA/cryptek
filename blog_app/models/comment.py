@@ -1,6 +1,5 @@
-from django.db.models import CASCADE, BooleanField, DateTimeField, ForeignKey, Model, TextField
-
 from blog_app.models.entry import Entry
+from django.db.models import CASCADE, BooleanField, DateTimeField, ForeignKey, Model, TextField
 from user_app.models.cryptek_user import CryptekUser
 
 

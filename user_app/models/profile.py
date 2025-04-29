@@ -1,12 +1,11 @@
 from io import BytesIO
 
-from PIL import Image
 from django.core.files.base import ContentFile
 from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
-
+from PIL import Image
 from user_app.models.cryptek_user import CryptekUser
 
 

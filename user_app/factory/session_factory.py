@@ -4,7 +4,6 @@ from django.utils.timezone import make_aware
 from factory import SelfAttribute, Sequence, SubFactory
 from factory.django import DjangoModelFactory
 from factory.fuzzy import FuzzyDateTime
-
 from user_app.factory.cryptek_user_factory import CryptekUserFactory
 from user_app.models.session import Session
 

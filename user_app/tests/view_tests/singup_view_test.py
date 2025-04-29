@@ -2,9 +2,8 @@ from unittest.mock import MagicMock, patch
 
 import dns.resolver
 import requests
-from django.test import TestCase
-
 from cryptek.qa_templates import ClassBaseViewTestCase
+from django.test import TestCase
 from user_app.adapters import email_is_legitimate
 from user_app.models.blocked_email_domain import BlockedEmailDomain, BlockedEmailDomainExtension
 

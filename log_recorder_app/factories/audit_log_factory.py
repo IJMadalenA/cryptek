@@ -2,7 +2,6 @@ from django.utils import timezone
 from factory import SubFactory
 from factory.django import DjangoModelFactory
 from factory.fuzzy import FuzzyDateTime, FuzzyText
-
 from user_app.factory.cryptek_user_factory import CryptekUserFactory
 
 

@@ -1,5 +1,4 @@
 from django.urls import path
-
 from user_app.views.session_view import SessionDeleteOtherView, SessionDeleteView, SessionListView
 from user_app.views.user_profile_view import PublicProfileView, UpdateProfileView, personal_profile_view
 

@@ -1,6 +1,5 @@
 from factory import Sequence
 from factory.django import DjangoModelFactory
-
 from user_app.models.cryptek_user import CryptekUser
 
 

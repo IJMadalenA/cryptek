@@ -1,5 +1,6 @@
 import secrets
 
+from cryptek.status_code_assertion import StatusCodeAssertionMixin
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
@@ -11,8 +12,6 @@ from django.test import Client, TestCase
 from django.test.utils import CaptureQueriesContext
 from django.urls import NoReverseMatch, reverse
 from factory.fuzzy import FuzzyText
-
-from cryptek.status_code_assertion import StatusCodeAssertionMixin
 
 if hasattr(TestCase, "assertURLEqual"):
     assertURLEqual = TestCase.assertURLEqual
