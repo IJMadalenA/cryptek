@@ -15,8 +15,8 @@ def gemini_tip_context(request):
         try:
             tip = CodeTip.generate_code_tip()
             # Si hay error en la generación, intenta obtener uno aleatorio
-            if not tip or tip.get('error_message'):
-                raise Exception('Error al generar tip')
+            if not tip or tip.get("error_message"):
+                raise Exception("Error al generar tip")
             cache.set("gemini_tip", tip, timeout=60 * 10)
         except Exception:
             # Si no se puede generar, usa uno aleatorio existente
