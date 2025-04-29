@@ -122,6 +122,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "cryptek.context_processors.gemini_tip_context",
             ],
         },
     },
@@ -324,7 +325,7 @@ LOGGING = {
             "filename": "csp_violations.log",
         },
         "console": {
-            "level": "WARNING",
+            "level": "DEBUG" if DEBUG else "WARNING",
             "class": "logging.StreamHandler",
         },
         "null": {
@@ -338,11 +339,19 @@ LOGGING = {
             "propagate": True,
         },
         "django.security.DisallowedHost": {
-            # https://docs.djangoproject.com/es/5.1/ref/logging/#django-security
             "handlers": ["file", "console"],
             "level": "WARNING",
             "propagate": False,
         },
+        "gemini_tip": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+            "propagate": False,
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
     },
 }
 
