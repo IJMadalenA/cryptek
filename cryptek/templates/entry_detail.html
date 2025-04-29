@@ -50,6 +50,48 @@
             border-left: 4px solid #e5e7eb;
             margin-bottom: 1.25rem;
         }
+
+        /* --- Mejora bloques de código --- */
+        .prose pre {
+            background: #23272e !important;
+            color: #e5e7eb !important;
+            border-radius: 0.7rem !important;
+            margin: 1.25em 0 !important;
+            padding: 1.1em 1.3em !important;
+            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.13);
+            border: 1.5px solid #232336;
+            overflow-x: auto;
+            font-family: 'Fira Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 1.02em;
+            transition: box-shadow 0.2s, border 0.2s;
+        }
+
+        .prose pre:hover {
+            box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.18);
+            border-color: #6366f1;
+        }
+
+        .prose pre code {
+            background: none !important;
+            color: inherit !important;
+            padding: 0;
+            border-radius: 0;
+            font-size: 0.97em;
+            white-space: pre;
+            width: 100%;
+            display: block;
+        }
+
+        /* --- Inline code --- */
+        .prose code:not(pre code) {
+            background: rgba(35, 39, 46, 0.85) !important;
+            color: #e5e7eb !important;
+            border-radius: 0.35em;
+            padding: 0.1em 0.2em;
+            font-size: 0.97em;
+            font-family: 'Fira Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.10);
+        }
     </style>
     <!-- Encabezado compacto y horizontal -->
     <header class="flex flex-col md:flex-row items-center mb-8 border-b pb-4">
