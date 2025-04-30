@@ -82,7 +82,7 @@ class Entry(Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title[:50], allow_unicode=True)
+            self.slug = slugify(self.title[:50])
         if not self.author or self.author.is_anonymous:
             self.author = kwargs.get("user", self.author)
         if self.header_image:
