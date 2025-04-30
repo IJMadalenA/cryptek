@@ -52,7 +52,7 @@ DEVELOPMENT_MODE = env.bool("DEVELOPMENT_MODE")
 SITE_ID = 1  # https://docs.djangoproject.com/es/5.1/ref/settings/#site-id.
 
 ADMINS = [
-    tuple(admin.split(":")) for admin in env("ADMINS")
+    tuple(admin.split(":")) for admin in env.list("ADMINS")
 ]  # https://docs.djangoproject.com/es/5.1/ref/settings/#admins.
 MANAGERS = ADMINS  # https://docs.djangoproject.com/es/5.1/ref/settings/#managers.
 
