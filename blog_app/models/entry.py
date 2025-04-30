@@ -59,9 +59,9 @@ class Entry(Model):
     cdn_image_url = URLField(blank=True, null=True, unique=True)
     cdn_image_public_id = CharField(max_length=200, blank=True, null=True)
     slug = SlugField(
-        max_length=100,
-        blank=True,
-        null=True,
+        max_length=50,
+        blank=False,
+        null=False,
     )
 
     class Meta:
@@ -82,9 +82,7 @@ class Entry(Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(
-                self.title[:100], allow_unicode=True, lower=True, separator="-", max_length=100, unique=True
-            )
+            self.slug = slugify(self.title[:50], allow_unicode=True)
         if not self.author or self.author.is_anonymous:
             self.author = kwargs.get("user", self.author)
         if self.header_image:
