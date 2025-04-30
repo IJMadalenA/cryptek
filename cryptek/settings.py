@@ -122,7 +122,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "cryptek.context_processors.gemini_tip_context",
+                "blog_app.context_processors.gemini_tip_context",
             ],
         },
     },

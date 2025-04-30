@@ -1,7 +1,8 @@
 import random
 
-from blog_app.models.code_tip import CodeTip
 from django.core.cache import cache
+
+from blog_app.models.code_tip import CodeTip
 
 
 def gemini_tip_context(request):
@@ -16,7 +17,8 @@ def gemini_tip_context(request):
             # Si hay error en la generación, intenta obtener uno aleatorio
             if not tip or tip.get("error_message"):
                 raise Exception("Error al generar tip")
-            cache.set("gemini_tip", tip, timeout=60 * 10)
+            # Si no hay error, guarda el tip en la caché por 30 minutos.
+            cache.set("gemini_tip", tip, timeout=60 * 30)
         except Exception:
             # Si no se puede generar, usa uno aleatorio existente
             tips = list(CodeTip.objects.all())
