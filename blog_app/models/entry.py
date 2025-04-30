@@ -1,7 +1,5 @@
 import logging
 
-from blog_app.models.category import Category
-from blog_app.models.tag import Tag
 from cloudinary import CloudinaryImage
 from cloudinary.exceptions import Error as CloudinaryError
 from cloudinary.uploader import upload
@@ -23,6 +21,9 @@ from django.db.models import (
 from django.urls import reverse
 from django.utils.text import slugify
 from markdownx.models import MarkdownxField
+
+from blog_app.models.category import Category
+from blog_app.models.tag import Tag
 from user_app.models.cryptek_user import CryptekUser
 
 logger = logging.getLogger(__name__)
@@ -58,6 +59,7 @@ class Entry(Model):
     cdn_image_url = URLField(blank=True, null=True, unique=True)
     cdn_image_public_id = CharField(max_length=200, blank=True, null=True)
     slug = SlugField(
+        max_length=100,
         blank=True,
         null=True,
     )
@@ -80,7 +82,9 @@ class Entry(Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)
+            self.slug = slugify(
+                self.title[:100], allow_unicode=True, lower=True, separator="-", max_length=100, unique=True
+            )
         if not self.author or self.author.is_anonymous:
             self.author = kwargs.get("user", self.author)
         if self.header_image:
@@ -104,6 +108,8 @@ class Entry(Model):
                 fetch_format="auto",
             )
             return image
+        else:
+            return self.header_image.url if self.header_image else None
 
     def get_all_comments(self):
         return self.comments.filter(active=True)
