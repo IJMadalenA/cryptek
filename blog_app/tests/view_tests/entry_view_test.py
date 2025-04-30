@@ -4,7 +4,7 @@ from cryptek.qa_templates import ClassBaseViewTestCase
 
 
 class EntryViewTestCase(ClassBaseViewTestCase):
-    endpoint_name = "entry_detail"
+    endpoint_name = "blog_app:entry_detail"
     is_authenticated = True
 
     def setUp(self):
@@ -42,3 +42,11 @@ class EntryViewTestCase(ClassBaseViewTestCase):
             response = self.get()
             self.response_code(response=response, status_code=200)
             self.assertTemplateUsed(response, "entry_detail.html")
+
+    def test_unicode_slug(self):
+        """Test that a slug with non-ASCII characters works."""
+        entry = EntryFactory.create(status=1, title="Título con caracteres especiales")
+        self.kwargs = {"slug": entry.slug}
+        response = self.get()
+        self.response_code(response=response, status_code=200)
+        self.assertTemplateUsed(response, "entry_detail.html")
