@@ -1,8 +1,7 @@
 import random
 
-from django.core.cache import cache
-
 from blog_app.models.code_tip import CodeTip
+from django.core.cache import cache
 
 
 def gemini_tip_context(request):

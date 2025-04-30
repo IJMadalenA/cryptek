@@ -64,9 +64,9 @@ class CodeTip(Model):
 
         tech_stack = tech_stack or random.choice(["django", "python"])
         level = level or random.choice(["junior", "mid", "senior"])
-        type_of_tip = type_of_tip or random.choice([
-            "consejo", "tip", "dato curioso", "recomendación en ciberseguridad"
-        ])
+        type_of_tip = type_of_tip or random.choice(
+            ["consejo", "tip", "dato curioso", "recomendación en ciberseguridad"]
+        )
         prompt = (
             f"Dame un {type_of_tip} sobre {tech_stack} para un público de desarrolladores de nivel {level}. "
             "NO EXPLIQUES NADA FUERA DEL JSON. Solo responde con el JSON solicitado, sin texto adicional fuera de el. "
@@ -79,14 +79,16 @@ class CodeTip(Model):
             response = model.generate_content(prompt)
             text = response.text
             logger.warning(f"Respuesta cruda de Gemini: {text!r}")
-            cleaned = re.sub(r"^```(?:json)?[ \t]*\n?|```$", "", text.strip(), flags=re.IGNORECASE | re.MULTILINE).strip()
+            cleaned = re.sub(
+                r"^```(?:json)?[ \t]*\n?|```$", "", text.strip(), flags=re.IGNORECASE | re.MULTILINE
+            ).strip()
             logger.warning(f"Respuesta limpia para parsear: {cleaned!r}")
             tip = None
             error = None
             try:
                 tip = pyjson.loads(cleaned)
             except Exception as e1:
-                json_match = re.search(r'{[\s\S]*}', cleaned)
+                json_match = re.search(r"{[\s\S]*}", cleaned)
                 if json_match:
                     try:
                         tip = pyjson.loads(json_match.group(0))
@@ -99,7 +101,7 @@ class CodeTip(Model):
                 tip = {
                     "title": tip.get("title", "Tip de Gemini"),
                     "description": tip.get("description", ""),
-                    "code": tip.get("code", "")
+                    "code": tip.get("code", ""),
                 }
                 if save:
                     # Evita duplicados simples (por título y código)
@@ -113,8 +115,8 @@ class CodeTip(Model):
                             "type_of_tip": type_of_tip,
                             "prompt_used": prompt,
                             "gemini_raw_response": text,
-                            "error_message": ""
-                        }
+                            "error_message": "",
+                        },
                     )
                 return tip
             else:
@@ -129,12 +131,12 @@ class CodeTip(Model):
                         type_of_tip=type_of_tip,
                         prompt_used=prompt,
                         gemini_raw_response=text,
-                        error_message=error or "No se encontró JSON válido"
+                        error_message=error or "No se encontró JSON válido",
                     )
                 return {
                     "title": "Respuesta no estructurada",
                     "description": cleaned,
-                    "code": f"# Error al parsear JSON: {error if error else 'No se encontró JSON válido'}"
+                    "code": f"# Error al parsear JSON: {error if error else 'No se encontró JSON válido'}",
                 }
         except Exception as e:
             logger.error(f"Error al obtener tip de Gemini: {e}")
@@ -147,8 +149,8 @@ class CodeTip(Model):
                     level=level,
                     type_of_tip=type_of_tip,
                     prompt_used=prompt,
-                    gemini_raw_response=text if 'text' in locals() else "",
-                    error_message=str(e)
+                    gemini_raw_response=text if "text" in locals() else "",
+                    error_message=str(e),
                 )
             return {
                 "title": "Error al obtener tip de Gemini",

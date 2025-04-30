@@ -1,7 +1,3 @@
-from django.contrib.admin import ModelAdmin, register
-from django.contrib.admin.decorators import action
-from django.contrib.admin.options import ShowFacets
-
 from blog_app.models import CodeTip
 from blog_app.models.category import Category
 from blog_app.models.comment import Comment
@@ -9,6 +5,9 @@ from blog_app.models.entry import Entry
 from blog_app.models.like import Like
 from blog_app.models.multimedia import Multimedia
 from blog_app.models.tag import Tag
+from django.contrib.admin import ModelAdmin, register
+from django.contrib.admin.decorators import action
+from django.contrib.admin.options import ShowFacets
 
 
 @register(Category)

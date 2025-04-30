@@ -1,8 +1,7 @@
+from blog_app.models.code_tip import CodeTip
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
-
-from blog_app.models.code_tip import CodeTip
 
 
 def code_tip_box(request):
