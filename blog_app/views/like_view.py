@@ -1,8 +1,9 @@
-from blog_app.models.entry import Entry
-from blog_app.models.like import Like
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views import View
+
+from blog_app.models.entry import Entry
+from blog_app.models.like import Like
 
 
 class LikeView(View):
@@ -30,4 +31,10 @@ class LikeView(View):
         else:
             message = f"{like_type.capitalize()} updated successfully!"
 
-        return JsonResponse({"success": True, "message": message}, status=201)
+        # Return the updated counts in the response
+        return JsonResponse({
+            "success": True, 
+            "message": message,
+            "like_count": entry.like_count,
+            "dislike_count": entry.dislike_count
+        }, status=201)
