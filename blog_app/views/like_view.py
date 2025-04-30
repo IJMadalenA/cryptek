@@ -32,9 +32,12 @@ class LikeView(View):
             message = f"{like_type.capitalize()} updated successfully!"
 
         # Return the updated counts in the response
-        return JsonResponse({
-            "success": True, 
-            "message": message,
-            "like_count": entry.like_count,
-            "dislike_count": entry.dislike_count
-        }, status=201)
+        return JsonResponse(
+            {
+                "success": True,
+                "message": message,
+                "like_count": entry.like_count,
+                "dislike_count": entry.dislike_count,
+            },
+            status=201,
+        )
