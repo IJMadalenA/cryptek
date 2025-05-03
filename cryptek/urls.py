@@ -16,10 +16,6 @@ Including another URLconf
 """
 
 from allauth.account.views import LogoutView
-from blog_app.sitemaps import EntrySitemap
-from blog_app.views.code_tip_view import code_tip_api
-from blog_app.views.email_verification_view import EmailConfirmationView
-from cryptek.csp_report_view import csp_report_view
 from debug_toolbar.toolbar import debug_toolbar_urls
 from django.conf import settings
 from django.conf.urls.static import static
@@ -27,7 +23,13 @@ from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
 from django.urls import include, path
 from django.views.generic import RedirectView
+
+from blog_app.sitemaps import EntrySitemap
+from blog_app.views.code_tip_view import code_tip_api
+from blog_app.views.email_verification_view import EmailConfirmationView
+from cryptek.csp_report_view import csp_report_view
 from message_app.views.contact_me_view import ContactMeView
+from message_app.views.contact_success_view import ContactSuccessView
 from user_app.views.about_me import about_me
 from user_app.views.login_view import CustomLoginView
 from user_app.views.singup_view import CustomSignupView
@@ -56,6 +58,7 @@ urlpatterns = (
         path("account/", include("user_app.urls")),
         path("blog/", include("blog_app.urls"), name="blog"),
         path("contact/", ContactMeView.as_view(), name="contact"),
+        path("contact/success/", ContactSuccessView.as_view(), name="contact_success"),
         path("accounts/login/", CustomLoginView.as_view(), name="login"),
         path("accounts/signup/", CustomSignupView.as_view(), name="signup"),
         path("logout/", LogoutView.as_view(), name="logout"),
