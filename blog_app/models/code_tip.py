@@ -3,10 +3,13 @@ import logging
 import os
 import random
 import re
+import time
 
 import environ
 import google.generativeai as genai
 from django.db.models import CharField, DateTimeField, Model, TextField
+
+from blog_app.models.gemini_api_usage import GeminiApiUsage
 
 env = environ.Env()
 
@@ -75,10 +78,27 @@ class CodeTip(Model):
         )
         try:
             logger.info(f"Enviando prompt a Gemini: {prompt}")
-            model = genai.GenerativeModel(env.str("GEMINI_MODEL", "gemini-2.5-pro-preview-03-25"))
+            model_name = env.str("GEMINI_MODEL", "gemini-2.5-pro-preview-03-25")
+            model = genai.GenerativeModel(model_name)
+
+            # Measure response time
+            start_time = time.time()
             response = model.generate_content(prompt)
+            end_time = time.time()
+            response_time = end_time - start_time
+
             text = response.text
             logger.warning(f"Respuesta cruda de Gemini: {text!r}")
+
+            # Estimate token usage (rough estimate: 1 token ≈ 4 chars)
+            prompt_tokens = len(prompt) // 4
+            response_tokens = len(text) // 4
+            total_tokens = prompt_tokens + response_tokens
+
+            # Log successful API request
+            GeminiApiUsage.log_request(
+                successful=True, tokens=total_tokens, response_time=response_time, model_name=model_name
+            )
             cleaned = re.sub(
                 r"^```(?:json)?[ \t]*\n?|```$", "", text.strip(), flags=re.IGNORECASE | re.MULTILINE
             ).strip()
@@ -120,7 +140,18 @@ class CodeTip(Model):
                     )
                 return tip
             else:
-                logger.error(f"Respuesta NO JSON de Gemini (tras limpieza): {cleaned!r}")
+                error_msg = f"Respuesta NO JSON de Gemini (tras limpieza): {cleaned!r}"
+                logger.error(error_msg)
+
+                # Log failed API request (parsing error)
+                GeminiApiUsage.log_request(
+                    successful=False,
+                    tokens=total_tokens if "total_tokens" in locals() else 0,
+                    response_time=response_time if "response_time" in locals() else 0,
+                    model_name=model_name if "model_name" in locals() else None,
+                    error_message=error or "No se encontró JSON válido",
+                )
+
                 if save:
                     cls.objects.create(
                         title="Respuesta no estructurada",
@@ -139,7 +170,24 @@ class CodeTip(Model):
                     "code": f"# Error al parsear JSON: {error if error else 'No se encontró JSON válido'}",
                 }
         except Exception as e:
-            logger.error(f"Error al obtener tip de Gemini: {e}")
+            error_msg = f"Error al obtener tip de Gemini: {e}"
+            logger.error(error_msg)
+
+            # Estimate token usage for the prompt (if we got this far)
+            prompt_tokens = len(prompt) // 4 if "prompt" in locals() else 0
+
+            # Log failed API request (general exception)
+            model_name = (
+                env.str("GEMINI_MODEL", "gemini-2.5-pro-preview-03-25") if "model_name" not in locals() else model_name
+            )
+            GeminiApiUsage.log_request(
+                successful=False,
+                tokens=prompt_tokens,  # Only count prompt tokens since we didn't get a response
+                response_time=time.time() - start_time if "start_time" in locals() else 0,
+                model_name=model_name,
+                error_message=str(e),
+            )
+
             if save:
                 cls.objects.create(
                     title="Error al obtener tip de Gemini",

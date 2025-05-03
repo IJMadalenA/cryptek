@@ -1,13 +1,16 @@
+from django.contrib.admin import ModelAdmin, register
+from django.contrib.admin.decorators import action
+from django.contrib.admin.options import ShowFacets
+from django.utils.html import format_html
+
 from blog_app.models import CodeTip
 from blog_app.models.category import Category
 from blog_app.models.comment import Comment
 from blog_app.models.entry import Entry
+from blog_app.models.gemini_api_usage import GeminiApiUsage
 from blog_app.models.like import Like
 from blog_app.models.multimedia import Multimedia
 from blog_app.models.tag import Tag
-from django.contrib.admin import ModelAdmin, register
-from django.contrib.admin.decorators import action
-from django.contrib.admin.options import ShowFacets
 
 
 @register(Category)
@@ -17,7 +20,34 @@ class CategoryAdmin(ModelAdmin):
 
 @register(CodeTip)
 class CodeTipAdmin(ModelAdmin):
-    pass
+    list_display = ("title", "tech_stack", "level", "type_of_tip", "created_at", "has_error")
+    list_filter = ("tech_stack", "level", "type_of_tip", "created_at")
+    search_fields = ("title", "description", "code", "error_message")
+    readonly_fields = ("created_at", "updated_at", "prompt_used", "gemini_raw_response", "error_message")
+    fieldsets = (
+        ("Basic Information", {"fields": ("title", "description", "code", "tech_stack", "level", "type_of_tip")}),
+        (
+            "Gemini API Details",
+            {
+                "fields": ("prompt_used", "gemini_raw_response", "error_message"),
+                "classes": ("collapse",),
+            },
+        ),
+        (
+            "Timestamps",
+            {
+                "fields": ("created_at", "updated_at"),
+                "classes": ("collapse",),
+            },
+        ),
+    )
+
+    def has_error(self, obj):
+        if obj.error_message:
+            return format_html('<span style="color: red;">✘</span>')
+        return format_html('<span style="color: green;">✓</span>')
+
+    has_error.short_description = "Status"
 
 
 @register(Comment)
@@ -100,3 +130,80 @@ class EntryAdmin(ModelAdmin):
 @register(Tag)
 class TagAdmin(ModelAdmin):
     pass
+
+
+@register(GeminiApiUsage)
+class GeminiApiUsageAdmin(ModelAdmin):
+    list_display = (
+        "date",
+        "model_name",
+        "request_count",
+        "successful_requests",
+        "failed_requests",
+        "tokens_used",
+        "average_response_time",
+        "success_rate",
+        "has_errors",
+    )
+    list_filter = ("date", "model_name")
+    readonly_fields = (
+        "date",
+        "request_count",
+        "successful_requests",
+        "failed_requests",
+        "tokens_used",
+        "average_response_time",
+        "model_name",
+        "last_error_message",
+        "last_updated",
+        "success_rate",
+    )
+
+    fieldsets = (
+        (
+            "Usage Statistics",
+            {
+                "fields": (
+                    "date",
+                    "model_name",
+                    "request_count",
+                    "successful_requests",
+                    "failed_requests",
+                    "tokens_used",
+                    "average_response_time",
+                    "success_rate",
+                )
+            },
+        ),
+        (
+            "Error Information",
+            {
+                "fields": ("last_error_message", "last_updated"),
+                "classes": ("collapse",),
+            },
+        ),
+    )
+
+    def success_rate(self, obj):
+        if obj.request_count == 0:
+            return "N/A"
+        success_rate = (obj.successful_requests / obj.request_count) * 100
+        color = "green" if success_rate > 90 else "orange" if success_rate > 70 else "red"
+        formatted_rate = f"{success_rate:.1f}%"
+        return format_html('<span style="color: {};">{}</span>', color, formatted_rate)
+
+    def has_errors(self, obj):
+        if obj.failed_requests > 0:
+            return format_html('<span style="color: red;">✘</span>')
+        return format_html('<span style="color: green;">✓</span>')
+
+    success_rate.short_description = "Success Rate"
+    has_errors.short_description = "Errors"
+
+    def has_add_permission(self, request):
+        # Prevent manual creation of usage records
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        # Allow deletion only for superusers
+        return request.user.is_superuser
