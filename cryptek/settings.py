@@ -218,9 +218,19 @@ CONTENT_SECURITY_POLICY = {
         "connect-src": (
             "'self'",
             "https://ijmadalena.com",
+            "https://cdn.tailwindcss.com",
+            "https://cdn.jsdelivr.net",
         ),
         # Allow image and media sources
-        "img-src": ("'self'", "data:", "https://ijmadalena.com", "https://res.cloudinary.com"),
+        "img-src": (
+            "'self'", 
+            "data:", 
+            "https://ijmadalena.com", 
+            "https://res.cloudinary.com", 
+            "https://res.cloudinary.com/dhwebrsx4/",
+            "https://res.cloudinary.com/dhwebrsx4/image/upload/",
+            "https://res.cloudinary.com/dhwebrsx4/image/upload/c_fill,f_auto,q_auto:good/"
+        ),
         "media-src": ("'self'", "https://ijmadalena.com"),
         # Fonts and Styles Configuration
         "font-src": (
@@ -235,6 +245,9 @@ CONTENT_SECURITY_POLICY = {
             "https://maxcdn.bootstrapcdn.com",
             "https://cdn.tailwindcss.com",
             "https://ijmadalena.com",
+            "https://cdn.jsdelivr.net",
+            "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css",
+            "'unsafe-inline'",
         ),
         "style-src-elem": (
             "'self'",
@@ -242,14 +255,35 @@ CONTENT_SECURITY_POLICY = {
             "https://maxcdn.bootstrapcdn.com",
             "https://cdn.tailwindcss.com",
             "https://ijmadalena.com",
+            "https://cdn.jsdelivr.net",
+            "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css",
+            "'unsafe-inline'",
+        ),
+        "style-src-attr": (
+            "'unsafe-inline'",
         ),
         # Scripts
         "script-src": (
             "'self'",
             "https://cdnjs.cloudflare.com",
             "https://cdn.jsdelivr.net",
+            "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js",
+            "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js",
             "https://cdn.tailwindcss.com",
             "https://ijmadalena.com",
+            "'unsafe-inline'",
+            "'unsafe-eval'",
+        ),
+        "script-src-elem": (
+            "'self'",
+            "https://cdnjs.cloudflare.com",
+            "https://cdn.jsdelivr.net",
+            "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js",
+            "https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js",
+            "https://cdn.tailwindcss.com",
+            "https://ijmadalena.com",
+            "'unsafe-inline'",
+            "'unsafe-eval'",
         ),
     },
 }
