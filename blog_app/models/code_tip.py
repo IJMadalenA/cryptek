@@ -3,6 +3,7 @@ import logging
 import os
 import random
 import re
+import sys
 import time
 
 import environ
@@ -11,7 +12,11 @@ from django.db.models import CharField, DateTimeField, Model, TextField
 
 from blog_app.models.gemini_api_usage import GeminiApiUsage
 
-env = environ.Env()
+env = environ.Env(
+    # Default values for testing configuration
+    GEMINI_MOCK_ENABLED=(bool, False),
+    GEMINI_MOCK_RESPONSE=(str, ''),
+)
 
 
 class CodeTip(Model):
@@ -53,8 +58,57 @@ class CodeTip(Model):
         return self.title
 
     @classmethod
-    def generate_code_tip(cls, tech_stack=None, level=None, type_of_tip=None, save=True):
+    def generate_code_tip(cls, tech_stack=None, level=None, type_of_tip=None, save=True, mock_enabled=None, mock_response=None):
         logger = logging.getLogger("gemini_tip")
+
+        # Determine if mocking is enabled
+        # Priority: 1. Explicit parameter, 2. Environment variable, 3. Default to 'test' in sys.argv for backward compatibility
+        is_mock_enabled = mock_enabled if mock_enabled is not None else env.bool('GEMINI_MOCK_ENABLED', 'test' in sys.argv)
+
+        if is_mock_enabled:
+            logger.info("Mock mode enabled. Skipping Gemini API call.")
+
+            # Use provided mock response, environment variable, or default mock
+            if mock_response:
+                # Use explicitly provided mock response
+                mock_tip = mock_response
+            elif env.str('GEMINI_MOCK_RESPONSE', ''):
+                # Try to parse mock response from environment variable
+                try:
+                    mock_tip = pyjson.loads(env.str('GEMINI_MOCK_RESPONSE'))
+                except Exception as e:
+                    logger.warning(f"Failed to parse GEMINI_MOCK_RESPONSE: {e}")
+                    # Fall back to default mock
+                    mock_tip = {
+                        "title": "Test Tip",
+                        "description": "This is a mock tip for testing purposes.",
+                        "code": "# Test code\nprint('Hello, test!')",
+                    }
+            else:
+                # Use default mock
+                mock_tip = {
+                    "title": "Test Tip",
+                    "description": "This is a mock tip for testing purposes.",
+                    "code": "# Test code\nprint('Hello, test!')",
+                }
+
+            if save:
+                cls.objects.get_or_create(
+                    title=mock_tip["title"],
+                    code=mock_tip["code"],
+                    defaults={
+                        "description": mock_tip["description"],
+                        "tech_stack": tech_stack or "django",
+                        "level": level or "junior",
+                        "type_of_tip": type_of_tip or "tip",
+                        "prompt_used": "Test prompt",
+                        "gemini_raw_response": "Test response",
+                        "error_message": "",
+                    },
+                )
+
+            return mock_tip
+
         api_key = os.environ.get("GEMINI_API_KEY")
         if not api_key:
             logger.error("Gemini API Key no configurada.")
