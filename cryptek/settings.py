@@ -184,7 +184,7 @@ AUTHENTICATION_BACKENDS = (
 AUTH_USER_MODEL = "user_app.CryptekUser"  # https://docs.djangoproject.com/es/5.1/ref/settings/#auth-user-model.
 
 LOGIN_URL = "login"  # https://docs.djangoproject.com/es/5.1/ref/settings/#login-url.
-LOGIN_REDIRECT_URL = "home"  # https://docs.djangoproject.com/es/5.1/ref/settings/#login-redirect-url.
+LOGIN_REDIRECT_URL = "blog_app:home"  # https://docs.djangoproject.com/es/5.1/ref/settings/#login-redirect-url.
 LOGOUT_REDIRECT_URL = "login"  # https://docs.djangoproject.com/es/5.1/ref/settings/#logout-redirect-url.
 
 PASSWORD_RESET_TIMEOUT = 259200  # https://docs.djangoproject.com/es/5.1/ref/settings/#password-reset-timeout.
@@ -478,7 +478,7 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 ACCOUNT_ADAPTER = "user_app.adapters.CustomAccountAdapter"
 # ACCOUNT_CHANGE_EMAIL = True
-# ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "home"
+# ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "blog_app:home"
 # ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
 # ACCOUNT_EMAIL_NOTIFICATIONS = True
 # ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = True

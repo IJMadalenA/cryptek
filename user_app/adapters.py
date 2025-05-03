@@ -3,6 +3,7 @@ import environ
 import requests
 from allauth.account.adapter import DefaultAccountAdapter
 from django.core.exceptions import ValidationError
+
 from user_app.models.blocked_email_domain import BlockedEmailDomain, BlockedEmailDomainExtension
 
 HUNTER_API_KEY = environ.Env().str("HUNTER_API_KEY")
@@ -78,7 +79,7 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         email = super().clean_email(email)
 
         # Si el email es identificado como temporal o inválido, se bloquea y se almacena en la BD
-        if email_is_legitimate(email):
+        if not email_is_legitimate(email):
             raise ValidationError("The email domain is blocked. Please use a different email address.")
 
         return email
